@@ -14,22 +14,25 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121715;--card:#1b2220;--ink:#e8eeec;--mute:#8d9a96;--line:#2c3733;--acc:#5fb8a8;--onacc:#0c1412;--bad:#e0766c}}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
-main{max-width:480px;margin:0 auto;padding:16px 16px 110px}
+main{max-width:480px;margin:0 auto;padding:12px 16px 110px}
 button,input{font:inherit;color:inherit}
 button{background:none;border:0;cursor:pointer;padding:0}
 .top{display:flex;align-items:center;justify-content:space-between;color:var(--mute)}
 .top b{color:var(--ink);font-weight:600}
 .ic{width:44px;height:44px;font-size:20px;color:var(--mute)}
-.hero{margin:18px 0 22px}
-.big{font-size:64px;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.hero{margin:8px 0 16px}
+.big{font-size:56px;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
 .big.over{color:var(--bad)}
-.sub{color:var(--mute);margin-top:6px}
-.bar{height:8px;border-radius:4px;background:var(--line);margin:16px 0 12px;overflow:hidden}
+.sub{color:var(--mute);margin-top:4px}
+.bar{height:8px;border-radius:4px;background:var(--line);margin:12px 0 14px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--acc);width:0}
-.mac{display:flex;gap:18px;color:var(--mute);font-variant-numeric:tabular-nums}
-.mac b{color:var(--ink);font-weight:600}
+.mac{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mh{display:flex;justify-content:space-between;font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums;margin-bottom:4px}
+.mh b{color:var(--ink);font-weight:600}
+.mb{height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.mb i{display:block;height:100%;background:var(--acc)}
 ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-li{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 li .n{flex:1;min-width:0}
 li .n span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 li small{color:var(--mute)}
@@ -39,18 +42,41 @@ li .x{color:var(--mute);font-size:22px;width:36px;height:36px}
 .fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--acc);color:var(--onacc);font-weight:600;border-radius:28px;padding:15px 34px;box-shadow:0 2px 10px rgba(0,0,0,.18)}
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;justify-content:center;z-index:5}
 .sheet.on{display:flex}
-.pane{background:var(--bg);width:100%;max-width:480px;max-height:88%;overflow:auto;border-radius:18px 18px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom,0px))}
-.pane h2{margin:0 0 14px;font-size:20px;display:flex;justify-content:space-between;align-items:center}
+.pane{background:var(--bg);width:100%;max-width:480px;max-height:90%;overflow:auto;border-radius:18px 18px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom,0px))}
+.pane h2{margin:0 0 12px;font-size:20px;display:flex;justify-content:space-between;align-items:center}
 input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;-webkit-appearance:none}
 input:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 .row{display:flex;gap:8px}
-.btn{background:var(--acc);color:var(--onacc);font-weight:600;border-radius:10px;padding:12px 16px;width:100%}
+.row>*{flex:1;min-width:0}
+.btn{background:var(--acc);color:var(--onacc);font-weight:600;border-radius:10px;padding:12px 14px;width:100%}
 .btn.alt{background:var(--card);color:var(--ink);border:1px solid var(--line)}
-.res{display:block;width:100%;text-align:left;padding:11px 0;border-bottom:1px solid var(--line)}
+.fr{display:flex;align-items:center;border-bottom:1px solid var(--line)}
+.res{display:block;flex:1;min-width:0;text-align:left;padding:11px 0}
+.res span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .res small{display:block;color:var(--mute)}
-.lbl{color:var(--mute);margin:16px 0 6px}
+.fr .ic{width:38px;height:38px;font-size:17px}
+.lbl{color:var(--mute);margin:16px 0 4px;font-size:14px}
 .msg{color:var(--mute);padding:8px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.grid label{color:var(--mute);font-size:14px}
 video{width:100%;border-radius:12px;background:#000;aspect-ratio:4/3;object-fit:cover}
+.tabs{display:flex;gap:6px;margin-bottom:8px}
+.tabs button{flex:1;padding:9px 0;border-radius:9px;background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--mute)}
+.tabs button.on{background:var(--acc);border-color:var(--acc);color:var(--onacc);font-weight:600}
+#modes{flex-wrap:wrap}#modes button{flex:0 0 auto;padding:9px 14px}
+.chip{display:inline-flex;align-items:center;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:2px 4px 2px 12px;margin:0 6px 6px 0;font-size:14px}
+.chip button{width:28px;height:28px;color:var(--mute);font-size:17px}
+li.gh{padding:16px 0 4px;border-bottom:0;justify-content:space-between;color:var(--mute);font-size:14px;font-variant-numeric:tabular-nums}
+li.gh:first-child{padding-top:10px}
+.srt{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-size:14px;margin:14px 0 0}
+#sortb button{font-size:13px;padding:5px 9px;border-radius:8px;color:var(--mute)}
+#sortb button.on{background:var(--acc);color:var(--onacc)}
+.fr div.res{cursor:default}
+.tabs.small{width:75%;margin-left:auto}
+#chart svg{display:block;width:100%;height:auto;margin:6px 0 2px;color:var(--mute)}
+#chart .bar1{fill:var(--acc)}
+.avg{font-size:40px;font-weight:700;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.avg span{font-size:15px;font-weight:400;color:var(--mute);letter-spacing:0}
 .hide{display:none!important}
 </style>
 </head>
@@ -59,7 +85,7 @@ video{width:100%;border-radius:12px;background:#000;aspect-ratio:4/3;object-fit:
   <div class="top">
     <button class="ic" id="prev" aria-label="Vorige dag">‹</button>
     <b id="date"></b>
-    <span><button class="ic" id="next" aria-label="Volgende dag">›</button><button class="ic" id="gear" aria-label="Instellingen">⚙</button></span>
+    <span><button class="ic" id="stat" aria-label="Grafiek"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="2" y="10" width="4" height="8" rx="1"/><rect x="8" y="3" width="4" height="15" rx="1"/><rect x="14" y="7" width="4" height="11" rx="1"/></svg></button><button class="ic" id="next" aria-label="Volgende dag">›</button><button class="ic" id="gear" aria-label="Instellingen">⚙</button></span>
   </div>
   <section class="hero">
     <div class="big" id="left">0</div>
@@ -74,17 +100,39 @@ video{width:100%;border-radius:12px;background:#000;aspect-ratio:4/3;object-fit:
 
 <div class="sheet" id="sh">
   <div class="pane">
-    <!-- zoeken -->
+    <!-- toevoegen -->
     <div id="v-add">
-      <h2>Toevoegen <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
-      <div class="row"><input id="q" type="search" placeholder="Zoek een product" enterkeyhint="search"><button class="btn alt" id="go" style="width:auto;margin-bottom:10px">Zoek</button></div>
-      <button class="btn" id="scan">Scan barcode</button>
+      <h2 id="addt">Toevoegen <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
+      <div class="tabs" id="ms1"></div>
+      <input id="q" type="search" placeholder="Zoek een product" autocomplete="off" autocorrect="off" enterkeyhint="search">
+      <div class="row"><button class="btn" id="scan">Scan</button><button class="btn alt" id="newf">+ Product</button><button class="btn alt" id="newc">+ Combinatie</button></div>
+      <div class="srt hide" id="srt"><span>Sorteer</span><span id="sortb"></span></div>
+      <div class="lbl hide" id="cl">Combinaties</div>
+      <div id="combos"></div>
+      <div class="lbl hide" id="ol">Mijn voeding</div>
+      <div id="own"></div>
+      <div class="lbl hide" id="rl">Online gevonden (tik om te bewaren)</div>
       <div id="res"></div>
-      <div class="lbl" id="rl">Eerder gebruikt</div>
-      <div id="recent"></div>
-      <div class="lbl">Handmatig</div>
-      <div class="row"><input id="mn" placeholder="Naam"><input id="mk" type="number" inputmode="decimal" placeholder="kcal" style="max-width:100px"></div>
-      <button class="btn alt" id="mgo">Voeg toe</button>
+      <div id="quick"><div class="lbl">Alleen kcal invoeren</div>
+      <div class="row"><input id="mn" placeholder="Naam" style="flex:2"><input id="mk" type="number" inputmode="decimal" placeholder="kcal"></div>
+      <button class="btn alt" id="mgo">Voeg toe</button></div>
+    </div>
+    <!-- eigen product -->
+    <div id="v-food" class="hide">
+      <h2 id="ft">Nieuw product <button class="ic" id="fx" aria-label="Terug">✕</button></h2>
+      <input id="fn" placeholder="Naam">
+      <div class="msg" style="padding-top:0">Waarden per 100 gram</div>
+      <div class="grid">
+        <label>kcal<input id="fk" type="number" inputmode="decimal"></label>
+        <label>Eiwit (g)<input id="fp" type="number" inputmode="decimal"></label>
+        <label>Koolhydraten (g)<input id="fc" type="number" inputmode="decimal"></label>
+        <label>Vet (g)<input id="ff" type="number" inputmode="decimal"></label>
+      </div>
+      <div class="lbl">Porties (optioneel)</div>
+      <div class="msg" style="padding:0 0 6px">Bijvoorbeeld: sneetje = 35 gram. Je kiest later hoeveel sneetjes je at.</div>
+      <div id="fpl"></div>
+      <div class="row"><input id="pn" placeholder="Naam, bijv. sneetje" style="flex:2"><input id="pg" type="number" inputmode="decimal" placeholder="gram"><button class="btn alt" id="pa" style="flex:0 0 52px;margin-bottom:10px" aria-label="Voeg portie toe">+</button></div>
+      <button class="btn" id="fgo">Bewaar</button>
     </div>
     <!-- scanner -->
     <div id="v-scan" class="hide">
@@ -94,17 +142,45 @@ video{width:100%;border-radius:12px;background:#000;aspect-ratio:4/3;object-fit:
     </div>
     <!-- hoeveelheid -->
     <div id="v-amt" class="hide">
-      <h2 id="an">Product <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
+      <h2 id="an"><span></span> <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
       <div class="msg" id="ap"></div>
-      <input id="ag" type="number" inputmode="decimal" value="100" aria-label="Gram">
+      <div class="tabs" id="ms2"></div>
+      <div class="tabs hide" id="modes"></div>
+      <div class="lbl" id="alab" style="margin:6px 0 4px">Aantal gram</div>
+      <input id="ag" type="number" inputmode="decimal" value="100">
       <div class="msg" id="at"></div>
       <button class="btn" id="ago">Toevoegen</button>
+    </div>
+    <!-- combinatie -->
+    <div id="v-combo" class="hide">
+      <h2 id="ct">Nieuwe combinatie <button class="ic" id="cx" aria-label="Annuleer">✕</button></h2>
+      <input id="cn" placeholder="Naam, bijv. havermout met banaan">
+      <div class="row" style="align-items:center"><span class="msg" style="flex:2;padding:0">Aantal porties</span><input id="cp" type="number" inputmode="decimal" value="1" style="margin:0"></div>
+      <div class="lbl">Producten</div>
+      <div id="cil"></div>
+      <button class="btn alt" id="cadd" style="margin-top:8px">Product toevoegen</button>
+      <div class="msg" id="ctot"></div>
+      <button class="btn" id="cgo">Bewaar</button>
+    </div>
+    <!-- grafiek -->
+    <div id="v-stats" class="hide">
+      <h2>Overzicht <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
+      <div class="tabs" id="tabs"></div>
+      <div class="tabs small" id="per"></div>
+      <div id="chart"></div>
+      <div class="avg" id="avg"></div>
+      <div class="msg" id="avs"></div>
+      <div class="msg" id="sel" style="color:var(--ink);min-height:1.4em;padding-top:0"></div>
     </div>
     <!-- instellingen -->
     <div id="v-set" class="hide">
       <h2>Instellingen <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
-      <div class="lbl" style="margin-top:0">Dagdoel (kcal)</div>
-      <input id="goal" type="number" inputmode="numeric">
+      <div class="grid">
+        <label>Dagdoel (kcal)<input id="goal" type="number" inputmode="numeric"></label>
+        <label>Eiwit (g)<input id="gp" type="number" inputmode="numeric"></label>
+        <label>Koolhydraten (g)<input id="gc" type="number" inputmode="numeric"></label>
+        <label>Vet (g)<input id="gf" type="number" inputmode="numeric"></label>
+      </div>
       <div class="lbl">Back-up</div>
       <div class="row"><button class="btn alt" id="exp">Kopieer data</button><button class="btn alt" id="imp">Plak data</button></div>
       <div class="msg" id="setmsg">Alles staat alleen op dit toestel. Maak af en toe een back-up.</div>
@@ -116,9 +192,30 @@ video{width:100%;border-radius:12px;background:#000;aspect-ratio:4/3;object-fit:
 const $=s=>document.querySelector(s), KEY='eten-v1';
 const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
 let S=null; try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-S=S||{goal:2000,days:{},recent:[]};
+function fix(){
+  S=S&&S.days?S:{days:{}};
+  S.goal=S.goal||2000; S.gp=S.gp||120; S.gc=S.gc||220; S.gf=S.gf||65;
+  S.foods=S.foods||S.recent||[]; delete S.recent; S.combos=S.combos||[]; S.sort=S.sort||'recent';
+  if(!S.bf){
+    S.bf=1; const use={};
+    Object.keys(S.days).forEach(k=>S.days[k].forEach(e=>{const u=use[e.name]=use[e.name]||{n:0,t:0};u.n++;u.t=Math.max(u.t,e.id||0)}));
+    [...S.foods,...S.combos].forEach(x=>{const u=use[x.name];if(u){x.used=u.n;x.last=u.t}});
+  }
+}
+fix();
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
-let day=iso(new Date()), pick=null;
+let day=iso(new Date()), pick=null, editing=null, isNew=false;
+let target='day', curView='add';
+const MEALS=[['o','Ontbijt'],['l','Lunch'],['a','Avondeten'],['t','Tussendoor']];
+const defMeal=()=>{const h=new Date().getHours();return h<10?'o':h<15?'l':h<21?'a':'t'};
+let curMeal=defMeal(), manual=false;
+function renderMeals(){
+  ['#ms1','#ms2'].forEach(id=>{
+    const box=$(id); box.innerHTML='';
+    MEALS.forEach(([k,n])=>{const b=document.createElement('button');b.textContent=n;b.className=k===curMeal?'on':'';
+      b.onclick=()=>{curMeal=k;manual=true;renderMeals()};box.appendChild(b)});
+  });
+}
 const r0=n=>Math.round(n||0);
 
 function render(){
@@ -128,19 +225,25 @@ function render(){
   el.textContent=Math.abs(r0(left)); el.classList.toggle('over',left<0);
   $('#sub').textContent=left<0?`kcal te veel (doel ${S.goal})`:`kcal over van ${S.goal}`;
   $('#fill').style.width=Math.min(100,t.k/S.goal*100)+'%';
-  $('#mac').innerHTML=`<span><b>${r0(t.p)}</b> g eiwit</span><span><b>${r0(t.c)}</b> g koolhydraten</span><span><b>${r0(t.f)}</b> g vet</span>`;
+  $('#mac').innerHTML=[['Eiwit','p','gp'],['Koolh.','c','gc'],['Vet','f','gf']].map(([l,k,g])=>
+    `<div><div class="mh"><span>${l}</span><span><b>${r0(t[k])}</b>/${S[g]}</span></div><div class="mb"><i style="width:${Math.min(100,t[k]/S[g]*100)}%"></i></div></div>`).join('');
   const today=iso(new Date());
   $('#date').textContent=day===today?'Vandaag':new Date(day+'T12:00').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'});
   $('#next').style.visibility=day>=today?'hidden':'visible';
   const ul=$('#list'); ul.innerHTML='';
-  L.forEach(e=>{
-    const li=document.createElement('li');
-    li.innerHTML='<div class="n"><span></span><small></small></div><div class="k"></div><button class="x" aria-label="Verwijder">×</button>';
-    li.querySelector('span').textContent=e.name;
-    li.querySelector('small').textContent=e.g?e.g+' g':'';
-    li.querySelector('.k').textContent=r0(e.kcal);
-    li.querySelector('.x').onclick=()=>{S.days[day]=L.filter(x=>x.id!==e.id);save();render()};
-    ul.appendChild(li);
+  [...MEALS,['','Overig']].forEach(([k,name])=>{
+    const G=L.filter(e=>(e.meal||'')===k); if(!G.length)return;
+    const h=document.createElement('li'); h.className='gh'; h.innerHTML='<span></span><span></span>';
+    h.children[0].textContent=name; h.children[1].textContent=r0(G.reduce((x,e)=>x+e.kcal,0))+' kcal'; ul.appendChild(h);
+    G.forEach(e=>{
+      const li=document.createElement('li');
+      li.innerHTML='<div class="n"><span></span><small></small></div><div class="k"></div><button class="x" aria-label="Verwijder">×</button>';
+      li.querySelector('span').textContent=e.name;
+      li.querySelector('small').textContent=e.label||(e.g?e.g+' g':'');
+      li.querySelector('.k').textContent=r0(e.kcal);
+      li.querySelector('.x').onclick=()=>{S.days[day]=L.filter(x=>x.id!==e.id);save();render()};
+      ul.appendChild(li);
+    });
   });
   ul.classList.toggle('hide',!L.length); $('#empty').classList.toggle('hide',!!L.length);
 }
@@ -148,18 +251,184 @@ const shift=n=>{const d=new Date(day+'T12:00');d.setDate(d.getDate()+n);day=iso(
 $('#prev').onclick=()=>shift(-1); $('#next').onclick=()=>shift(1);
 
 /* sheets */
-const views=['add','scan','amt','set'];
-function view(v){views.forEach(x=>$('#v-'+x).classList.toggle('hide',x!==v));$('#sh').classList.add('on')}
-function closeAll(){stopScan();$('#sh').classList.remove('on')}
-document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeAll);
-$('#sh').onclick=e=>{if(e.target.id==='sh')closeAll()};
-$('#add').onclick=()=>{$('#res').innerHTML='';$('#q').value='';showRecent();view('add')};
-$('#gear').onclick=()=>{$('#goal').value=S.goal;view('set')};
-$('#goal').onchange=e=>{const v=+e.target.value;if(v>0){S.goal=v;save();render()}};
+const views=['add','food','scan','amt','combo','stats','set'];
+function view(v){curView=v;views.forEach(x=>$('#v-'+x).classList.toggle('hide',x!==v));$('#sh').classList.add('on')}
+function closeAll(){stopScan();cancelSearch();target='day';$('#sh').classList.remove('on')}
+function back(){if(target==='combo'&&(curView==='add'||curView==='amt')){stopScan();cancelSearch();renderCombo();view('combo')}else closeAll()}
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=back);
+$('#sh').onclick=e=>{if(e.target.id==='sh')back()};
+function openAdd(clear){
+  if(clear)$('#q').value='';
+  const cm=target==='combo';
+  ['#ms1','#quick','#newc'].forEach(i=>$(i).classList.toggle('hide',cm));
+  $('#addt').firstChild.textContent=cm?'Product kiezen ':'Toevoegen ';
+  renderOwn(); suggest(); view('add');
+}
+$('#add').onclick=()=>{if(!manual)curMeal=defMeal();renderMeals();openAdd(true);setTimeout(()=>$('#q').focus(),60)};
+$('#gear').onclick=()=>{['goal','gp','gc','gf'].forEach(k=>$('#'+k).value=S[k]);view('set')};
+['goal','gp','gc','gf'].forEach(k=>$('#'+k).onchange=e=>{const v=+e.target.value;if(v>0){S[k]=v;save();render()}});
 $('#exp').onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(S));$('#setmsg').textContent='Gekopieerd. Plak het ergens veilig, bijvoorbeeld in Notities.'}catch(e){$('#setmsg').textContent='Kopiëren lukte niet.'}};
-$('#imp').onclick=async()=>{try{const d=JSON.parse(await navigator.clipboard.readText());if(d&&d.days){S=d;save();render();$('#setmsg').textContent='Hersteld.'}else throw 0}catch(e){$('#setmsg').textContent='Geen geldige back-up op het klembord.'}};
+$('#imp').onclick=async()=>{try{const d=JSON.parse(await navigator.clipboard.readText());if(d&&d.days){S=d;fix();save();render();$('#setmsg').textContent='Hersteld.'}else throw 0}catch(e){$('#setmsg').textContent='Geen geldige back-up op het klembord.'}};
 
-/* producten */
+/* overzicht */
+const TABS=[['k','kcal','kcal','goal'],['p','Eiwit','g','gp'],['c','Koolh.','g','gc'],['f','Vet','g','gf']];
+let stT='k', stN=7, stSel=-1;
+function stats(){
+  const tab=TABS.find(t=>t[0]===stT), goal=S[tab[3]], unit=tab[2];
+  $('#tabs').innerHTML=TABS.map(t=>`<button data-t="${t[0]}" class="${t[0]===stT?'on':''}">${t[1]}</button>`).join('');
+  $('#per').innerHTML=[7,30,365].map(n=>`<button data-n="${n}" class="${n===stN?'on':''}">${n===365?'Jaar':n+' dagen'}</button>`).join('');
+  $('#tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{stT=b.dataset.t;stSel=-1;stats()});
+  $('#per').querySelectorAll('button').forEach(b=>b.onclick=()=>{stN=+b.dataset.n;stSel=-1;stats()});
+  const days=[];
+  for(let i=stN-1;i>=0;i--){
+    const d=new Date(); d.setHours(12,0,0,0); d.setDate(d.getDate()-i);
+    const L=S.days[iso(d)]||[];
+    days.push({d,n:L.length,v:L.reduce((a,e)=>a+e[stT==='k'?'kcal':stT],0)});
+  }
+  const logged=days.filter(x=>x.n>0), avg=logged.length?logged.reduce((a,x)=>a+x.v,0)/logged.length:0;
+  const W=320,H=150,pt=8,pb=18,ph=H-pt-pb, max=Math.max(goal*1.15,...days.map(x=>x.v*1.08),1);
+  const cw=W/stN, bw=cw*(stN>30?.8:stN>7?.66:.58), Y=v=>pt+ph*(1-v/max);
+  let g=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Staafgrafiek per dag">`;
+  g+=`<line x1="0" x2="${W}" y1="${pt+ph}" y2="${pt+ph}" stroke="var(--line)"/>`;
+  days.forEach((x,i)=>{
+    const cx=i*cw+cw/2;
+    if(x.n>0){const y=Y(x.v);g+=`<rect class="bar1" x="${cx-bw/2}" y="${y}" width="${bw}" height="${pt+ph-y}" rx="${stN>30?0:2}" opacity="${stSel<0||stSel===i?1:.35}"/>`}
+    const lab=stN<=7?x.d.toLocaleDateString('nl-NL',{weekday:'short'}):stN>30?(x.d.getDate()===1?x.d.toLocaleDateString('nl-NL',{month:'short'}).replace('.',''):''):((i%5===0||i===stN-1)?x.d.getDate():'');
+    if(lab!=='')g+=`<text x="${cx}" y="${H-4}" font-size="9" text-anchor="middle" fill="currentColor">${lab}</text>`;
+  });
+  g+=`<line x1="0" x2="${W}" y1="${Y(goal)}" y2="${Y(goal)}" stroke="currentColor" stroke-dasharray="4 3" opacity=".7"/>`;
+  g+=`<text x="2" y="${Y(goal)-3}" font-size="9" fill="currentColor">doel ${goal}</text></svg>`;
+  $('#chart').innerHTML=g;
+  $('#chart svg').onclick=e=>{const r=e.currentTarget.getBoundingClientRect(),i=Math.min(stN-1,Math.max(0,Math.floor((e.clientX-r.left)/r.width*stN)));stSel=stSel===i?-1:i;stats()};
+  $('#avg').innerHTML=`${r0(avg)} <span>${unit} gemiddeld per dag</span>`;
+  $('#avs').textContent=`${logged.length} van ${stN} dagen ingevuld`;
+  const sd=days[stSel];
+  $('#sel').textContent=sd?`${sd.d.toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'})}: ${sd.n?r0(sd.v)+' '+unit:'niets ingevuld'}`:'Tik op een dag voor de waarde.';
+}
+$('#stat').onclick=()=>{stSel=-1;stats();view('stats')};
+
+/* combinaties */
+let cd={items:[],name:'',porties:1,ref:null};
+function comboForm(c){
+  cd=c?{items:c.items.map(x=>({...x})),name:c.name,porties:c.porties||1,ref:c}:{items:[],name:'',porties:1,ref:null};
+  renderCombo(); view('combo');
+}
+function syncCombo(){cd.name=$('#cn').value.trim();cd.porties=+$('#cp').value>0?+$('#cp').value:1}
+function renderTot(){
+  const k=cd.items.reduce((a,x)=>a+x.kcal,0);
+  $('#ctot').textContent=cd.items.length?`Totaal ${r0(k)} kcal · ${r0(k/cd.porties)} kcal per portie`:'Voeg minstens één product toe.';
+}
+function renderCombo(){
+  $('#ct').firstChild.textContent=cd.ref?'Wijzig combinatie ':'Nieuwe combinatie ';
+  $('#cn').value=cd.name; $('#cp').value=cd.porties;
+  const box=$('#cil'); box.innerHTML='';
+  cd.items.forEach((x,i)=>{
+    const d=document.createElement('div'), t=document.createElement('div'); d.className='fr'; t.className='res';
+    const s1=document.createElement('span'), s2=document.createElement('small');
+    s1.textContent=x.name; s2.textContent=`${x.label||r0(x.g)+' g'} · ${r0(x.kcal)} kcal`; t.append(s1,s2); d.appendChild(t);
+    const b=document.createElement('button'); b.className='ic'; b.textContent='×'; b.setAttribute('aria-label','Verwijder product');
+    b.onclick=()=>{syncCombo();cd.items.splice(i,1);renderCombo()}; d.appendChild(b); box.appendChild(d);
+  });
+  renderTot();
+}
+$('#cp').oninput=()=>{syncCombo();renderTot()};
+$('#newc').onclick=()=>comboForm(null);
+$('#cadd').onclick=()=>{syncCombo();target='combo';openAdd(true)};
+$('#cx').onclick=()=>{target='day';openAdd(false)};
+$('#cgo').onclick=()=>{
+  syncCombo();
+  if(!cd.name||!cd.items.length){$('#ctot').textContent='Geef een naam en voeg minstens één product toe.';return}
+  if(cd.ref)Object.assign(cd.ref,{name:cd.name,porties:cd.porties,items:cd.items});
+  else S.combos.push({id:Date.now(),name:cd.name,porties:cd.porties,items:cd.items,added:Date.now()});
+  save(); target='day'; openAdd(false);
+};
+
+/* eigen voeding */
+const info=p=>`${r0(p.kcal)} kcal · E ${r0(p.p)} · K ${r0(p.c)} · V ${r0(p.f)} per 100 g`;
+function foodRow(p,own,onpick){
+  const d=document.createElement('div'); d.className='fr';
+  const b=document.createElement('button'); b.className='res';
+  const s1=document.createElement('span'), s2=document.createElement('small');
+  s1.textContent=p.name; s2.textContent=info(p); b.append(s1,s2); b.onclick=onpick; d.appendChild(b);
+  if(own){
+    const e=document.createElement('button'); e.className='ic'; e.textContent='✎'; e.setAttribute('aria-label','Wijzig'); e.onclick=()=>foodForm(p);
+    const x=document.createElement('button'); x.className='ic'; x.textContent='×'; x.setAttribute('aria-label','Verwijder uit mijn voeding');
+    x.onclick=()=>{S.foods=S.foods.filter(f=>f!==p);save();renderOwn()};
+    d.append(e,x);
+  }
+  return d;
+}
+function sortList(L){
+  const m=S.sort, t=x=>x.last||x.added||0, az=(x,y)=>x.name.localeCompare(y.name,'nl');
+  return [...L].sort((x,y)=>m==='az'?az(x,y):m==='count'?((y.used||0)-(x.used||0))||(t(y)-t(x))||az(x,y):(t(y)-t(x))||az(x,y));
+}
+function renderSort(){
+  const box=$('#sortb'); box.innerHTML='';
+  [['recent','Recent'],['count','Meest gebruikt'],['az','A–Z']].forEach(([k,n])=>{
+    const b=document.createElement('button'); b.textContent=n; b.className=S.sort===k?'on':'';
+    b.onclick=()=>{S.sort=k;save();renderOwn()}; box.appendChild(b);
+  });
+}
+function comboFood(c){
+  const T=c.items.reduce((a,i)=>({g:a.g+i.g,k:a.k+i.kcal,p:a.p+i.p,c:a.c+i.c,f:a.f+i.f}),{g:0,k:0,p:0,c:0,f:0}), n=c.porties||1;
+  return {name:c.name,kcal:T.k/T.g*100,p:T.p/T.g*100,c:T.c/T.g*100,f:T.f/T.g*100,portions:[{n:'portie',g:T.g/n}],_c:c};
+}
+function comboRow(c){
+  const f=comboFood(c), d=document.createElement('div'); d.className='fr';
+  const b=document.createElement('button'), s1=document.createElement('span'), s2=document.createElement('small'); b.className='res';
+  s1.textContent=c.name; s2.textContent=`${r0(f.kcal*f.portions[0].g/100)} kcal per portie · ${c.items.length} producten`;
+  b.append(s1,s2); b.onclick=()=>amount(f); d.appendChild(b);
+  const e=document.createElement('button'); e.className='ic'; e.textContent='✎'; e.setAttribute('aria-label','Wijzig'); e.onclick=()=>comboForm(c);
+  const x=document.createElement('button'); x.className='ic'; x.textContent='×'; x.setAttribute('aria-label','Verwijder combinatie');
+  x.onclick=()=>{S.combos=S.combos.filter(y=>y!==c);save();renderOwn()};
+  d.append(e,x); return d;
+}
+function renderOwn(){
+  const q=$('#q').value.trim().toLowerCase(), box=$('#own'), cb=$('#combos'); box.innerHTML=''; cb.innerHTML='';
+  const m=x=>!q||x.name.toLowerCase().includes(q);
+  const L=sortList(S.foods.filter(m)), C=target==='combo'?[]:sortList(S.combos.filter(m));
+  $('#ol').classList.toggle('hide',!L.length); $('#cl').classList.toggle('hide',!C.length);
+  $('#srt').classList.toggle('hide',L.length+C.length<2);
+  L.forEach(p=>box.appendChild(foodRow(p,true,()=>amount(p))));
+  C.forEach(c=>cb.appendChild(comboRow(c)));
+  renderSort();
+}
+function adopt(p){
+  const i=S.foods.findIndex(x=>(p.code&&x.code===p.code)||x.name===p.name);
+  if(i>=0)return S.foods[i]; p.added=Date.now(); S.foods.push(p); save(); return p;
+}
+let fPort=[];
+function renderPort(){
+  const box=$('#fpl'); box.innerHTML='';
+  fPort.forEach((x,i)=>{
+    const c=document.createElement('span'); c.className='chip'; c.append(`${x.n} · ${r0(x.g)} g`);
+    const b=document.createElement('button'); b.textContent='×'; b.setAttribute('aria-label','Verwijder portie');
+    b.onclick=()=>{fPort.splice(i,1);renderPort()}; c.appendChild(b); box.appendChild(c);
+  });
+}
+function addPort(){
+  const n=$('#pn').value.trim(), g=+$('#pg').value; if(!n||!(g>0))return false;
+  fPort.push({n,g}); $('#pn').value=''; $('#pg').value=''; renderPort(); return true;
+}
+$('#pa').onclick=addPort;
+function foodForm(p){
+  editing=p||null; isNew=!p; $('#ft').firstChild.textContent=p?'Wijzig product ':'Nieuw product ';
+  $('#fn').value=p?p.name:''; $('#fk').value=p?r0(p.kcal*10)/10:''; $('#fp').value=p?r0(p.p*10)/10:''; $('#fc').value=p?r0(p.c*10)/10:''; $('#ff').value=p?r0(p.f*10)/10:'';
+  fPort=p&&p.portions?p.portions.map(x=>({...x})):[]; $('#pn').value=''; $('#pg').value=''; renderPort();
+  view('food');
+}
+$('#newf').onclick=()=>foodForm(null);
+$('#fx').onclick=()=>openAdd(false);
+$('#fgo').onclick=()=>{
+  const n=$('#fn').value.trim(); if(!n||$('#fk').value==='')return;
+  addPort();
+  const o={code:editing?editing.code:'',name:n,kcal:+$('#fk').value||0,p:+$('#fp').value||0,c:+$('#fc').value||0,f:+$('#ff').value||0,portions:fPort.slice()};
+  let item; if(editing){Object.assign(editing,o);item=editing}else{o.added=Date.now();S.foods.push(o);item=o}
+  save(); if(isNew)amount(item); else openAdd(false);
+};
+
+/* online zoeken tijdens het typen */
+const OFF='https://world.openfoodfacts.org', F='fields=code,product_name,brands,nutriments';
 function parse(p,code){
   const n=p.nutriments||{};
   let k=n['energy-kcal_100g']; if(k==null&&n['energy_100g']!=null)k=n['energy_100g']/4.184;
@@ -167,51 +436,72 @@ function parse(p,code){
   return {code:code||p.code||'',name:(p.product_name+(p.brands?' – '+p.brands.split(',')[0]:'')).trim(),
     kcal:+k,p:+n.proteins_100g||0,c:+n.carbohydrates_100g||0,f:+n.fat_100g||0};
 }
-const OFF='https://world.openfoodfacts.org';
-const F='fields=code,product_name,brands,nutriments';
-async function search(){
-  const q=$('#q').value.trim(); if(!q)return;
-  const box=$('#res'); box.innerHTML='<div class="msg">Zoeken…</div>';
+async function off(q,nl,signal){
+  const u=`${OFF}/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=15&sort_by=unique_scans_n&${F}`+(nl?'&tagtype_0=countries&tag_contains_0=contains&tag_0=netherlands':'');
+  const r=await fetch(u,{signal}); return ((await r.json()).products||[]).map(p=>parse(p)).filter(Boolean);
+}
+let tmr=null, ctl=null, seq=0;
+function cancelSearch(){clearTimeout(tmr);if(ctl)ctl.abort();ctl=null;seq++}
+$('#q').oninput=()=>{renderOwn();cancelSearch();tmr=setTimeout(suggest,350)};
+async function suggest(){
+  const q=$('#q').value.trim(), box=$('#res'), lbl=$('#rl');
+  cancelSearch();
+  if(q.length<2){box.innerHTML='';lbl.classList.add('hide');return}
+  const my=seq; ctl=new AbortController();
+  lbl.classList.remove('hide'); box.innerHTML='<div class="msg">Zoeken…</div>';
   try{
-    const r=await fetch(`${OFF}/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=20&${F}`);
-    const items=((await r.json()).products||[]).map(p=>parse(p)).filter(Boolean);
-    box.innerHTML=''; if(!items.length)box.innerHTML='<div class="msg">Niets gevonden. Voeg het handmatig toe.</div>';
-    items.forEach(p=>box.appendChild(resBtn(p)));
-  }catch(e){box.innerHTML='<div class="msg">Zoeken lukt niet. Heb je internet?</div>'}
+    let items=await off(q,true,ctl.signal);
+    if(items.length<5){
+      const more=await off(q,false,ctl.signal), seen=new Set(items.map(p=>p.code||p.name));
+      more.forEach(p=>{if(!seen.has(p.code||p.name))items.push(p)});
+    }
+    if(my!==seq)return;
+    items=items.filter(p=>!S.foods.some(x=>(p.code&&x.code===p.code)||x.name===p.name));
+    box.innerHTML=''; if(!items.length)box.innerHTML='<div class="msg">Niets nieuws gevonden. Maak het zelf aan met Nieuw product.</div>';
+    items.forEach(p=>box.appendChild(foodRow(p,false,()=>amount(adopt(p)))));
+  }catch(e){
+    if(e.name==='AbortError'||my!==seq)return;
+    box.innerHTML='<div class="msg">Zoeken lukt niet. Heb je internet?</div>';
+  }
 }
-function resBtn(p){
-  const b=document.createElement('button'); b.className='res';
-  b.textContent=p.name; const s=document.createElement('small');
-  s.textContent=r0(p.kcal)+' kcal per 100 g'; b.appendChild(s); b.onclick=()=>amount(p); return b;
-}
-$('#go').onclick=search; $('#q').onkeydown=e=>{if(e.key==='Enter')search()};
-function showRecent(){
-  const box=$('#recent'); box.innerHTML='';
-  S.recent.forEach(p=>box.appendChild(resBtn(p)));
-  $('#rl').classList.toggle('hide',!S.recent.length);
-}
+
+/* hoeveelheid */
+let mode=-1;
 function amount(p){
-  pick=p; $('#an').firstChild.textContent=p.name; $('#ap').textContent=r0(p.kcal)+' kcal per 100 g';
-  $('#ag').value=100; calc(); view('amt'); setTimeout(()=>$('#ag').select(),50);
+  renderMeals(); pick=p; $('#an').firstChild.textContent=p.name; $('#ap').textContent=p._c?`${r0(p.kcal*p.portions[0].g/100)} kcal per portie · ${p._c.items.length} producten`:info(p);
+  $('#ms2').classList.toggle('hide',target==='combo'); $('#ago').textContent=target==='combo'?'Toevoegen aan combinatie':'Toevoegen';
+  setMode(p.portions&&p.portions.length?0:-1); view('amt'); setTimeout(()=>$('#ag').select(),50);
 }
-function calc(){const g=+$('#ag').value||0;$('#at').textContent=`${r0(pick.kcal*g/100)} kcal · ${r0(pick.p*g/100)} g eiwit · ${r0(pick.c*g/100)} g koolhydraten · ${r0(pick.f*g/100)} g vet`}
+function setMode(m){
+  mode=m; const P=pick.portions||[], box=$('#modes');
+  box.classList.toggle('hide',!P.length); box.innerHTML='';
+  [['Gram',-1],...P.map((x,i)=>[x.n,i])].forEach(([t,i])=>{
+    const b=document.createElement('button'); b.textContent=t; b.className=i===mode?'on':''; b.onclick=()=>setMode(i); box.appendChild(b);
+  });
+  $('#ag').value=mode<0?100:1; $('#alab').textContent=mode<0?'Aantal gram':'Aantal '+P[mode].n; calc();
+}
+function grams(){const v=+$('#ag').value||0;return mode<0?v:v*pick.portions[mode].g}
+function calc(){const g=grams();$('#at').textContent=`${mode>=0?r0(g)+' g · ':''}${r0(pick.kcal*g/100)} kcal · ${r0(pick.p*g/100)} g eiwit · ${r0(pick.c*g/100)} g koolhydraten · ${r0(pick.f*g/100)} g vet`}
 $('#ag').oninput=calc;
 $('#ago').onclick=()=>{
-  const g=+$('#ag').value; if(!(g>0))return; const k=g/100;
-  (S.days[day]=S.days[day]||[]).push({id:Date.now(),name:pick.name,g,kcal:pick.kcal*k,p:pick.p*k,c:pick.c*k,f:pick.f*k});
-  S.recent=[pick,...S.recent.filter(x=>x.name!==pick.name)].slice(0,15);
+  const v=+$('#ag').value, g=grams(); if(!(v>0)||!(g>0))return; const k=g/100;
+  const label=mode>=0?`${v} × ${pick.portions[mode].n} (${r0(g)} g)`:'';
+  const item={name:pick.name,g,label,kcal:pick.kcal*k,p:pick.p*k,c:pick.c*k,f:pick.f*k};
+  if(target==='combo'){cd.items.push(item);renderCombo();view('combo');return}
+  const x=pick._c||pick; x.used=(x.used||0)+1; x.last=Date.now();
+  (S.days[day]=S.days[day]||[]).push({id:Date.now(),meal:curMeal,...item});
   save();render();closeAll();
 };
 $('#mgo').onclick=()=>{
   const n=$('#mn').value.trim()||'Snel toegevoegd', k=+$('#mk').value; if(!(k>0))return;
-  (S.days[day]=S.days[day]||[]).push({id:Date.now(),name:n,g:0,kcal:k,p:0,c:0,f:0});
+  (S.days[day]=S.days[day]||[]).push({id:Date.now(),meal:curMeal,name:n,g:0,kcal:k,p:0,c:0,f:0});
   save();render();$('#mn').value='';$('#mk').value='';closeAll();
 };
 
 /* scanner */
 let stream=null,timer=null,reader=null,found=false;
 async function scan(){
-  found=false; view('scan'); const v=$('#vid'), m=$('#smsg'); m.textContent='Richt de camera op de barcode.';
+  found=false; cancelSearch(); view('scan'); const v=$('#vid'), m=$('#smsg'); m.textContent='Richt de camera op de barcode.';
   try{
     if('BarcodeDetector' in window){
       stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
@@ -233,13 +523,14 @@ function stopScan(){
 }
 async function hit(code){
   if(found)return; found=true; stopScan(); view('scan'); $('#smsg').textContent='Zoeken naar '+code+'…';
+  const own=S.foods.find(x=>x.code===code); if(own){amount(own);return}
   try{
     const r=await fetch(`${OFF}/api/v2/product/${code}.json?fields=product_name,brands,nutriments`);
     const j=await r.json(), p=j.status===1&&parse(j.product,code);
-    if(p)amount(p); else{view('add');$('#res').innerHTML=`<div class="msg">Barcode ${code} staat niet in de database. Voeg het handmatig toe.</div>`}
-  }catch(e){view('add');$('#res').innerHTML='<div class="msg">Opzoeken lukt niet. Heb je internet?</div>'}
+    if(p)amount(adopt(p)); else{openAdd(true);$('#res').innerHTML=`<div class="msg">Barcode ${code} staat niet in de database. Maak het zelf aan met Nieuw product.</div>`}
+  }catch(e){openAdd(true);$('#res').innerHTML='<div class="msg">Opzoeken lukt niet. Heb je internet?</div>'}
 }
-$('#scan').onclick=scan; $('#scanx').onclick=()=>{stopScan();view('add')};
+$('#scan').onclick=scan; $('#scanx').onclick=()=>{stopScan();openAdd(false)};
 
 render();
 </script>
