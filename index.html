@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="MacroTracker">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -13,13 +13,19 @@
 :root{--bg:#eef1ef;--card:#fff;--ink:#1b2321;--mute:#68736f;--line:#d8dfdc;--acc:#1f6f63;--onacc:#fff;--bad:#a6382f;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121715;--card:#1b2220;--ink:#e8eeec;--mute:#8d9a96;--line:#2c3733;--acc:#5fb8a8;--onacc:#0c1412;--bad:#e0766c}}
-*{box-sizing:border-box}
+*{box-sizing:border-box;touch-action:pan-x pan-y}
+html{-webkit-touch-callout:none}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
 main{max-width:480px;margin:0 auto;padding:12px 16px 110px}
 button,input{font:inherit;color:inherit}
 button{background:none;border:0;cursor:pointer;padding:0}
 .top{display:flex;align-items:center;justify-content:space-between;color:var(--mute)}
 .top b{color:var(--ink);font-weight:600}
+.top>b{flex:1;min-width:0;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top>span{display:flex;align-items:center;flex:none}
+.streak{display:inline-flex;align-items:center;gap:2px;margin-right:2px;color:var(--mute);font-variant-numeric:tabular-nums;font-size:15px}
+.streak.on{color:var(--acc)}
+.streak b{color:inherit;font-weight:600}
 .ic{width:44px;height:44px;font-size:20px;color:var(--mute)}
 .hero{margin:8px 0 16px}
 .big{font-size:56px;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
@@ -86,7 +92,7 @@ li.gh:first-child{padding-top:10px}
   <div class="top">
     <button class="ic" id="prev" aria-label="Vorige dag">‹</button>
     <b id="date"></b>
-    <span><button class="ic" id="stat" aria-label="Grafiek"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="2" y="10" width="4" height="8" rx="1"/><rect x="8" y="3" width="4" height="15" rx="1"/><rect x="14" y="7" width="4" height="11" rx="1"/></svg></button><button class="ic" id="next" aria-label="Volgende dag">›</button><button class="ic" id="gear" aria-label="Instellingen">⚙</button></span>
+    <span><span class="streak" id="stk" role="img" aria-label="Dagen op rij ingevuld"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12.5 2C13.5 5.5 17.5 8.5 17.5 14A5.5 5.5 0 0 1 6.5 14C6.5 11.8 7.5 10.2 8.8 9C8.9 10.4 9.5 11.2 10.4 11.6C10 8 10.8 4.5 12.5 2ZM12 18.3A2.2 2.2 0 0 1 9.8 16.1C9.8 14.7 10.9 14 12 12.6C13.1 14 14.2 14.7 14.2 16.1A2.2 2.2 0 0 1 12 18.3Z"/></svg><b id="stn">0</b></span><button class="ic" id="stat" aria-label="Grafiek"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="2" y="10" width="4" height="8" rx="1"/><rect x="8" y="3" width="4" height="15" rx="1"/><rect x="14" y="7" width="4" height="11" rx="1"/></svg></button><button class="ic" id="next" aria-label="Volgende dag">›</button><button class="ic" id="gear" aria-label="Instellingen">⚙</button></span>
   </div>
   <section class="hero">
     <div class="big" id="left">0</div>
@@ -219,7 +225,14 @@ function renderMeals(){
 }
 const r0=n=>Math.round(n||0);
 
+function streak(){
+  let n=0; const d=new Date(); d.setHours(12,0,0,0);
+  if(!(S.days[iso(d)]||[]).length)d.setDate(d.getDate()-1);
+  while((S.days[iso(d)]||[]).length){n++;d.setDate(d.getDate()-1)}
+  return n;
+}
 function render(){
+  const sk=streak(); $('#stn').textContent=sk; $('#stk').classList.toggle('on',sk>0);
   const L=S.days[day]||[], t={k:0,p:0,c:0,f:0};
   L.forEach(e=>{t.k+=e.kcal;t.p+=e.p;t.c+=e.c;t.f+=e.f});
   const left=S.goal-t.k, el=$('#left');
@@ -533,6 +546,8 @@ async function hit(code){
 }
 $('#scan').onclick=scan; $('#scanx').onclick=()=>{stopScan();openAdd(false)};
 
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
+document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
 render();
 </script>
 </body>
