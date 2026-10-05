@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Eten">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#eef1ef">
+<title>Eten</title>
+<style>
+:root{--bg:#eef1ef;--card:#fff;--ink:#1b2321;--mute:#68736f;--line:#d8dfdc;--acc:#1f6f63;--onacc:#fff;--bad:#a6382f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121715;--card:#1b2220;--ink:#e8eeec;--mute:#8d9a96;--line:#2c3733;--acc:#5fb8a8;--onacc:#0c1412;--bad:#e0766c}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:480px;margin:0 auto;padding:16px 16px 110px}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;padding:0}
+.top{display:flex;align-items:center;justify-content:space-between;color:var(--mute)}
+.top b{color:var(--ink);font-weight:600}
+.ic{width:44px;height:44px;font-size:20px;color:var(--mute)}
+.hero{margin:18px 0 22px}
+.big{font-size:64px;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.big.over{color:var(--bad)}
+.sub{color:var(--mute);margin-top:6px}
+.bar{height:8px;border-radius:4px;background:var(--line);margin:16px 0 12px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc);width:0}
+.mac{display:flex;gap:18px;color:var(--mute);font-variant-numeric:tabular-nums}
+.mac b{color:var(--ink);font-weight:600}
+ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+li{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+li .n{flex:1;min-width:0}
+li .n span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+li small{color:var(--mute)}
+li .k{font-variant-numeric:tabular-nums;font-weight:600}
+li .x{color:var(--mute);font-size:22px;width:36px;height:36px}
+.empty{color:var(--mute);padding:28px 0;text-align:center}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--acc);color:var(--onacc);font-weight:600;border-radius:28px;padding:15px 34px;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;justify-content:center;z-index:5}
+.sheet.on{display:flex}
+.pane{background:var(--bg);width:100%;max-width:480px;max-height:88%;overflow:auto;border-radius:18px 18px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom,0px))}
+.pane h2{margin:0 0 14px;font-size:20px;display:flex;justify-content:space-between;align-items:center}
+input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;-webkit-appearance:none}
+input:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:flex;gap:8px}
+.btn{background:var(--acc);color:var(--onacc);font-weight:600;border-radius:10px;padding:12px 16px;width:100%}
+.btn.alt{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.res{display:block;width:100%;text-align:left;padding:11px 0;border-bottom:1px solid var(--line)}
+.res small{display:block;color:var(--mute)}
+.lbl{color:var(--mute);margin:16px 0 6px}
+.msg{color:var(--mute);padding:8px 0}
+video{width:100%;border-radius:12px;background:#000;aspect-ratio:4/3;object-fit:cover}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <button class="ic" id="prev" aria-label="Vorige dag">‹</button>
+    <b id="date"></b>
+    <span><button class="ic" id="next" aria-label="Volgende dag">›</button><button class="ic" id="gear" aria-label="Instellingen">⚙</button></span>
+  </div>
+  <section class="hero">
+    <div class="big" id="left">0</div>
+    <div class="sub" id="sub"></div>
+    <div class="bar"><i id="fill"></i></div>
+    <div class="mac" id="mac"></div>
+  </section>
+  <ul id="list"></ul>
+  <div class="empty hide" id="empty">Nog niets gegeten. Tik op Toevoegen.</div>
+</main>
+<button class="fab" id="add">Toevoegen</button>
+
+<div class="sheet" id="sh">
+  <div class="pane">
+    <!-- zoeken -->
+    <div id="v-add">
+      <h2>Toevoegen <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
+      <div class="row"><input id="q" type="search" placeholder="Zoek een product" enterkeyhint="search"><button class="btn alt" id="go" style="width:auto;margin-bottom:10px">Zoek</button></div>
+      <button class="btn" id="scan">Scan barcode</button>
+      <div id="res"></div>
+      <div class="lbl" id="rl">Eerder gebruikt</div>
+      <div id="recent"></div>
+      <div class="lbl">Handmatig</div>
+      <div class="row"><input id="mn" placeholder="Naam"><input id="mk" type="number" inputmode="decimal" placeholder="kcal" style="max-width:100px"></div>
+      <button class="btn alt" id="mgo">Voeg toe</button>
+    </div>
+    <!-- scanner -->
+    <div id="v-scan" class="hide">
+      <h2>Scan barcode <button class="ic" id="scanx" aria-label="Stop">✕</button></h2>
+      <video id="vid" playsinline muted></video>
+      <div class="msg" id="smsg">Richt de camera op de barcode.</div>
+    </div>
+    <!-- hoeveelheid -->
+    <div id="v-amt" class="hide">
+      <h2 id="an">Product <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
+      <div class="msg" id="ap"></div>
+      <input id="ag" type="number" inputmode="decimal" value="100" aria-label="Gram">
+      <div class="msg" id="at"></div>
+      <button class="btn" id="ago">Toevoegen</button>
+    </div>
+    <!-- instellingen -->
+    <div id="v-set" class="hide">
+      <h2>Instellingen <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
+      <div class="lbl" style="margin-top:0">Dagdoel (kcal)</div>
+      <input id="goal" type="number" inputmode="numeric">
+      <div class="lbl">Back-up</div>
+      <div class="row"><button class="btn alt" id="exp">Kopieer data</button><button class="btn alt" id="imp">Plak data</button></div>
+      <div class="msg" id="setmsg">Alles staat alleen op dit toestel. Maak af en toe een back-up.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s), KEY='eten-v1';
+const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+let S=null; try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+S=S||{goal:2000,days:{},recent:[]};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+let day=iso(new Date()), pick=null;
+const r0=n=>Math.round(n||0);
+
+function render(){
+  const L=S.days[day]||[], t={k:0,p:0,c:0,f:0};
+  L.forEach(e=>{t.k+=e.kcal;t.p+=e.p;t.c+=e.c;t.f+=e.f});
+  const left=S.goal-t.k, el=$('#left');
+  el.textContent=Math.abs(r0(left)); el.classList.toggle('over',left<0);
+  $('#sub').textContent=left<0?`kcal te veel (doel ${S.goal})`:`kcal over van ${S.goal}`;
+  $('#fill').style.width=Math.min(100,t.k/S.goal*100)+'%';
+  $('#mac').innerHTML=`<span><b>${r0(t.p)}</b> g eiwit</span><span><b>${r0(t.c)}</b> g koolhydraten</span><span><b>${r0(t.f)}</b> g vet</span>`;
+  const today=iso(new Date());
+  $('#date').textContent=day===today?'Vandaag':new Date(day+'T12:00').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'});
+  $('#next').style.visibility=day>=today?'hidden':'visible';
+  const ul=$('#list'); ul.innerHTML='';
+  L.forEach(e=>{
+    const li=document.createElement('li');
+    li.innerHTML='<div class="n"><span></span><small></small></div><div class="k"></div><button class="x" aria-label="Verwijder">×</button>';
+    li.querySelector('span').textContent=e.name;
+    li.querySelector('small').textContent=e.g?e.g+' g':'';
+    li.querySelector('.k').textContent=r0(e.kcal);
+    li.querySelector('.x').onclick=()=>{S.days[day]=L.filter(x=>x.id!==e.id);save();render()};
+    ul.appendChild(li);
+  });
+  ul.classList.toggle('hide',!L.length); $('#empty').classList.toggle('hide',!!L.length);
+}
+const shift=n=>{const d=new Date(day+'T12:00');d.setDate(d.getDate()+n);day=iso(d);render()};
+$('#prev').onclick=()=>shift(-1); $('#next').onclick=()=>shift(1);
+
+/* sheets */
+const views=['add','scan','amt','set'];
+function view(v){views.forEach(x=>$('#v-'+x).classList.toggle('hide',x!==v));$('#sh').classList.add('on')}
+function closeAll(){stopScan();$('#sh').classList.remove('on')}
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeAll);
+$('#sh').onclick=e=>{if(e.target.id==='sh')closeAll()};
+$('#add').onclick=()=>{$('#res').innerHTML='';$('#q').value='';showRecent();view('add')};
+$('#gear').onclick=()=>{$('#goal').value=S.goal;view('set')};
+$('#goal').onchange=e=>{const v=+e.target.value;if(v>0){S.goal=v;save();render()}};
+$('#exp').onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(S));$('#setmsg').textContent='Gekopieerd. Plak het ergens veilig, bijvoorbeeld in Notities.'}catch(e){$('#setmsg').textContent='Kopiëren lukte niet.'}};
+$('#imp').onclick=async()=>{try{const d=JSON.parse(await navigator.clipboard.readText());if(d&&d.days){S=d;save();render();$('#setmsg').textContent='Hersteld.'}else throw 0}catch(e){$('#setmsg').textContent='Geen geldige back-up op het klembord.'}};
+
+/* producten */
+function parse(p,code){
+  const n=p.nutriments||{};
+  let k=n['energy-kcal_100g']; if(k==null&&n['energy_100g']!=null)k=n['energy_100g']/4.184;
+  if(!p.product_name||k==null)return null;
+  return {code:code||p.code||'',name:(p.product_name+(p.brands?' – '+p.brands.split(',')[0]:'')).trim(),
+    kcal:+k,p:+n.proteins_100g||0,c:+n.carbohydrates_100g||0,f:+n.fat_100g||0};
+}
+const OFF='https://world.openfoodfacts.org';
+const F='fields=code,product_name,brands,nutriments';
+async function search(){
+  const q=$('#q').value.trim(); if(!q)return;
+  const box=$('#res'); box.innerHTML='<div class="msg">Zoeken…</div>';
+  try{
+    const r=await fetch(`${OFF}/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=20&${F}`);
+    const items=((await r.json()).products||[]).map(p=>parse(p)).filter(Boolean);
+    box.innerHTML=''; if(!items.length)box.innerHTML='<div class="msg">Niets gevonden. Voeg het handmatig toe.</div>';
+    items.forEach(p=>box.appendChild(resBtn(p)));
+  }catch(e){box.innerHTML='<div class="msg">Zoeken lukt niet. Heb je internet?</div>'}
+}
+function resBtn(p){
+  const b=document.createElement('button'); b.className='res';
+  b.textContent=p.name; const s=document.createElement('small');
+  s.textContent=r0(p.kcal)+' kcal per 100 g'; b.appendChild(s); b.onclick=()=>amount(p); return b;
+}
+$('#go').onclick=search; $('#q').onkeydown=e=>{if(e.key==='Enter')search()};
+function showRecent(){
+  const box=$('#recent'); box.innerHTML='';
+  S.recent.forEach(p=>box.appendChild(resBtn(p)));
+  $('#rl').classList.toggle('hide',!S.recent.length);
+}
+function amount(p){
+  pick=p; $('#an').firstChild.textContent=p.name; $('#ap').textContent=r0(p.kcal)+' kcal per 100 g';
+  $('#ag').value=100; calc(); view('amt'); setTimeout(()=>$('#ag').select(),50);
+}
+function calc(){const g=+$('#ag').value||0;$('#at').textContent=`${r0(pick.kcal*g/100)} kcal · ${r0(pick.p*g/100)} g eiwit · ${r0(pick.c*g/100)} g koolhydraten · ${r0(pick.f*g/100)} g vet`}
+$('#ag').oninput=calc;
+$('#ago').onclick=()=>{
+  const g=+$('#ag').value; if(!(g>0))return; const k=g/100;
+  (S.days[day]=S.days[day]||[]).push({id:Date.now(),name:pick.name,g,kcal:pick.kcal*k,p:pick.p*k,c:pick.c*k,f:pick.f*k});
+  S.recent=[pick,...S.recent.filter(x=>x.name!==pick.name)].slice(0,15);
+  save();render();closeAll();
+};
+$('#mgo').onclick=()=>{
+  const n=$('#mn').value.trim()||'Snel toegevoegd', k=+$('#mk').value; if(!(k>0))return;
+  (S.days[day]=S.days[day]||[]).push({id:Date.now(),name:n,g:0,kcal:k,p:0,c:0,f:0});
+  save();render();$('#mn').value='';$('#mk').value='';closeAll();
+};
+
+/* scanner */
+let stream=null,timer=null,reader=null,found=false;
+async function scan(){
+  found=false; view('scan'); const v=$('#vid'), m=$('#smsg'); m.textContent='Richt de camera op de barcode.';
+  try{
+    if('BarcodeDetector' in window){
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+      v.srcObject=stream; await v.play();
+      const det=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});
+      timer=setInterval(async()=>{try{const c=await det.detect(v);if(c.length)hit(c[0].rawValue)}catch(e){}},300);
+    }else{
+      await new Promise((ok,no)=>{if(window.ZXing)return ok();const s=document.createElement('script');
+        s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+      reader=new ZXing.BrowserMultiFormatReader();
+      reader.decodeFromVideoDevice(undefined,v,r=>{if(r)hit(r.getText())});
+    }
+  }catch(e){m.textContent='Camera niet beschikbaar. Geef Safari toegang tot de camera of zoek op naam.'}
+}
+function stopScan(){
+  clearInterval(timer);timer=null;
+  try{reader&&reader.reset()}catch(e){} reader=null;
+  const v=$('#vid'); const s=stream||v.srcObject; s&&s.getTracks&&s.getTracks().forEach(t=>t.stop()); stream=null; v.srcObject=null;
+}
+async function hit(code){
+  if(found)return; found=true; stopScan(); view('scan'); $('#smsg').textContent='Zoeken naar '+code+'…';
+  try{
+    const r=await fetch(`${OFF}/api/v2/product/${code}.json?fields=product_name,brands,nutriments`);
+    const j=await r.json(), p=j.status===1&&parse(j.product,code);
+    if(p)amount(p); else{view('add');$('#res').innerHTML=`<div class="msg">Barcode ${code} staat niet in de database. Voeg het handmatig toe.</div>`}
+  }catch(e){view('add');$('#res').innerHTML='<div class="msg">Opzoeken lukt niet. Heb je internet?</div>'}
+}
+$('#scan').onclick=scan; $('#scanx').onclick=()=>{stopScan();view('add')};
+
+render();
+</script>
+</body>
+</html>
