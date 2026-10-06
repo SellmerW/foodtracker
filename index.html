@@ -10,9 +10,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="icon.png?v=2">
 <title>MacroTracker</title>
 <style>
-:root{--bg:#eef1ef;--card:#fff;--ink:#1b2321;--mute:#68736f;--line:#d8dfdc;--acc:#1f6f63;--onacc:#fff;--bad:#a6382f;
+:root{--bg:#eef1ef;--card:#fff;--ink:#1b2321;--mute:#68736f;--line:#d8dfdc;--acc:#1f6f63;--onacc:#fff;--bad:#a6382f;--tint:rgba(31,111,99,.22);
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121715;--card:#1b2220;--ink:#e8eeec;--mute:#8d9a96;--line:#2c3733;--acc:#5fb8a8;--onacc:#0c1412;--bad:#e0766c}}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121715;--card:#1b2220;--ink:#e8eeec;--mute:#8d9a96;--line:#2c3733;--acc:#5fb8a8;--onacc:#0c1412;--bad:#e0766c;--tint:rgba(95,184,168,.3)}}
 *{box-sizing:border-box;touch-action:pan-x pan-y}
 html{-webkit-touch-callout:none}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -22,6 +22,17 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .top{display:flex;align-items:center;justify-content:space-between;color:var(--mute)}
 .top b{color:var(--ink);font-weight:600}
 .top>b{flex:1;min-width:0;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top>b{cursor:pointer}
+.top>b::after{content:' ▾';font-size:11px;color:var(--mute)}
+.calnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.calnav b{text-transform:capitalize}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:8px}
+.cal .wd{color:var(--mute);font-size:12px;padding:4px 0}
+.cal button{aspect-ratio:1;border-radius:10px;font-size:15px;font-variant-numeric:tabular-nums;background:transparent}
+.cal button.has{background:var(--tint)}
+.cal button.today{box-shadow:inset 0 0 0 2px var(--acc)}
+.cal button.sel{background:var(--acc);color:var(--onacc);font-weight:600}
+.cal button:disabled{color:var(--line);cursor:default}
 .top>span{display:flex;align-items:center;flex:none}
 .streak{display:inline-flex;align-items:center;gap:2px;margin-right:2px;color:var(--mute);font-variant-numeric:tabular-nums;font-size:15px}
 .streak.on{color:var(--acc)}
@@ -61,7 +72,7 @@ input:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px
 .res{display:block;flex:1;min-width:0;text-align:left;padding:11px 0}
 .res span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .res small{display:block;color:var(--mute)}
-.fr .ic{width:38px;height:38px;font-size:17px}
+.fr .ic{width:34px;height:38px;font-size:17px}
 .lbl{color:var(--mute);margin:16px 0 4px;font-size:14px}
 .msg{color:var(--mute);padding:8px 0}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
@@ -75,9 +86,20 @@ video{width:100%;border-radius:12px;background:#000;aspect-ratio:4/3;object-fit:
 .chip button{width:28px;height:28px;color:var(--mute);font-size:17px}
 li.gh{padding:16px 0 4px;border-bottom:0;justify-content:space-between;color:var(--mute);font-size:14px;font-variant-numeric:tabular-nums}
 li.gh:first-child{padding-top:10px}
-.srt{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-size:14px;margin:14px 0 0}
-#sortb button{font-size:13px;padding:5px 9px;border-radius:8px;color:var(--mute)}
-#sortb button.on{background:var(--acc);color:var(--onacc)}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:14px 0 4px;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;font-size:14px;padding:6px 12px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.chips button.on{background:var(--acc);border-color:var(--acc);color:var(--onacc);font-weight:600}
+.toast{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:20;background:#222a28;color:#f2f5f4;border-radius:12px;padding:10px 14px;display:flex;gap:16px;align-items:center;max-width:92%;box-shadow:0 2px 12px rgba(0,0,0,.3);font-size:15px}
+.toast span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.toast button{color:#7fd3c3;font-weight:600;white-space:nowrap}
+.cmp{display:block;margin-top:2px;padding:4px 0;color:var(--mute);font-size:14px;text-align:left;max-width:100%}
+.swr{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.swb{flex:none;width:48px;height:28px;border-radius:14px;background:var(--line);position:relative}
+.swb::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .15s}
+.swb.on{background:var(--acc)}
+.swb.on::after{left:23px}
+.fr .ic.fav{color:var(--acc)}
 .fr div.res{cursor:default}
 .tabs.small{width:75%;margin-left:auto}
 #chart svg{display:block;width:100%;height:auto;margin:6px 0 2px;color:var(--mute)}
@@ -91,12 +113,13 @@ li.gh:first-child{padding-top:10px}
 <main>
   <div class="top">
     <button class="ic" id="prev" aria-label="Vorige dag">‹</button>
-    <b id="date"></b>
+    <b id="date" role="button" tabindex="0" aria-label="Kies een dag"></b>
     <span><span class="streak" id="stk" role="img" aria-label="Dagen op rij ingevuld"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12.5 2C13.5 5.5 17.5 8.5 17.5 14A5.5 5.5 0 0 1 6.5 14C6.5 11.8 7.5 10.2 8.8 9C8.9 10.4 9.5 11.2 10.4 11.6C10 8 10.8 4.5 12.5 2ZM12 18.3A2.2 2.2 0 0 1 9.8 16.1C9.8 14.7 10.9 14 12 12.6C13.1 14 14.2 14.7 14.2 16.1A2.2 2.2 0 0 1 12 18.3Z"/></svg><b id="stn">0</b></span><button class="ic" id="stat" aria-label="Grafiek"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="2" y="10" width="4" height="8" rx="1"/><rect x="8" y="3" width="4" height="15" rx="1"/><rect x="14" y="7" width="4" height="11" rx="1"/></svg></button><button class="ic" id="next" aria-label="Volgende dag">›</button><button class="ic" id="gear" aria-label="Instellingen">⚙</button></span>
   </div>
   <section class="hero">
     <div class="big" id="left">0</div>
     <div class="sub" id="sub"></div>
+    <button class="cmp hide" id="cmp" aria-label="Nieuwe vergelijking"><span id="cmptxt"></span></button>
     <div class="bar"><i id="fill"></i></div>
     <div class="mac" id="mac"></div>
   </section>
@@ -104,6 +127,7 @@ li.gh:first-child{padding-top:10px}
   <div class="empty hide" id="empty">Nog niets gegeten. Tik op Toevoegen.</div>
 </main>
 <button class="fab" id="add">Toevoegen</button>
+<div class="toast hide" id="toast"><span id="tmsg"></span><button id="tundo">Ongedaan maken</button></div>
 
 <div class="sheet" id="sh">
   <div class="pane">
@@ -112,12 +136,17 @@ li.gh:first-child{padding-top:10px}
       <h2 id="addt">Toevoegen <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
       <div class="tabs" id="ms1"></div>
       <input id="q" type="search" placeholder="Zoek een product" autocomplete="off" autocorrect="off" enterkeyhint="search">
-      <div class="row"><button class="btn" id="scan">Scan</button><button class="btn alt" id="newf">+ Product</button><button class="btn alt" id="newc">+ Combinatie</button></div>
-      <div class="srt hide" id="srt"><span>Sorteer</span><span id="sortb"></span></div>
+      <div class="row"><button class="btn alt" id="newf">+ Product</button><button class="btn alt" id="newc">+ Combinatie</button></div>
+      <div class="chips" id="sortb"></div>
+      <div class="chips hide" id="catb" style="margin-top:6px"></div>
+      <div class="msg hide" id="emp"></div>
       <div class="lbl hide" id="cl">Combinaties</div>
       <div id="combos"></div>
       <div class="lbl hide" id="ol">Mijn voeding</div>
       <div id="own"></div>
+      <div id="basel"></div>
+      <div class="lbl hide" id="bl2">Basisproducten</div>
+      <div id="bres"></div>
       <div class="lbl hide" id="rl">Online gevonden (tik om te bewaren)</div>
       <div id="res"></div>
       <div id="quick"><div class="lbl">Alleen kcal invoeren</div>
@@ -141,11 +170,13 @@ li.gh:first-child{padding-top:10px}
       <div class="row"><input id="pn" placeholder="Naam, bijv. sneetje" style="flex:2"><input id="pg" type="number" inputmode="decimal" placeholder="gram"><button class="btn alt" id="pa" style="flex:0 0 52px;margin-bottom:10px" aria-label="Voeg portie toe">+</button></div>
       <button class="btn" id="fgo">Bewaar</button>
     </div>
-    <!-- scanner -->
-    <div id="v-scan" class="hide">
-      <h2>Scan barcode <button class="ic" id="scanx" aria-label="Stop">✕</button></h2>
-      <video id="vid" playsinline muted></video>
-      <div class="msg" id="smsg">Richt de camera op de barcode.</div>
+    <!-- kalender -->
+    <div id="v-cal" class="hide">
+      <h2>Kies een dag <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
+      <div class="calnav"><button class="ic" id="calprev" aria-label="Vorige maand">‹</button><b id="calmonth"></b><button class="ic" id="calnext" aria-label="Volgende maand">›</button></div>
+      <div class="cal" id="cal"></div>
+      <div class="msg">Gekleurde dagen hebben iets ingevuld.</div>
+      <button class="btn alt" id="caltoday">Vandaag</button>
     </div>
     <!-- hoeveelheid -->
     <div id="v-amt" class="hide">
@@ -188,6 +219,8 @@ li.gh:first-child{padding-top:10px}
         <label>Koolhydraten (g)<input id="gc" type="number" inputmode="numeric"></label>
         <label>Vet (g)<input id="gf" type="number" inputmode="numeric"></label>
       </div>
+      <div class="lbl">Extra</div>
+      <div class="swr"><span>Grappige vergelijking onder je kcal</span><button class="swb on" id="funsw" role="switch" aria-checked="true" aria-label="Grappige vergelijking"></button></div>
       <div class="lbl">Back-up</div>
       <div class="row"><button class="btn alt" id="exp">Kopieer data</button><button class="btn alt" id="imp">Plak data</button></div>
       <div class="msg" id="setmsg">Alles staat alleen op dit toestel. Maak af en toe een back-up.</div>
@@ -231,6 +264,37 @@ function streak(){
   while((S.days[iso(d)]||[]).length){n++;d.setDate(d.getDate()-1)}
   return n;
 }
+/* grappige vergelijking: [emoji, enkelvoud, meervoud, kcal per stuk] */
+const FUN=[
+['🍬','suikerkorrel','suikerkorrels',0.00116],['🥗','sesamzaadje','sesamzaadjes',0.017],['🍚','rijstkorrel (droog)','rijstkorrels (droog)',0.09],
+['🌽','maiskorrel','maiskorrels',0.215],['🫛','doperwtje','doperwtjes',0.243],['☕','koffieboon','koffiebonen',0.45],
+['🥒','plakje komkommer','plakjes komkommer',0.75],['🍿','stukje popcorn','stukjes popcorn',1.2],['🫘','kikkererwt (gekookt)','kikkererwten (gekookt)',2.5],
+['🍄','champignon','champignons',4],['🧄','teentje knoflook','teentjes knoflook',4.5],['🟢','spruitje','spruitjes',8.6],
+['🥛','slok halfvolle melk','slokken halfvolle melk',9.2],['🐦','kwarteleitje','kwarteleitjes',14],['🧊','suikerklontje','suikerklontjes',16],
+['🥕','wortel','wortels',29],['🧅','ui','uien',44],['🍯','eetlepel honing','eetlepels honing',64],['🥬','krop ijsbergsla','kroppen ijsbergsla',70],
+['🥚','kippenei','kippeneieren',83],['🫒','eetlepel olijfolie','eetlepels olijfolie',120],['🍍','hele ananas','hele ananassen',250],
+['🍉','hele watermeloen','hele watermeloenen',750],['🧈','pak boter','pakken boter',1850],['🥔','zak aardappelen','zakken aardappelen',1925]
+];
+let cmpItem=null, lastLeft=0;
+function fmtN(n){
+  if(n>=1000){const d=Math.pow(10,Math.floor(Math.log10(n))-1);return (Math.round(n/d)*d).toLocaleString('nl-NL')}
+  if(n>=10)return Math.round(n).toLocaleString('nl-NL');
+  return (Math.round(n*10)/10).toLocaleString('nl-NL');
+}
+function updateCmp(left,reroll){
+  const el=$('#cmp'); lastLeft=left;
+  if(S.fun===false||left<1){el.classList.add('hide');return}
+  const E=FUN.filter(f=>left/f[3]>=1); if(!E.length){el.classList.add('hide');return}
+  if(reroll||!cmpItem||!E.includes(cmpItem)){
+    const pool=E.length>1?E.filter(f=>f!==cmpItem):E; cmpItem=pool[Math.floor(Math.random()*pool.length)];
+  }
+  const t=fmtN(left/cmpItem[3]);
+  $('#cmptxt').textContent=`≈ ${t} ${t==='1'?cmpItem[1]:cmpItem[2]} ${cmpItem[0]}`;
+  el.classList.remove('hide');
+}
+$('#cmp').onclick=()=>updateCmp(lastLeft,true);
+function renderFun(){const on=S.fun!==false,b=$('#funsw');b.classList.toggle('on',on);b.setAttribute('aria-checked',on)}
+$('#funsw').onclick=()=>{S.fun=S.fun===false;save();renderFun();render()};
 function render(){
   const sk=streak(); $('#stn').textContent=sk; $('#stk').classList.toggle('on',sk>0);
   const L=S.days[day]||[], t={k:0,p:0,c:0,f:0};
@@ -238,6 +302,7 @@ function render(){
   const left=S.goal-t.k, el=$('#left');
   el.textContent=Math.abs(r0(left)); el.classList.toggle('over',left<0);
   $('#sub').textContent=left<0?`kcal te veel (doel ${S.goal})`:`kcal over van ${S.goal}`;
+  updateCmp(left);
   $('#fill').style.width=Math.min(100,t.k/S.goal*100)+'%';
   $('#mac').innerHTML=[['Eiwit','p','gp'],['Koolh.','c','gc'],['Vet','f','gf']].map(([l,k,g])=>
     `<div><div class="mh"><span>${l}</span><span><b>${r0(t[k])}</b>/${S[g]}</span></div><div class="mb"><i style="width:${Math.min(100,t[k]/S[g]*100)}%"></i></div></div>`).join('');
@@ -255,20 +320,49 @@ function render(){
       li.querySelector('span').textContent=e.name;
       li.querySelector('small').textContent=e.label||(e.g?e.g+' g':'');
       li.querySelector('.k').textContent=r0(e.kcal);
-      li.querySelector('.x').onclick=()=>{S.days[day]=L.filter(x=>x.id!==e.id);save();render()};
+      li.querySelector('.x').onclick=()=>{
+        const dk=day, i=L.indexOf(e); S.days[dk]=L.filter(x=>x!==e); save(); render();
+        toast('Verwijderd: '+e.name,()=>{const A=S.days[dk]||(S.days[dk]=[]);A.splice(Math.min(i,A.length),0,e);save();render()});
+      };
       ul.appendChild(li);
     });
   });
   ul.classList.toggle('hide',!L.length); $('#empty').classList.toggle('hide',!!L.length);
 }
+let calM=new Date();
+function renderCal(){
+  const y=calM.getFullYear(), m=calM.getMonth(), today=iso(new Date());
+  $('#calmonth').textContent=calM.toLocaleDateString('nl-NL',{month:'long',year:'numeric'});
+  $('#calnext').style.visibility=(y>new Date().getFullYear()||(y===new Date().getFullYear()&&m>=new Date().getMonth()))?'hidden':'visible';
+  const g=$('#cal'); g.innerHTML='';
+  ['ma','di','wo','do','vr','za','zo'].forEach(n=>{const d=document.createElement('div');d.className='wd';d.textContent=n;g.appendChild(d)});
+  const first=new Date(y,m,1,12), off=(first.getDay()+6)%7, n=new Date(y,m+1,0).getDate();
+  const gap=()=>{const b=document.createElement('button');b.disabled=true;b.tabIndex=-1;b.setAttribute('aria-hidden','true');b.style.visibility='hidden';b.textContent='0';g.appendChild(b)};
+  for(let i=0;i<off;i++)gap();
+  for(let d=1;d<=n;d++){
+    const key=iso(new Date(y,m,d,12)), b=document.createElement('button');
+    b.textContent=d; b.setAttribute('aria-label',new Date(y,m,d,12).toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'}));
+    if((S.days[key]||[]).length)b.classList.add('has');
+    if(key===today)b.classList.add('today');
+    if(key===day)b.classList.add('sel');
+    if(key>today)b.disabled=true; else b.onclick=()=>{day=key;render();closeAll()};
+    g.appendChild(b);
+  }
+  for(let i=off+n;i<42;i++)gap();
+}
+function openCal(){const d=new Date(day+'T12:00');calM=new Date(d.getFullYear(),d.getMonth(),1,12);renderCal();view('cal')}
+$('#date').onclick=openCal; $('#date').onkeydown=e=>{if(e.key==='Enter'||e.key===' ')openCal()};
+$('#calprev').onclick=()=>{calM=new Date(calM.getFullYear(),calM.getMonth()-1,1,12);renderCal()};
+$('#calnext').onclick=()=>{calM=new Date(calM.getFullYear(),calM.getMonth()+1,1,12);renderCal()};
+$('#caltoday').onclick=()=>{day=iso(new Date());render();closeAll()};
 const shift=n=>{const d=new Date(day+'T12:00');d.setDate(d.getDate()+n);day=iso(d);render()};
 $('#prev').onclick=()=>shift(-1); $('#next').onclick=()=>shift(1);
 
 /* sheets */
-const views=['add','food','scan','amt','combo','stats','set'];
+const views=['add','food','amt','combo','stats','cal','set'];
 function view(v){curView=v;views.forEach(x=>$('#v-'+x).classList.toggle('hide',x!==v));$('#sh').classList.add('on')}
-function closeAll(){stopScan();cancelSearch();target='day';$('#sh').classList.remove('on')}
-function back(){if(target==='combo'&&(curView==='add'||curView==='amt')){stopScan();cancelSearch();renderCombo();view('combo')}else closeAll()}
+function closeAll(){cancelSearch();target='day';$('#sh').classList.remove('on')}
+function back(){if(target==='combo'&&(curView==='add'||curView==='amt')){cancelSearch();renderCombo();view('combo')}else closeAll()}
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=back);
 $('#sh').onclick=e=>{if(e.target.id==='sh')back()};
 function openAdd(clear){
@@ -276,10 +370,10 @@ function openAdd(clear){
   const cm=target==='combo';
   ['#ms1','#quick','#newc'].forEach(i=>$(i).classList.toggle('hide',cm));
   $('#addt').firstChild.textContent=cm?'Product kiezen ':'Toevoegen ';
-  renderOwn(); suggest(); view('add');
+  renderOwn(); baseMatches(); suggest(); view('add');
 }
 $('#add').onclick=()=>{if(!manual)curMeal=defMeal();renderMeals();openAdd(true);setTimeout(()=>$('#q').focus(),60)};
-$('#gear').onclick=()=>{['goal','gp','gc','gf'].forEach(k=>$('#'+k).value=S[k]);view('set')};
+$('#gear').onclick=()=>{['goal','gp','gc','gf'].forEach(k=>$('#'+k).value=S[k]);renderFun();view('set')};
 ['goal','gp','gc','gf'].forEach(k=>$('#'+k).onchange=e=>{const v=+e.target.value;if(v>0){S[k]=v;save();render()}});
 $('#exp').onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(S));$('#setmsg').textContent='Gekopieerd. Plak het ergens veilig, bijvoorbeeld in Notities.'}catch(e){$('#setmsg').textContent='Kopiëren lukte niet.'}};
 $('#imp').onclick=async()=>{try{const d=JSON.parse(await navigator.clipboard.readText());if(d&&d.days){S=d;fix();save();render();$('#setmsg').textContent='Hersteld.'}else throw 0}catch(e){$('#setmsg').textContent='Geen geldige back-up op het klembord.'}};
@@ -359,30 +453,91 @@ $('#cgo').onclick=()=>{
 
 /* eigen voeding */
 const info=p=>`${r0(p.kcal)} kcal · E ${r0(p.p)} · K ${r0(p.c)} · V ${r0(p.f)} per 100 g`;
+function star(p){
+  const st=document.createElement('button'); st.className='ic'+(p.fav?' fav':''); st.textContent=p.fav?'★':'☆';
+  st.setAttribute('aria-label',p.fav?'Haal uit favorieten':'Maak favoriet'); st.onclick=()=>{p.fav=!p.fav;save();renderOwn()}; return st;
+}
+function delBtn(list,p,label){
+  const x=document.createElement('button'); x.className='ic'; x.textContent='×'; x.setAttribute('aria-label',label);
+  x.onclick=()=>{
+    const i=list().indexOf(p); if(i<0)return; list().splice(i,1); save(); renderOwn();
+    toast('Verwijderd: '+p.name,()=>{const A=list();A.splice(Math.min(i,A.length),0,p);save();renderOwn()});
+  };
+  return x;
+}
 function foodRow(p,own,onpick){
   const d=document.createElement('div'); d.className='fr';
   const b=document.createElement('button'); b.className='res';
   const s1=document.createElement('span'), s2=document.createElement('small');
-  s1.textContent=p.name; s2.textContent=info(p); b.append(s1,s2); b.onclick=onpick; d.appendChild(b);
+  s1.textContent=p.name; s2.textContent=info(p)+(p.portions&&p.portions.length?` · 1 ${p.portions[0].n} = ${r0(p.portions[0].g)} g`:'');
+  b.append(s1,s2); b.onclick=onpick; d.appendChild(b);
   if(own){
     const e=document.createElement('button'); e.className='ic'; e.textContent='✎'; e.setAttribute('aria-label','Wijzig'); e.onclick=()=>foodForm(p);
-    const x=document.createElement('button'); x.className='ic'; x.textContent='×'; x.setAttribute('aria-label','Verwijder uit mijn voeding');
-    x.onclick=()=>{S.foods=S.foods.filter(f=>f!==p);save();renderOwn()};
-    d.append(e,x);
+    d.append(star(p),e,delBtn(()=>S.foods,p,'Verwijder uit mijn voeding'));
   }
   return d;
 }
-function sortList(L){
-  const m=S.sort, t=x=>x.last||x.added||0, az=(x,y)=>x.name.localeCompare(y.name,'nl');
-  return [...L].sort((x,y)=>m==='az'?az(x,y):m==='count'?((y.used||0)-(x.used||0))||(t(y)-t(x))||az(x,y):(t(y)-t(x))||az(x,y));
+const TOP=10;
+function rankAll(q){
+  const t=x=>x.last||x.added||0, az=(x,y)=>x.name.localeCompare(y.name,'nl'), m=S.sort;
+  const byRecent=(x,y)=>(t(y)-t(x))||az(x,y), byCount=(x,y)=>((y.used||0)-(x.used||0))||(t(y)-t(x))||az(x,y);
+  let L=[...S.foods,...(target==='combo'?[]:S.combos)];
+  if(q)return L.filter(x=>x.name.toLowerCase().includes(q)).sort(m==='count'?byCount:m==='recent'?byRecent:az);
+  if(m==='recent')return L.sort(byRecent).slice(0,TOP);
+  if(m==='count')return L.filter(x=>x.used>0).sort(byCount).slice(0,TOP);
+  if(m==='fav')return L.filter(x=>x.fav).sort(az);
+  return L.sort(az);
 }
-function renderSort(){
+function renderFilter(){
   const box=$('#sortb'); box.innerHTML='';
-  [['recent','Recent'],['count','Meest gebruikt'],['az','A–Z']].forEach(([k,n])=>{
+  [['recent','Recent'],['count','Meest gebruikt'],['fav','★ Favorieten'],['az','Alles'],['base','Basis']].forEach(([k,n])=>{
     const b=document.createElement('button'); b.textContent=n; b.className=S.sort===k?'on':'';
     b.onclick=()=>{S.sort=k;save();renderOwn()}; box.appendChild(b);
   });
 }
+/* basisproducten: per 100 g, plus een gangbare portie */
+const BASE={
+Groente:[['Aardappel (gekookt)',77,2,17,.1,[['aardappel',75]]],['Aubergine',25,1,5.9,.2,[['aubergine',250]]],['Asperges',20,2.2,3.9,.1,[['stengel',20]]],
+['Bloemkool',25,1.9,5,.3,[['portie',100]]],['Broccoli',34,2.8,6.6,.4,[['portie',90]]],['Champignons',22,3.1,3.3,.3,[['champignon',18]]],
+['Courgette',17,1.2,3.1,.3,[['courgette',200]]],['Knoflook',149,6.4,33,.5,[['teentje',3]]],['Komkommer',15,.7,3.6,.1,[['komkommer',300]]],
+['Maïs',86,3.3,19,1.4,[['portie',80]]],['Paprika',31,1,6,.3,[['paprika',160]]],['Pompoen',26,1,6.5,.1,[['portie',150]]],
+['Prei',61,1.5,14,.3,[['prei',90]]],['Radijs',16,.7,3.4,.1,[['radijsje',8]]],['Rucola',25,2.6,3.7,.7,[['handvol',20]]],
+['Sla (ijsberg)',14,.9,3,.1,[['portie',50]]],['Sperziebonen',31,1.8,7,.2,[['portie',100]]],['Spinazie',23,2.9,3.6,.4,[['handvol',30]]],
+['Spruitjes',43,3.4,9,.3,[['spruitje',20]]],['Tomaat',18,.9,3.9,.2,[['tomaat',120],['cherrytomaat',15]]],['Ui',40,1.1,9.3,.1,[['ui',110]]],
+['Wortel',41,.9,9.6,.2,[['wortel',70]]],['Zoete aardappel',86,1.6,20,.1,[['zoete aardappel',150]]]],
+Fruit:[['Abrikoos',48,1.4,11.1,.4,[['abrikoos',35]]],['Ananas',50,.5,13.1,.1,[['schijf',80]]],['Appel',52,.3,13.8,.2,[['appel',150]]],
+['Aardbeien',32,.7,7.7,.3,[['aardbei',15]]],['Avocado',160,2,8.5,14.7,[['avocado',140],['halve avocado',70]]],['Banaan',89,1.1,22.8,.3,[['banaan',120]]],
+['Blauwe bessen',57,.7,14.5,.3,[['handvol',50]]],['Dadel (gedroogd)',277,1.8,75,.2,[['dadel',24]]],['Druiven',69,.7,18.1,.2,[['druif',5],['handvol',80]]],
+['Frambozen',52,1.2,11.9,.7,[['handvol',50]]],['Kersen',63,1.1,16,.2,[['kers',8]]],['Kiwi',61,1.1,14.7,.5,[['kiwi',70]]],
+['Mandarijn',53,.8,13.3,.3,[['mandarijn',75]]],['Mango',60,.8,15,.4,[['mango',200]]],['Meloen',34,.8,8.2,.2,[['plak',150]]],
+['Nectarine',44,1.1,10.6,.3,[['nectarine',140]]],['Peer',57,.4,15.2,.1,[['peer',160]]],['Perzik',39,.9,9.5,.3,[['perzik',150]]],
+['Pruim',46,.7,11.4,.3,[['pruim',65]]],['Sinaasappel',47,.9,11.8,.1,[['sinaasappel',130]]],['Watermeloen',30,.6,7.6,.2,[['plak',250]]]]
+};
+let _ba=null;
+const baseAll=()=>_ba||(_ba=Object.keys(BASE).flatMap(c=>BASE[c].map(r=>({name:r[0],kcal:r[1],p:r[2],c:r[3],f:r[4],portions:(r[5]||[]).map(([n,g])=>({n,g})),cat:c}))));
+const clone=o=>JSON.parse(JSON.stringify(o));
+const pickBase=b=>()=>amount(adopt(clone(b)));
+function renderBase(){
+  const cats=Object.keys(BASE); if(!BASE[S.cat])S.cat=cats[0];
+  const cb=$('#catb'); cb.innerHTML='';
+  cats.forEach(c=>{const b=document.createElement('button');b.textContent=c;b.className=S.cat===c?'on':'';b.onclick=()=>{S.cat=c;save();renderOwn()};cb.appendChild(b)});
+  const box=$('#basel'); box.innerHTML='';
+  baseAll().filter(b=>b.cat===S.cat).sort((x,y)=>x.name.localeCompare(y.name,'nl')).forEach(b=>box.appendChild(foodRow(b,false,pickBase(b))));
+}
+function baseMatches(){
+  const q=$('#q').value.trim().toLowerCase(), box=$('#bres'); box.innerHTML='';
+  const rk=n=>{n=n.toLowerCase();return n.startsWith(q)?0:n.split(/[\s(]+/).some(w=>w.startsWith(q))?1:2};
+  const L=q.length<2?[]:baseAll().filter(b=>b.name.toLowerCase().includes(q)&&!S.foods.some(x=>x.name===b.name)).sort((x,y)=>rk(x.name)-rk(y.name)||x.name.localeCompare(y.name,'nl')).slice(0,8);
+  $('#bl2').classList.toggle('hide',!L.length);
+  L.forEach(b=>box.appendChild(foodRow(b,false,pickBase(b))));
+}
+/* melding met ongedaan maken */
+let tt=null, tundo=null;
+function toast(msg,undo){
+  clearTimeout(tt); tundo=undo; $('#tmsg').textContent=msg; $('#toast').classList.remove('hide');
+  tt=setTimeout(()=>{$('#toast').classList.add('hide');tundo=null},6000);
+}
+$('#tundo').onclick=()=>{const f=tundo; tundo=null; clearTimeout(tt); $('#toast').classList.add('hide'); if(f)f()};
 function comboFood(c){
   const T=c.items.reduce((a,i)=>({g:a.g+i.g,k:a.k+i.kcal,p:a.p+i.p,c:a.c+i.c,f:a.f+i.f}),{g:0,k:0,p:0,c:0,f:0}), n=c.porties||1;
   return {name:c.name,kcal:T.k/T.g*100,p:T.p/T.g*100,c:T.c/T.g*100,f:T.f/T.g*100,portions:[{n:'portie',g:T.g/n}],_c:c};
@@ -393,19 +548,19 @@ function comboRow(c){
   s1.textContent=c.name; s2.textContent=`${r0(f.kcal*f.portions[0].g/100)} kcal per portie · ${c.items.length} producten`;
   b.append(s1,s2); b.onclick=()=>amount(f); d.appendChild(b);
   const e=document.createElement('button'); e.className='ic'; e.textContent='✎'; e.setAttribute('aria-label','Wijzig'); e.onclick=()=>comboForm(c);
-  const x=document.createElement('button'); x.className='ic'; x.textContent='×'; x.setAttribute('aria-label','Verwijder combinatie');
-  x.onclick=()=>{S.combos=S.combos.filter(y=>y!==c);save();renderOwn()};
-  d.append(e,x); return d;
+  d.append(star(c),e,delBtn(()=>S.combos,c,'Verwijder combinatie')); return d;
 }
 function renderOwn(){
-  const q=$('#q').value.trim().toLowerCase(), box=$('#own'), cb=$('#combos'); box.innerHTML=''; cb.innerHTML='';
-  const m=x=>!q||x.name.toLowerCase().includes(q);
-  const L=sortList(S.foods.filter(m)), C=target==='combo'?[]:sortList(S.combos.filter(m));
-  $('#ol').classList.toggle('hide',!L.length); $('#cl').classList.toggle('hide',!C.length);
-  $('#srt').classList.toggle('hide',L.length+C.length<2);
+  const q=$('#q').value.trim().toLowerCase(), m=S.sort, base=m==='base'&&!q;
+  const box=$('#own'), cb=$('#combos'), emp=$('#emp'); box.innerHTML=''; cb.innerHTML=''; $('#basel').innerHTML='';
+  renderFilter(); $('#catb').classList.toggle('hide',!base);
+  if(base){['#cl','#ol','#emp'].forEach(i=>$(i).classList.add('hide'));renderBase();return}
+  const R=rankAll(q), C=R.filter(x=>x.items), L=R.filter(x=>!x.items);
+  $('#cl').classList.toggle('hide',!C.length); $('#ol').classList.toggle('hide',!L.length);
   L.forEach(p=>box.appendChild(foodRow(p,true,()=>amount(p))));
   C.forEach(c=>cb.appendChild(comboRow(c)));
-  renderSort();
+  const none=!R.length&&!q; emp.classList.toggle('hide',!none);
+  if(none)emp.textContent={recent:'Nog niets gebruikt. Zoek een product, of kies Basis.',count:'Nog niets vaak gebruikt.',fav:'Nog geen favorieten. Tik op ☆ bij een product.',az:'Je hebt nog geen producten opgeslagen. Zoek een product, of kies Basis.'}[m]||'';
 }
 function adopt(p){
   const i=S.foods.findIndex(x=>(p.code&&x.code===p.code)||x.name===p.name);
@@ -441,22 +596,47 @@ $('#fgo').onclick=()=>{
   save(); if(isNew)amount(item); else openAdd(false);
 };
 
-/* online zoeken tijdens het typen */
-const OFF='https://world.openfoodfacts.org', F='fields=code,product_name,brands,nutriments';
-function parse(p,code){
-  const n=p.nutriments||{};
-  let k=n['energy-kcal_100g']; if(k==null&&n['energy_100g']!=null)k=n['energy_100g']/4.184;
-  if(!p.product_name||k==null)return null;
-  return {code:code||p.code||'',name:(p.product_name+(p.brands?' – '+p.brands.split(',')[0]:'')).trim(),
-    kcal:+k,p:+n.proteins_100g||0,c:+n.carbohydrates_100g||0,f:+n.fat_100g||0};
+/* online zoeken */
+const OFF='https://world.openfoodfacts.org';
+const nm=v=>Array.isArray(v)?nm(v[0]):(v&&typeof v==='object'?nm(v.nl||v.en||v.main||Object.values(v)[0]):v||'');
+function nutr(p){
+  const n=p.nutriments; if(!n)return {}; if(!Array.isArray(n))return n;
+  const o={}; n.forEach(x=>{if(x&&x.name&&x['100g']!=null)o[x.name+'_100g']=x['100g']}); return o;
 }
-async function off(q,nl,signal){
-  const u=`${OFF}/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=15&sort_by=unique_scans_n&${F}`+(nl?'&tagtype_0=countries&tag_contains_0=contains&tag_0=netherlands':'');
-  const r=await fetch(u,{signal}); return ((await r.json()).products||[]).map(p=>parse(p)).filter(Boolean);
+function parse(p,code){
+  const n=nutr(p); let k=n['energy-kcal_100g'];
+  if(k==null){const kj=n['energy_100g']??n['energy-kj_100g']; if(kj!=null)k=kj/4.184}
+  const name=String(nm(p.product_name)||nm(p.product_name_nl)||nm(p.generic_name)||'').trim();
+  if(!name||k==null||isNaN(+k))return null;
+  const br=String(nm(p.brands)||'').split(',')[0].trim();
+  return {code:code||p.code||'',name:name+(br?' – '+br:''),kcal:+k,p:+n.proteins_100g||0,c:+n.carbohydrates_100g||0,f:+n.fat_100g||0};
+}
+function getJSON(url,signal,ms){
+  const c=new AbortController(), t=setTimeout(()=>c.abort(),ms);
+  if(signal)signal.addEventListener('abort',()=>c.abort());
+  return fetch(url,{signal:c.signal}).then(r=>{if(!r.ok)throw new Error('http '+r.status);return r.json()}).finally(()=>clearTimeout(t));
+}
+async function sal(q,signal){
+  const j=await getJSON(`https://search.openfoodfacts.org/search?q=${encodeURIComponent(q)}&langs=nl&page_size=25&fields=code,product_name,brands,nutriments`,signal,5000);
+  return (j.hits||[]).map(h=>parse(h)).filter(Boolean);
+}
+async function classic(q,nl,signal){
+  const j=await getJSON(`${OFF}/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=20&sort_by=unique_scans_n&fields=code,product_name,product_name_nl,brands,nutriments`+(nl?'&tagtype_0=countries&tag_contains_0=contains&tag_0=netherlands':''),signal,7000);
+  return (j.products||[]).map(p=>parse(p)).filter(Boolean);
+}
+async function onlineSearch(q,signal){
+  const out=[]; let fails=0, tries=0;
+  const add=a=>{const seen=new Set(out.map(p=>p.code||p.name)); a.forEach(p=>{if(!seen.has(p.code||p.name))out.push(p)})};
+  for(const f of [()=>sal(q,signal),()=>classic(q,true,signal),()=>classic(q,false,signal)]){
+    if(out.length>=6)break; tries++;
+    try{add(await f())}catch(e){if(signal.aborted)throw e; fails++}
+  }
+  if(!out.length&&fails===tries)throw new Error('offline');
+  return out;
 }
 let tmr=null, ctl=null, seq=0;
 function cancelSearch(){clearTimeout(tmr);if(ctl)ctl.abort();ctl=null;seq++}
-$('#q').oninput=()=>{renderOwn();cancelSearch();tmr=setTimeout(suggest,350)};
+$('#q').oninput=()=>{renderOwn();baseMatches();cancelSearch();tmr=setTimeout(suggest,350)};
 async function suggest(){
   const q=$('#q').value.trim(), box=$('#res'), lbl=$('#rl');
   cancelSearch();
@@ -464,18 +644,14 @@ async function suggest(){
   const my=seq; ctl=new AbortController();
   lbl.classList.remove('hide'); box.innerHTML='<div class="msg">Zoeken…</div>';
   try{
-    let items=await off(q,true,ctl.signal);
-    if(items.length<5){
-      const more=await off(q,false,ctl.signal), seen=new Set(items.map(p=>p.code||p.name));
-      more.forEach(p=>{if(!seen.has(p.code||p.name))items.push(p)});
-    }
+    let items=await onlineSearch(q,ctl.signal);
     if(my!==seq)return;
     items=items.filter(p=>!S.foods.some(x=>(p.code&&x.code===p.code)||x.name===p.name));
-    box.innerHTML=''; if(!items.length)box.innerHTML='<div class="msg">Niets nieuws gevonden. Maak het zelf aan met Nieuw product.</div>';
+    box.innerHTML=''; if(!items.length)box.innerHTML='<div class="msg">Niets nieuws gevonden. Maak het zelf aan met + Product.</div>';
     items.forEach(p=>box.appendChild(foodRow(p,false,()=>amount(adopt(p)))));
   }catch(e){
-    if(e.name==='AbortError'||my!==seq)return;
-    box.innerHTML='<div class="msg">Zoeken lukt niet. Heb je internet?</div>';
+    if(my!==seq)return;
+    box.innerHTML='<div class="msg">Online zoeken lukt nu niet (geen internet, of de dienst is traag). Je eigen producten en Basis werken wel.</div>';
   }
 }
 
@@ -511,40 +687,6 @@ $('#mgo').onclick=()=>{
   (S.days[day]=S.days[day]||[]).push({id:Date.now(),meal:curMeal,name:n,g:0,kcal:k,p:0,c:0,f:0});
   save();render();$('#mn').value='';$('#mk').value='';closeAll();
 };
-
-/* scanner */
-let stream=null,timer=null,reader=null,found=false;
-async function scan(){
-  found=false; cancelSearch(); view('scan'); const v=$('#vid'), m=$('#smsg'); m.textContent='Richt de camera op de barcode.';
-  try{
-    if('BarcodeDetector' in window){
-      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
-      v.srcObject=stream; await v.play();
-      const det=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});
-      timer=setInterval(async()=>{try{const c=await det.detect(v);if(c.length)hit(c[0].rawValue)}catch(e){}},300);
-    }else{
-      await new Promise((ok,no)=>{if(window.ZXing)return ok();const s=document.createElement('script');
-        s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
-      reader=new ZXing.BrowserMultiFormatReader();
-      reader.decodeFromVideoDevice(undefined,v,r=>{if(r)hit(r.getText())});
-    }
-  }catch(e){m.textContent='Camera niet beschikbaar. Geef Safari toegang tot de camera of zoek op naam.'}
-}
-function stopScan(){
-  clearInterval(timer);timer=null;
-  try{reader&&reader.reset()}catch(e){} reader=null;
-  const v=$('#vid'); const s=stream||v.srcObject; s&&s.getTracks&&s.getTracks().forEach(t=>t.stop()); stream=null; v.srcObject=null;
-}
-async function hit(code){
-  if(found)return; found=true; stopScan(); view('scan'); $('#smsg').textContent='Zoeken naar '+code+'…';
-  const own=S.foods.find(x=>x.code===code); if(own){amount(own);return}
-  try{
-    const r=await fetch(`${OFF}/api/v2/product/${code}.json?fields=product_name,brands,nutriments`);
-    const j=await r.json(), p=j.status===1&&parse(j.product,code);
-    if(p)amount(adopt(p)); else{openAdd(true);$('#res').innerHTML=`<div class="msg">Barcode ${code} staat niet in de database. Maak het zelf aan met Nieuw product.</div>`}
-  }catch(e){openAdd(true);$('#res').innerHTML='<div class="msg">Opzoeken lukt niet. Heb je internet?</div>'}
-}
-$('#scan').onclick=scan; $('#scanx').onclick=()=>{stopScan();openAdd(false)};
 
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
 document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
