@@ -62,8 +62,9 @@ li .x{color:var(--mute);font-size:22px;width:36px;height:36px}
 .sheet.on{display:flex}
 .pane{background:var(--bg);width:100%;max-width:480px;max-height:90%;overflow:auto;border-radius:18px 18px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom,0px))}
 .pane h2{margin:0 0 12px;font-size:20px;display:flex;justify-content:space-between;align-items:center}
-input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;-webkit-appearance:none}
-input:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;-webkit-appearance:none}
+textarea{font:inherit;color:inherit;resize:none}
+input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 .row{display:flex;gap:8px}
 .row>*{flex:1;min-width:0}
 .btn{background:var(--acc);color:var(--onacc);font-weight:600;border-radius:10px;padding:12px 14px;width:100%}
@@ -99,6 +100,10 @@ li.gh:first-child{padding-top:10px}
 .swb::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .15s}
 .swb.on{background:var(--acc)}
 .swb.on::after{left:23px}
+.dr{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.dr small{color:var(--mute);margin-left:6px}
+li:not(.gh){cursor:pointer}
+#v-det h2>span,#v-shr h2>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fr .ic.fav{color:var(--acc)}
 .fr div.res{cursor:default}
 .tabs.small{width:75%;margin-left:auto}
@@ -136,7 +141,7 @@ li.gh:first-child{padding-top:10px}
       <h2 id="addt">Toevoegen <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
       <div class="tabs" id="ms1"></div>
       <input id="q" type="search" placeholder="Zoek een product" autocomplete="off" autocorrect="off" enterkeyhint="search">
-      <div class="row"><button class="btn alt" id="newf">+ Product</button><button class="btn alt" id="newc">+ Combinatie</button></div>
+      <div class="row"><button class="btn alt" id="newf">+ Product</button><button class="btn alt" id="newc">+ Combinatie</button><button class="btn alt" id="impb" aria-label="Importeer een gedeeld product of gedeelde combinatie" style="flex:0 0 48px;padding:12px 0;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 20h16"/></svg></button></div>
       <div class="chips" id="sortb"></div>
       <div class="chips hide" id="catb" style="margin-top:6px"></div>
       <div class="msg hide" id="emp"></div>
@@ -168,7 +173,42 @@ li.gh:first-child{padding-top:10px}
       <div class="msg" style="padding:0 0 6px">Bijvoorbeeld: sneetje = 35 gram. Je kiest later hoeveel sneetjes je at.</div>
       <div id="fpl"></div>
       <div class="row"><input id="pn" placeholder="Naam, bijv. sneetje" style="flex:2"><input id="pg" type="number" inputmode="decimal" placeholder="gram"><button class="btn alt" id="pa" style="flex:0 0 52px;margin-bottom:10px" aria-label="Voeg portie toe">+</button></div>
-      <button class="btn" id="fgo">Bewaar</button>
+      <div class="row"><button class="btn alt hide" id="fshare" style="flex:0 0 32%">Deel</button><button class="btn" id="fgo">Bewaar</button></div>
+    </div>
+    <!-- details van een ingevulde regel -->
+    <div id="v-det" class="hide">
+      <h2><span id="dn"></span> <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
+      <div class="msg" id="dsub" style="padding-top:0"></div>
+      <div id="dtab"></div>
+      <div class="lbl" id="dpl">Per 100 gram</div>
+      <div id="dper"></div>
+      <div class="msg" id="dmix"></div>
+      <button class="btn" id="dedit">Wijzig</button>
+    </div>
+    <!-- snelle regel wijzigen -->
+    <div id="v-qe" class="hide">
+      <h2>Wijzig <button class="ic" data-close aria-label="Terug">✕</button></h2>
+      <div class="tabs" id="ms3"></div>
+      <input id="qn" placeholder="Naam">
+      <input id="qk" type="number" inputmode="decimal" placeholder="kcal">
+      <button class="btn" id="qgo">Opslaan</button>
+    </div>
+    <!-- delen -->
+    <div id="v-shr" class="hide">
+      <h2><span>Delen</span> <button class="ic" id="shx" aria-label="Terug">✕</button></h2>
+      <div class="msg" id="shn" style="padding-top:0"></div>
+      <textarea id="shc" rows="4" readonly></textarea>
+      <div class="row"><button class="btn" id="shcopy">Kopieer</button><button class="btn alt hide" id="shsend">Deel via…</button></div>
+      <div class="msg" id="shm">De ander plakt dit bericht bij Importeren (het pijltje naast + Combinatie).</div>
+    </div>
+    <!-- importeren -->
+    <div id="v-imp" class="hide">
+      <h2>Importeren <button class="ic" data-close aria-label="Terug">✕</button></h2>
+      <div class="msg" style="padding-top:0">Plak het bericht of de code die je hebt gekregen.</div>
+      <textarea id="impt" rows="4" placeholder="MT1.…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+      <button class="btn alt" id="impp">Plak van klembord</button>
+      <div class="msg" id="impm"></div>
+      <button class="btn hide" id="impgo">Voeg toe</button>
     </div>
     <!-- kalender -->
     <div id="v-cal" class="hide">
@@ -198,7 +238,7 @@ li.gh:first-child{padding-top:10px}
       <div id="cil"></div>
       <button class="btn alt" id="cadd" style="margin-top:8px">Product toevoegen</button>
       <div class="msg" id="ctot"></div>
-      <button class="btn" id="cgo">Bewaar</button>
+      <div class="row"><button class="btn alt hide" id="cshare" style="flex:0 0 32%">Deel</button><button class="btn" id="cgo">Bewaar</button></div>
     </div>
     <!-- grafiek -->
     <div id="v-stats" class="hide">
@@ -250,7 +290,7 @@ const MEALS=[['o','Ontbijt'],['l','Lunch'],['a','Avondeten'],['t','Tussendoor']]
 const defMeal=()=>{const h=new Date().getHours();return h<10?'o':h<15?'l':h<21?'a':'t'};
 let curMeal=defMeal(), manual=false;
 function renderMeals(){
-  ['#ms1','#ms2'].forEach(id=>{
+  ['#ms1','#ms2','#ms3'].forEach(id=>{
     const box=$(id); box.innerHTML='';
     MEALS.forEach(([k,n])=>{const b=document.createElement('button');b.textContent=n;b.className=k===curMeal?'on':'';
       b.onclick=()=>{curMeal=k;manual=true;renderMeals()};box.appendChild(b)});
@@ -318,6 +358,7 @@ function render(){
       const li=document.createElement('li');
       li.innerHTML='<div class="n"><span></span><small></small></div><div class="k"></div><button class="x" aria-label="Verwijder">×</button>';
       li.querySelector('span').textContent=e.name;
+      li.onclick=ev=>{if(!ev.target.closest('.x'))openDet(e)};
       li.querySelector('small').textContent=e.label||(e.g?e.g+' g':'');
       li.querySelector('.k').textContent=r0(e.kcal);
       li.querySelector('.x').onclick=()=>{
@@ -359,16 +400,22 @@ const shift=n=>{const d=new Date(day+'T12:00');d.setDate(d.getDate()+n);day=iso(
 $('#prev').onclick=()=>shift(-1); $('#next').onclick=()=>shift(1);
 
 /* sheets */
-const views=['add','food','amt','combo','stats','cal','set'];
+const views=['add','food','amt','combo','stats','cal','det','qe','shr','imp','set'];
 function view(v){curView=v;views.forEach(x=>$('#v-'+x).classList.toggle('hide',x!==v));$('#sh').classList.add('on')}
-function closeAll(){cancelSearch();target='day';$('#sh').classList.remove('on')}
-function back(){if(target==='combo'&&(curView==='add'||curView==='amt')){cancelSearch();renderCombo();view('combo')}else closeAll()}
+function closeAll(){endEdit();det=null;cancelSearch();target='day';$('#sh').classList.remove('on')}
+function back(){
+  if(curView==='shr'){view(shBack==='combo'?'combo':'food');return}
+  if(curView==='imp'){openAdd(false);return}
+  if(ed&&(curView==='amt'||curView==='qe')){const e=ed;endEdit();openDet(e);return}
+  if(target==='combo'&&(curView==='add'||curView==='amt')){cancelSearch();renderCombo();view('combo');return}
+  closeAll();
+}
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=back);
 $('#sh').onclick=e=>{if(e.target.id==='sh')back()};
 function openAdd(clear){
   if(clear)$('#q').value='';
   const cm=target==='combo';
-  ['#ms1','#quick','#newc'].forEach(i=>$(i).classList.toggle('hide',cm));
+  ['#ms1','#quick','#newc','#impb'].forEach(i=>$(i).classList.toggle('hide',cm));
   $('#addt').firstChild.textContent=cm?'Product kiezen ':'Toevoegen ';
   renderOwn(); baseMatches(); suggest(); view('add');
 }
@@ -415,11 +462,130 @@ function stats(){
 }
 $('#stat').onclick=()=>{stSel=-1;stats();view('stats')};
 
+/* details en wijzigen van een ingevulde regel */
+let det=null, ed=null, edSaved=null;
+const MN={o:'Ontbijt',l:'Lunch',a:'Avondeten',t:'Tussendoor'};
+const f1=n=>(n<10?Math.round(n*10)/10:Math.round(n)).toLocaleString('nl-NL');
+function drow(l,v,sm){
+  const d=document.createElement('div'), a=document.createElement('span'), b=document.createElement('span'), bb=document.createElement('b'); d.className='dr';
+  a.textContent=l; bb.textContent=v; b.appendChild(bb);
+  if(sm){const s=document.createElement('small'); s.textContent=sm; b.appendChild(s)}
+  d.append(a,b); return d;
+}
+function renderDet(){
+  const e=det; $('#dn').textContent=e.name;
+  $('#dsub').textContent=`${MN[e.meal]||'Overig'} · ${e.g>0?(e.label||r0(e.g)+' g'):'snel toegevoegd'}`;
+  const pc=(v,goal)=>goal>0?`${r0(v/goal*100)}% van je dagdoel`:'';
+  const box=$('#dtab'); box.innerHTML='';
+  box.append(drow('Calorieën',r0(e.kcal)+' kcal',pc(e.kcal,S.goal)),drow('Eiwit',f1(e.p)+' g',pc(e.p,S.gp)),drow('Koolhydraten',f1(e.c)+' g',pc(e.c,S.gc)),drow('Vet',f1(e.f)+' g',pc(e.f,S.gf)));
+  const per=$('#dper'); per.innerHTML=''; $('#dpl').classList.toggle('hide',!(e.g>0));
+  if(e.g>0){const k=100/e.g; per.append(drow('Calorieën',r0(e.kcal*k)+' kcal'),drow('Eiwit',f1(e.p*k)+' g'),drow('Koolhydraten',f1(e.c*k)+' g'),drow('Vet',f1(e.f*k)+' g'))}
+  const pk=e.p*4, ck=e.c*4, fk=e.f*9, t=pk+ck+fk;
+  $('#dmix').textContent=t>0?`Verdeling van de macro's: ${r0(pk/t*100)}% eiwit · ${r0(ck/t*100)}% koolhydraten · ${r0(fk/t*100)}% vet`:'';
+}
+function openDet(e){det=e;renderDet();view('det')}
+function endEdit(){if(ed&&edSaved){curMeal=edSaved.m;manual=edSaved.a}ed=null;edSaved=null}
+function beginEdit(e){ed=e;edSaved={m:curMeal,a:manual};curMeal=e.meal||defMeal()}
+function startEdit(e){
+  const g=e.g, f=S.foods.find(x=>x.name===e.name), c=S.combos.find(x=>x.name===e.name);
+  const portions=(f&&f.portions)?f.portions:(c&&c.items.length?comboFood(c).portions:[]);
+  let qty=e.qty, pn=e.pn;
+  if(qty==null&&e.label){const m=e.label.match(/^([\d.]+) × (.+) \(\d+ g\)$/);if(m){qty=+m[1];pn=m[2]}}
+  beginEdit(e);
+  amount({name:e.name,kcal:e.kcal/g*100,p:e.p/g*100,c:e.c/g*100,f:e.f/g*100,portions:portions.map(x=>({...x}))},{pn,qty,g});
+}
+$('#dedit').onclick=()=>{
+  const e=det; if(e.g>0){startEdit(e);return}
+  beginEdit(e); renderMeals(); $('#qn').value=e.name; $('#qk').value=Math.round(e.kcal*10)/10; view('qe');
+};
+$('#qgo').onclick=()=>{
+  const k=+$('#qk').value; if(!(k>0))return;
+  Object.assign(ed,{name:$('#qn').value.trim()||'Snel toegevoegd',kcal:k,meal:curMeal}); save(); render(); closeAll();
+};
+
+/* delen en importeren */
+const r3=n=>Math.round(n*1000)/1000;
+const b64e=t=>{const u=new TextEncoder().encode(t);let s='';u.forEach(x=>s+=String.fromCharCode(x));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+const b64d=b=>{b=b.replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';const s=atob(b),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return new TextDecoder().decode(u)};
+const foodPayload=f=>({t:'f',n:f.name,k:r3(f.kcal),p:r3(f.p),c:r3(f.c),f:r3(f.f),o:(f.portions||[]).map(x=>[x.n,r3(x.g)])});
+const comboPayload=c=>({t:'c',n:c.name,o:c.porties||1,i:c.items.map(x=>[x.name,r3(x.g),r3(x.kcal),r3(x.p),r3(x.c),r3(x.f),x.label||''])});
+let shBack='food';
+function openShare(from,payload){
+  shBack=from; const code='MT1.'+b64e(JSON.stringify(payload));
+  $('#shn').textContent=(payload.t==='f'?'Product: ':'Combinatie: ')+payload.n;
+  $('#shc').value=`MacroTracker · ${payload.n}\n${code}`;
+  $('#shm').textContent='De ander plakt dit bericht bij Importeren (het pijltje naast + Combinatie).';
+  $('#shsend').classList.toggle('hide',typeof navigator.share!=='function'); view('shr');
+}
+$('#fshare').onclick=()=>{
+  const n=$('#fn').value.trim(); if(!n||$('#fk').value==='')return;
+  const po=fPort.slice(), pn=$('#pn').value.trim(), pg=+$('#pg').value; if(pn&&pg>0)po.push({n:pn,g:pg});
+  openShare('food',foodPayload({name:n,kcal:+$('#fk').value||0,p:+$('#fp').value||0,c:+$('#fc').value||0,f:+$('#ff').value||0,portions:po}));
+};
+$('#cshare').onclick=()=>{syncCombo();if(!cd.name||!cd.items.length)return;openShare('combo',comboPayload({name:cd.name,porties:cd.porties,items:cd.items}))};
+$('#shc').onfocus=e=>e.target.select();
+$('#shcopy').onclick=async()=>{
+  const t=$('#shc').value;
+  try{await navigator.clipboard.writeText(t);$('#shm').textContent='Gekopieerd. Plak het in een bericht.'}
+  catch(e){const a=$('#shc');a.focus();a.select();try{document.execCommand('copy');$('#shm').textContent='Gekopieerd. Plak het in een bericht.'}catch(_){$('#shm').textContent='Kopiëren lukte niet. Houd de tekst ingedrukt en kies Kopieer.'}}
+};
+$('#shsend').onclick=async()=>{try{await navigator.share({text:$('#shc').value})}catch(e){}};
+$('#shx').onclick=()=>view(shBack==='combo'?'combo':'food');
+
+const num=(x,max)=>{x=+x;if(!isFinite(x)||x<0||x>max)throw 0;return x};
+const str=(x,n=80)=>String(x==null?'':x).trim().slice(0,n);
+function validate(o){
+  if(!o||typeof o!=='object')throw 0;
+  const n=str(o.n); if(!n)throw 0;
+  if(o.t==='f'){
+    const po=(Array.isArray(o.o)?o.o:[]).slice(0,20).map(x=>({n:str(x[0],40),g:num(x[1],5000)})).filter(x=>x.n&&x.g>0);
+    return {t:'f',name:n,kcal:num(o.k,1000),p:num(o.p,1000),c:num(o.c,1000),f:num(o.f,1000),portions:po};
+  }
+  if(o.t==='c'){
+    if(!Array.isArray(o.i)||!o.i.length||o.i.length>60)throw 0;
+    const items=o.i.map(x=>{const g=num(x[1],100000);if(!(g>0))throw 0;return {name:str(x[0])||'Product',g,kcal:num(x[2],100000),p:num(x[3],100000),c:num(x[4],100000),f:num(x[5],100000),label:str(x[6])}});
+    return {t:'c',name:n,porties:Math.max(.1,num(o.o,1000)||1),items};
+  }
+  throw 0;
+}
+function parseCode(text){
+  const m=String(text).match(/MT1\.[A-Za-z0-9_-]+/); if(!m)return null;
+  try{return validate(JSON.parse(b64d(m[0].slice(4))))}catch(e){return null}
+}
+const uniq=(n,list)=>{let r=n,i=2;while(list.some(x=>x.name===r))r=`${n} (${i++})`;return r};
+const comboKcal=c=>c.items.reduce((a,i)=>a+i.kcal,0);
+let impObj=null;
+function impPreview(){
+  const t=$('#impt').value, m=$('#impm'), go=$('#impgo'); impObj=t.trim()?parseCode(t):null;
+  go.classList.toggle('hide',!impObj);
+  if(!t.trim()){m.textContent='';return}
+  if(!impObj){m.textContent='Dit is geen geldige code. Plak het hele bericht, inclusief de code die met MT1. begint.';return}
+  const o=impObj;
+  m.textContent=o.t==='f'?`Product: ${o.name} · ${r0(o.kcal)} kcal per 100 g · E ${f1(o.p)} · K ${f1(o.c)} · V ${f1(o.f)}`:`Combinatie: ${o.name} · ${o.items.length} producten · ${r0(comboKcal(o)/o.porties)} kcal per portie`;
+}
+$('#impt').oninput=impPreview;
+$('#impb').onclick=()=>{$('#impt').value='';impPreview();view('imp')};
+$('#impp').onclick=async()=>{
+  try{$('#impt').value=await navigator.clipboard.readText()}
+  catch(e){$('#impm').textContent='Plakken lukte niet. Houd in het vak ingedrukt en kies Plak.';return}
+  impPreview();
+};
+$('#impgo').onclick=()=>{
+  const o=impObj; if(!o)return; const list=o.t==='f'?S.foods:S.combos;
+  const dup=list.find(x=>x.name===o.name&&(o.t==='f'?Math.round(x.kcal)===Math.round(o.kcal)&&Math.round(x.p*10)===Math.round(o.p*10):x.items.length===o.items.length&&Math.round(comboKcal(x))===Math.round(comboKcal(o))));
+  if(dup){$('#impm').textContent='Dit staat al in je lijst.';return}
+  const name=uniq(o.name,list); let item;
+  if(o.t==='f'){item={code:'',name,kcal:o.kcal,p:o.p,c:o.c,f:o.f,portions:o.portions,added:Date.now()};S.foods.push(item)}
+  else{item={id:Date.now(),name,porties:o.porties,items:o.items,added:Date.now()};S.combos.push(item)}
+  S.sort='recent'; save(); $('#impt').value=''; impPreview(); target='day'; openAdd(true);
+  toast('Toegevoegd: '+name,()=>{const i=list.indexOf(item);if(i>=0){list.splice(i,1);save();renderOwn()}});
+};
+
 /* combinaties */
 let cd={items:[],name:'',porties:1,ref:null};
 function comboForm(c){
   cd=c?{items:c.items.map(x=>({...x})),name:c.name,porties:c.porties||1,ref:c}:{items:[],name:'',porties:1,ref:null};
-  renderCombo(); view('combo');
+  renderCombo(); $('#cshare').classList.toggle('hide',!c); view('combo');
 }
 function syncCombo(){cd.name=$('#cn').value.trim();cd.porties=+$('#cp').value>0?+$('#cp').value:1}
 function renderTot(){
@@ -584,6 +750,7 @@ function foodForm(p){
   editing=p||null; isNew=!p; $('#ft').firstChild.textContent=p?'Wijzig product ':'Nieuw product ';
   $('#fn').value=p?p.name:''; $('#fk').value=p?r0(p.kcal*10)/10:''; $('#fp').value=p?r0(p.p*10)/10:''; $('#fc').value=p?r0(p.c*10)/10:''; $('#ff').value=p?r0(p.f*10)/10:'';
   fPort=p&&p.portions?p.portions.map(x=>({...x})):[]; $('#pn').value=''; $('#pg').value=''; renderPort();
+  $('#fshare').classList.toggle('hide',!p);
   view('food');
 }
 $('#newf').onclick=()=>foodForm(null);
@@ -657,10 +824,13 @@ async function suggest(){
 
 /* hoeveelheid */
 let mode=-1;
-function amount(p){
+function amount(p,init){
   renderMeals(); pick=p; $('#an').firstChild.textContent=p.name; $('#ap').textContent=p._c?`${r0(p.kcal*p.portions[0].g/100)} kcal per portie · ${p._c.items.length} producten`:info(p);
-  $('#ms2').classList.toggle('hide',target==='combo'); $('#ago').textContent=target==='combo'?'Toevoegen aan combinatie':'Toevoegen';
-  setMode(p.portions&&p.portions.length?0:-1); view('amt'); setTimeout(()=>$('#ag').select(),50);
+  $('#ms2').classList.toggle('hide',target==='combo'); $('#ago').textContent=ed?'Opslaan':target==='combo'?'Toevoegen aan combinatie':'Toevoegen';
+  let m=p.portions&&p.portions.length?0:-1, val=null;
+  if(init){m=-1;val=init.g;if(init.pn&&init.qty>0){const i=(p.portions||[]).findIndex(x=>x.n===init.pn);if(i>=0){m=i;val=init.qty}}}
+  setMode(m); if(val!=null){$('#ag').value=Math.round(val*100)/100;calc()}
+  view('amt'); setTimeout(()=>$('#ag').select(),50);
 }
 function setMode(m){
   mode=m; const P=pick.portions||[], box=$('#modes');
@@ -676,7 +846,8 @@ $('#ag').oninput=calc;
 $('#ago').onclick=()=>{
   const v=+$('#ag').value, g=grams(); if(!(v>0)||!(g>0))return; const k=g/100;
   const label=mode>=0?`${v} × ${pick.portions[mode].n} (${r0(g)} g)`:'';
-  const item={name:pick.name,g,label,kcal:pick.kcal*k,p:pick.p*k,c:pick.c*k,f:pick.f*k};
+  const item={name:pick.name,g,label,qty:v,pn:mode>=0?pick.portions[mode].n:null,kcal:pick.kcal*k,p:pick.p*k,c:pick.c*k,f:pick.f*k};
+  if(ed){Object.assign(ed,item,{meal:curMeal});save();render();closeAll();return}
   if(target==='combo'){cd.items.push(item);renderCombo();view('combo');return}
   const x=pick._c||pick; x.used=(x.used||0)+1; x.last=Date.now();
   (S.days[day]=S.days[day]||[]).push({id:Date.now(),meal:curMeal,...item});
