@@ -10,9 +10,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="icon.png?v=2">
 <title>MacroTracker</title>
 <style>
-:root{--bg:#eef1ef;--card:#fff;--ink:#1b2321;--mute:#68736f;--line:#d8dfdc;--acc:#1f6f63;--onacc:#fff;--bad:#a6382f;--tint:rgba(31,111,99,.22);--m1:#3f7fc4;--m2:#d49a2a;--m3:#c25d86;--ftint:rgba(63,127,196,.22);
+:root{--bg:#eef1ef;--card:#fff;--ink:#1b2321;--mute:#68736f;--line:#d8dfdc;--acc:#1f6f63;--onacc:#fff;--bad:#a6382f;--tint:rgba(31,111,99,.22);--c0:#ff2d55;--c1:#30d158;--c2:#0a84ff;--c3:#ff9f0a;--ftint:rgba(63,127,196,.22);
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121715;--card:#1b2220;--ink:#e8eeec;--mute:#8d9a96;--line:#2c3733;--acc:#5fb8a8;--onacc:#0c1412;--bad:#e0766c;--tint:rgba(95,184,168,.3);--m1:#6aa6e6;--m2:#e8b455;--m3:#e07fa5;--ftint:rgba(106,166,230,.28)}}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121715;--card:#1b2220;--ink:#e8eeec;--mute:#8d9a96;--line:#2c3733;--acc:#5fb8a8;--onacc:#0c1412;--bad:#e0766c;--tint:rgba(95,184,168,.3);--c0:#ff375f;--c1:#32d74b;--c2:#409cff;--c3:#ff9f0a;--ftint:rgba(106,166,230,.28)}}
 *{box-sizing:border-box;touch-action:pan-x pan-y}
 html{-webkit-touch-callout:none}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -121,6 +121,23 @@ li:not(.gh){cursor:pointer}
 .sw1{width:32px;height:32px;border-radius:50%;box-shadow:0 0 0 1px var(--line)}
 .sw1.on{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--ink)}
 .cpick{width:36px;height:34px;padding:0;margin:0;border:0;background:none;border-radius:50%}
+.sh{margin:20px 4px 6px;font-size:12px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.sh:first-of-type{margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 12px 10px}
+.card input{background:var(--bg)}
+.card .tabs button{background:var(--bg)}
+.card .tabs button.on{background:var(--acc);border-color:var(--acc);color:var(--onacc)}
+.card .tabs{margin-bottom:0}
+.sl{color:var(--mute);font-size:14px;margin:12px 0 6px}
+.sl:first-child{margin-top:0}
+.card .grid{margin-bottom:-2px}
+.sep{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.td{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.wkscroll{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.wkscroll::-webkit-scrollbar{display:none}
+.wkw{flex:none;width:100%;scroll-snap-align:start}
+.wkw svg{display:block;width:100%;height:auto}
+.wkcap{color:var(--mute);font-size:12px;text-align:right;margin:2px 2px 0;min-height:1.2em}
 .fr .ic.fav{color:var(--acc)}
 .fr div.res{cursor:default}
 .tabs.small{width:75%;margin-left:auto}
@@ -281,27 +298,35 @@ li:not(.gh){cursor:pointer}
     <!-- instellingen -->
     <div id="v-set" class="hide">
       <h2>Instellingen <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
-      <div class="grid">
+      <div class="sh">Doelen</div>
+      <div class="card"><div class="grid">
         <label>Dagdoel (kcal)<input id="goal" type="number" inputmode="numeric"></label>
         <label>Eiwit (g)<input id="gp" type="number" inputmode="numeric"></label>
         <label>Koolhydraten (g)<input id="gc" type="number" inputmode="numeric"></label>
         <label>Vet (g)<input id="gf" type="number" inputmode="numeric"></label>
+      </div></div>
+      <div class="sh">Uiterlijk</div>
+      <div class="card">
+        <div class="sl">Accentkleur</div>
+        <div class="swatches" id="accsw" style="margin-top:0"></div>
       </div>
-      <div class="lbl">Accentkleur</div>
-      <div class="swatches" id="accsw"></div>
-      <div class="lbl">Startscherm</div>
-      <div class="msg" style="padding:0 0 4px">Weergave</div><div class="tabs" id="hsView"></div>
-      <div class="msg" style="padding:0 0 4px">Calorieën tonen als</div><div class="tabs" id="hsShow"></div>
-      <div class="swr" style="margin:10px 0 6px"><span>Weekgrafiek</span><button class="swb" id="wksw" role="switch" aria-checked="false" aria-label="Weekgrafiek"></button></div>
-      <div id="wkopts" class="hide">
-        <div class="msg" style="padding:0 0 4px">Stijl</div><div class="tabs" id="hsStyle"></div>
-        <div class="msg" style="padding:0 0 4px">Waarden</div><div class="tabs" id="hsMode"></div>
+      <div class="sh">Startscherm</div>
+      <div class="card">
+        <div class="sl">Weergave</div><div class="tabs" id="hsView"></div>
+        <div class="sl">Calorieën tonen als</div><div class="tabs" id="hsShow"></div>
+        <div class="swr sep"><span>Weekgrafiek</span><button class="swb" id="wksw" role="switch" aria-checked="false" aria-label="Weekgrafiek"></button></div>
+        <div id="wkopts" class="hide">
+          <div class="sl">Stijl</div><div class="tabs" id="hsStyle"></div>
+          <div class="sl">Waarden</div><div class="tabs" id="hsMode"></div>
+        </div>
       </div>
-      <div class="lbl">Extra</div>
-      <div class="swr"><span>Vergelijking onder je kcal</span><button class="swb on" id="funsw" role="switch" aria-checked="true" aria-label="Vergelijking onder je kcal"></button></div>
-      <div class="lbl">Back-up</div>
-      <div class="row"><button class="btn alt" id="exp">Kopieer data</button><button class="btn alt" id="imp">Plak data</button></div>
-      <div class="msg" id="setmsg">Alles staat alleen op dit toestel. Maak af en toe een back-up.</div>
+      <div class="sh">Extra</div>
+      <div class="card"><div class="swr"><span>Vergelijking onder je kcal</span><button class="swb on" id="funsw" role="switch" aria-checked="true" aria-label="Vergelijking onder je kcal"></button></div></div>
+      <div class="sh">Back-up</div>
+      <div class="card">
+        <div class="row"><button class="btn alt" id="exp">Kopieer data</button><button class="btn alt" id="imp">Plak data</button></div>
+        <div class="msg" id="setmsg" style="padding-bottom:0">Alles staat alleen op dit toestel. Maak af en toe een back-up.</div>
+      </div>
     </div>
   </div>
 </div>
@@ -421,20 +446,43 @@ function renderSet(){
 $('#wksw').onclick=()=>{S.hs.wk=!S.hs.wk;save();renderSet();render()};
 
 /* ringen en weekgrafiek */
-const MET=[['k','kcal','var(--acc)','goal'],['p','Eiwit','var(--m1)','gp'],['c','Koolh.','var(--m2)','gc'],['f','Vet','var(--m3)','gf']];
+const MET=[['k','kcal','var(--c0)','goal'],['p','Eiwit','var(--c1)','gp'],['c','Koolh.','var(--c2)','gc'],['f','Vet','var(--c3)','gf']];
+const RING=[['k','var(--c0)',['#fa114f','#ff7a9a'],90],['p','var(--c1)',['#30d158','#9af5ae'],74],['c','var(--c2)',['#0a84ff','#6fd6ff'],58],['f','var(--c3)',['#ff9f0a','#ffe066'],42]];
+const lerpHex=(A,B,t)=>{const a=h2rgb(A),b=h2rgb(B);return '#'+a.map((v,i)=>Math.round(v+(b[i]-v)*t).toString(16).padStart(2,'0')).join('')};
+const rpt=(r,f)=>{const a=2*Math.PI*f;return [100+r*Math.sin(a),100-r*Math.cos(a)]};
+function arcSegs(r,f,A,B){
+  const n=Math.max(2,Math.ceil(f*60)); let o='';
+  for(let i=0;i<n;i++){
+    const a=f*i/n, b=Math.min(f,f*(i+1)/n+.004), [x0,y0]=rpt(r,a), [x1,y1]=rpt(r,b);
+    o+=`<path d="M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}" fill="none" stroke-width="12" stroke="${lerpHex(A,B,(i+.5)/n)}"/>`;
+  }
+  return o;
+}
+function ringLap(r,f,A,B){
+  if(f<=.002)return '';
+  const [sx,sy]=rpt(r,0), [ex,ey]=rpt(r,f);
+  return `<circle cx="${sx.toFixed(2)}" cy="${sy.toFixed(2)}" r="6" fill="${A}"/>${arcSegs(r,f,A,B)}<circle cx="${ex.toFixed(2)}" cy="${ey.toFixed(2)}" r="6" fill="${B}"/>`;
+}
 function renderRing(t){
   const on=S.hs.view==='ring'; $('#hero').classList.toggle('ringmode',on); if(!on)return;
-  let g='';
-  [['k',S.goal,'var(--acc)',90],['p',S.gp,'var(--m1)',74],['c',S.gc,'var(--m2)',58],['f',S.gf,'var(--m3)',42]].forEach(([k,goal,col,r])=>{
-    const c=2*Math.PI*r, p=Math.min(1,t[k]/goal);
-    g+=`<circle cx="100" cy="100" r="${r}" fill="none" stroke-width="12" style="stroke:${col};stroke-opacity:.18"/>`;
-    if(p>.002)g+=`<circle cx="100" cy="100" r="${r}" fill="none" stroke-width="12" stroke-linecap="round" stroke-dasharray="${(c*p).toFixed(2)} ${c.toFixed(2)}" transform="rotate(-90 100 100)" style="stroke:${col}"/>`;
+  let defs='<defs><filter id="rb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.2"/></filter>', g='';
+  RING.forEach(([k,v,[A,B],r],i)=>{
+    const R=r+6, Rn=r-6;
+    defs+=`<clipPath id="rc${i}"><path clip-rule="evenodd" fill-rule="evenodd" d="M${100-R} 100a${R} ${R} 0 1 0 ${2*R} 0a${R} ${R} 0 1 0 ${-2*R} 0ZM${100-Rn} 100a${Rn} ${Rn} 0 1 0 ${2*Rn} 0a${Rn} ${Rn} 0 1 0 ${-2*Rn} 0Z"/></clipPath>`;
+    const goal=k==='k'?S.goal:S[{p:'gp',c:'gc',f:'gf'}[k]], p=t[k]/goal;
+    g+=`<circle cx="100" cy="100" r="${r}" fill="none" stroke-width="12" stroke="${A}" stroke-opacity=".2"/>`;
+    g+=ringLap(r,Math.min(p,1),A,B);
+    if(p>1){
+      const q=(p-1)%1||1, a=2*Math.PI*q, [hx,hy]=rpt(r,q);
+      g+=`<g clip-path="url(#rc${i})"><circle cx="${(hx+Math.cos(a)*2.5).toFixed(2)}" cy="${(hy+Math.sin(a)*2.5).toFixed(2)}" r="6" fill="#000" fill-opacity=".5" filter="url(#rb)"/></g>`;
+      g+=ringLap(r,q,A,B);
+    }
   });
   const left=S.goal-t.k, eaten=S.hs.show==='eaten', num=eaten?r0(t.k):Math.abs(r0(left));
   g+=`<text x="100" y="103" text-anchor="middle" font-size="20" font-weight="700" style="fill:${!eaten&&left<0?'var(--bad)':'var(--ink)'}">${num.toLocaleString('nl-NL')}</text>`;
   g+=`<text x="100" y="118" text-anchor="middle" font-size="10" style="fill:var(--mute)">${eaten?'gegeten':left<0?'te veel':'over'}</text>`;
-  $('#ring').innerHTML=g;
-  $('#rleg').innerHTML=[['Kcal','k','var(--acc)',S.goal],['Eiwit','p','var(--m1)',S.gp],['Koolh.','c','var(--m2)',S.gc],['Vet','f','var(--m3)',S.gf]]
+  $('#ring').innerHTML=defs+'</defs>'+g;
+  $('#rleg').innerHTML=[['Kcal','k','var(--c0)',S.goal],['Eiwit','p','var(--c1)',S.gp],['Koolh.','c','var(--c2)',S.gc],['Vet','f','var(--c3)',S.gf]]
     .map(([n,k,c,g2])=>`<div class="rl"><i style="background:${c}"></i><span class="n">${n}</span><span><b>${r0(t[k])}</b>/${g2}</span></div>`).join('');
 }
 function smoothPath(P){
@@ -449,52 +497,69 @@ function smoothPath(P){
 }
 function renderWeek(){
   const box=$('#wk'), H=S.hs; box.classList.toggle('hide',!H.wk); if(!H.wk)return; box.innerHTML='';
-  const sel=new Date(day+'T12:00'), mon=new Date(sel); mon.setDate(sel.getDate()-((sel.getDay()+6)%7));
-  const tk=iso(new Date()), days=[];
-  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const key=iso(d);days.push({key,d,t:tot(key),fut:key>tk,sel:key===day})}
+  const tk=iso(new Date()), mondayOf=k=>{const d=new Date(k+'T12:00');d.setDate(d.getDate()-((d.getDay()+6)%7));return d};
+  const last=mondayOf(tk), selM=mondayOf(day), logged=Object.keys(S.days).filter(k=>S.days[k].length).sort();
+  let first=logged.length?mondayOf(logged[0]):last; const lim=new Date(last); lim.setDate(lim.getDate()-7*51);
+  if(first<lim)first=lim; if(selM<first)first=selM;
+  const weeks=[]; for(const m=new Date(first);m<=last;m.setDate(m.getDate()+7))weeks.push(weekDays(new Date(m)));
+  function weekDays(mon){const o=[];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const key=iso(d);o.push({key,d,t:tot(key),fut:key>tk,sel:key===day})}return o}
   const pct=H.wkMode==='pct', bars=H.wkStyle==='bar', ser=pct?MET:MET.filter(m=>m[0]===H.wkMetric);
   const chips=document.createElement('div'); chips.className='chips'; chips.style.margin='12px 0 2px';
   MET.forEach(m=>{
     const b=document.createElement('button'); b.textContent=m[1];
-    if(pct){const i=document.createElement('i');i.style.cssText=`display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:${m[2]}`;b.prepend(i);b.disabled=true;b.style.opacity=1;b.style.cursor='default'}
+    const i=document.createElement('i'); i.className='td'; i.style.background=m[2]; b.prepend(i);
+    if(pct){b.disabled=true;b.style.opacity=1;b.style.cursor='default'}
     else{b.className=m[0]===H.wkMetric?'on':'';b.onclick=()=>{S.hs.wkMetric=m[0];save();renderWeek()}}
     chips.appendChild(b);
   });
   box.appendChild(chips);
   const W=320,Ht=112,pt=16,pb=18,base=pt+(Ht-pt-pb), cw=W/7, cx=i=>i*cw+cw/2;
   const val=(d,m)=>pct?d.t[m[0]]/S[m[3]]:d.t[m[0]], ref=pct?1:S[ser[0][3]];
-  const vals=days.flatMap(d=>d.t.n&&!d.fut?ser.map(m=>val(d,m)):[]);
-  const max=Math.max(pct?1.2:ref*1.15,...vals.map(v=>v*1.08)), Y=v=>pt+(Ht-pt-pb)*(1-v/max);
-  let g=`<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Weekoverzicht">`;
-  days.forEach((d,i)=>{if(d.sel)g+=`<rect x="${(i*cw+2).toFixed(1)}" y="2" width="${(cw-4).toFixed(1)}" height="${base-2}" rx="8" style="fill:var(--line);opacity:.65"/>`});
-  g+=`<line x1="0" x2="${W}" y1="${base}" y2="${base}" style="stroke:var(--line)"/>`;
-  g+=`<line x1="0" x2="${W}" y1="${Y(ref).toFixed(1)}" y2="${Y(ref).toFixed(1)}" stroke-dasharray="4 3" style="stroke:var(--mute);opacity:.6"/>`;
-  g+=`<text x="2" y="${(Y(ref)-3).toFixed(1)}" font-size="9" style="fill:var(--mute)">${pct?'100%':'doel '+ref}</text>`;
-  if(bars){
-    days.forEach((d,i)=>{
-      if(d.fut||!d.t.n)return;
-      const n=ser.length, bw=n>1?cw*.17:cw*.5, gap=n>1?1.5:0, x0=cx(i)-(n*bw+(n-1)*gap)/2;
-      ser.forEach((m,j)=>{const y=Y(val(d,m));g+=`<rect x="${(x0+j*(bw+gap)).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1,base-y).toFixed(1)}" rx="${n>1?1.5:3}" style="fill:${m[2]};opacity:${d.sel?1:.5}"/>`});
-    });
-  }else{
-    ser.forEach(m=>{
-      const segs=[]; let cur=[];
-      days.forEach((d,i)=>{if(!d.fut&&d.t.n)cur.push({x:cx(i),y:Y(val(d,m)),d});else if(cur.length){segs.push(cur);cur=[]}});
-      if(cur.length)segs.push(cur);
-      segs.forEach(P=>{
-        if(!pct&&P.length>1)g+=`<path d="${smoothPath(P)} L${P[P.length-1].x.toFixed(1)} ${base} L${P[0].x.toFixed(1)} ${base}Z" style="fill:${m[2]};opacity:.12"/>`;
-        if(P.length>1)g+=`<path d="${smoothPath(P)}" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="stroke:${m[2]}"/>`;
-        P.forEach(q=>{g+=`<circle cx="${q.x.toFixed(1)}" cy="${q.y.toFixed(1)}" r="${q.d.sel?4.5:2.6}" style="fill:${m[2]};${q.d.sel?'stroke:var(--bg);stroke-width:2':''}"/>`});
+  const vals=weeks.flat().flatMap(d=>d.t.n&&!d.fut?ser.map(m=>val(d,m)):[]);
+  const lo=pct?1.2:ref*1.15, max=Math.min(Math.max(lo,...vals.map(v=>v*1.08)),lo*1.8), Y=v=>Math.max(3,pt+(Ht-pt-pb)*(1-v/max));
+  function weekSvg(days){
+    let g=`<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Weekoverzicht">`;
+    days.forEach((d,i)=>{if(d.sel)g+=`<rect x="${(i*cw+2).toFixed(1)}" y="2" width="${(cw-4).toFixed(1)}" height="${base-2}" rx="8" style="fill:var(--line);opacity:.65"/>`});
+    g+=`<line x1="0" x2="${W}" y1="${base}" y2="${base}" style="stroke:var(--line)"/>`;
+    g+=`<line x1="0" x2="${W}" y1="${Y(ref).toFixed(1)}" y2="${Y(ref).toFixed(1)}" stroke-dasharray="4 3" style="stroke:var(--mute);opacity:.6"/>`;
+    g+=`<text x="2" y="${(Y(ref)-3).toFixed(1)}" font-size="9" style="fill:var(--mute)">${pct?'100%':'doel '+ref}</text>`;
+    if(bars){
+      days.forEach((d,i)=>{
+        if(d.fut||!d.t.n)return;
+        const n=ser.length, bw=n>1?cw*.17:cw*.5, gap=n>1?1.5:0, x0=cx(i)-(n*bw+(n-1)*gap)/2;
+        ser.forEach((m,j)=>{const y=Y(val(d,m));g+=`<rect x="${(x0+j*(bw+gap)).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1,base-y).toFixed(1)}" rx="${n>1?1.5:3}" style="fill:${m[2]};opacity:${d.sel?1:.5}"/>`});
       });
-    });
+    }else{
+      ser.forEach(m=>{
+        const segs=[]; let cur=[];
+        days.forEach((d,i)=>{if(!d.fut&&d.t.n)cur.push({x:cx(i),y:Y(val(d,m)),d});else if(cur.length){segs.push(cur);cur=[]}});
+        if(cur.length)segs.push(cur);
+        segs.forEach(P=>{
+          if(!pct&&P.length>1)g+=`<path d="${smoothPath(P)} L${P[P.length-1].x.toFixed(1)} ${base} L${P[0].x.toFixed(1)} ${base}Z" style="fill:${m[2]};opacity:.12"/>`;
+          if(P.length>1)g+=`<path d="${smoothPath(P)}" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="stroke:${m[2]}"/>`;
+          P.forEach(q=>{g+=`<circle cx="${q.x.toFixed(1)}" cy="${q.y.toFixed(1)}" r="${q.d.sel?4.5:2.6}" style="fill:${m[2]};${q.d.sel?'stroke:var(--bg);stroke-width:2':''}"/>`});
+        });
+      });
+    }
+    const sd=days.find(d=>d.sel);
+    if(!pct&&sd&&sd.t.n&&!sd.fut){const v=val(sd,ser[0]);g+=`<text x="${cx(days.indexOf(sd)).toFixed(1)}" y="${Math.max(10,Y(v)-(bars?5:9)).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" style="fill:var(--ink)">${r0(v)}</text>`}
+    days.forEach((d,i)=>{g+=`<text x="${cx(i).toFixed(1)}" y="${Ht-4}" text-anchor="middle" font-size="10" font-weight="${d.sel?700:400}" style="fill:${d.sel?'var(--ink)':'var(--mute)'};opacity:${d.fut?.4:1}">${d.d.toLocaleDateString('nl-NL',{weekday:'short'}).replace('.','')}</text>`});
+    return g+'</svg>';
   }
-  const sd=days.find(d=>d.sel);
-  if(!pct&&sd&&sd.t.n&&!sd.fut){const v=val(sd,ser[0]);g+=`<text x="${cx(days.indexOf(sd)).toFixed(1)}" y="${Math.max(10,Y(v)-(bars?5:9)).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" style="fill:var(--ink)">${r0(v)}</text>`}
-  days.forEach((d,i)=>{g+=`<text x="${cx(i).toFixed(1)}" y="${Ht-4}" text-anchor="middle" font-size="10" font-weight="${d.sel?700:400}" style="fill:${d.sel?'var(--ink)':'var(--mute)'};opacity:${d.fut?.4:1}">${d.d.toLocaleDateString('nl-NL',{weekday:'short'}).replace('.','')}</text>`});
-  g+='</svg>';
-  const wrap=document.createElement('div'); wrap.innerHTML=g; const svg=wrap.firstChild; svg.style.cssText='display:block;width:100%;height:auto';
-  svg.onclick=e=>{const r=svg.getBoundingClientRect(),i=Math.min(6,Math.max(0,Math.floor((e.clientX-r.left)/r.width*7)));if(!days[i].fut&&days[i].key!==day){day=days[i].key;render()}};
-  box.appendChild(wrap);
+  const wrap=document.createElement('div'); wrap.className='wkscroll';
+  weeks.forEach(days=>{
+    const cell=document.createElement('div'); cell.className='wkw'; cell.innerHTML=weekSvg(days);
+    cell.firstChild.onclick=e=>{const r=cell.firstChild.getBoundingClientRect(),i=Math.min(6,Math.max(0,Math.floor((e.clientX-r.left)/r.width*7)));if(!days[i].fut&&days[i].key!==day){day=days[i].key;render()}};
+    wrap.appendChild(cell);
+  });
+  const cap=document.createElement('div'); cap.className='wkcap';
+  const range=i=>{const a=weeks[i][0].d,b=weeks[i][6].d,m=d=>d.toLocaleDateString('nl-NL',{month:'long'});
+    return a.getMonth()===b.getMonth()?`${a.getDate()} – ${b.getDate()} ${m(b)}`:`${a.getDate()} ${m(a).slice(0,3)} – ${b.getDate()} ${m(b).slice(0,3)}`};
+  const si=weeks.findIndex(w=>w[0].key===iso(selM));
+  cap.textContent=range(si);
+  wrap.onscroll=()=>{const i=Math.min(weeks.length-1,Math.max(0,Math.round(wrap.scrollLeft/(wrap.clientWidth||1))));cap.textContent=range(i)};
+  box.appendChild(wrap); box.appendChild(cap);
+  if(weeks.length>1)wrap.scrollLeft=si*wrap.clientWidth;
 }
 
 /* vergelijking onder je kcal: [emoji, enkelvoud, meervoud, kcal per stuk] */
@@ -629,7 +694,8 @@ const TABS=[['k','kcal','kcal','goal'],['p','Eiwit','g','gp'],['c','Koolh.','g',
 let stT='k', stN=7, stSel=-1;
 function stats(){
   const tab=TABS.find(t=>t[0]===stT), goal=S[tab[3]], unit=tab[2];
-  $('#tabs').innerHTML=TABS.map(t=>`<button data-t="${t[0]}" class="${t[0]===stT?'on':''}">${t[1]}</button>`).join('');
+  const COL={k:'var(--c0)',p:'var(--c1)',c:'var(--c2)',f:'var(--c3)'};
+  $('#tabs').innerHTML=TABS.map(t=>`<button data-t="${t[0]}" class="${t[0]===stT?'on':''}"><i class="td" style="background:${COL[t[0]]}"></i>${t[1]}</button>`).join('');
   $('#per').innerHTML=[7,30,365].map(n=>`<button data-n="${n}" class="${n===stN?'on':''}">${n===365?'Jaar':n+' dagen'}</button>`).join('');
   $('#tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{stT=b.dataset.t;stSel=-1;stats()});
   $('#per').querySelectorAll('button').forEach(b=>b.onclick=()=>{stN=+b.dataset.n;stSel=-1;stats()});
@@ -646,7 +712,7 @@ function stats(){
   g+=`<line x1="0" x2="${W}" y1="${pt+ph}" y2="${pt+ph}" style="stroke:var(--line)"/>`;
   days.forEach((x,i)=>{
     const cx=i*cw+cw/2;
-    if(x.n>0){const y=Y(x.v);g+=`<rect class="bar1" x="${cx-bw/2}" y="${y}" width="${bw}" height="${pt+ph-y}" rx="${stN>30?0:2}" opacity="${stSel<0||stSel===i?1:.35}"/>`}
+    if(x.n>0){const y=Y(x.v);g+=`<rect class="bar1" style="fill:${COL[stT]}" x="${cx-bw/2}" y="${y}" width="${bw}" height="${pt+ph-y}" rx="${stN>30?0:2}" opacity="${stSel<0||stSel===i?1:.35}"/>`}
     const lab=stN<=7?x.d.toLocaleDateString('nl-NL',{weekday:'short'}):stN>30?(x.d.getDate()===1?x.d.toLocaleDateString('nl-NL',{month:'short'}).replace('.',''):''):((i%5===0||i===stN-1)?x.d.getDate():'');
     if(lab!=='')g+=`<text x="${cx}" y="${H-4}" font-size="9" text-anchor="middle" fill="currentColor">${lab}</text>`;
   });
