@@ -10,9 +10,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="icon.png?v=2">
 <title>MacroTracker</title>
 <style>
-:root{--bg:#eef1ef;--card:#fff;--ink:#1b2321;--mute:#68736f;--line:#d8dfdc;--acc:#1f6f63;--onacc:#fff;--bad:#a6382f;--tint:rgba(31,111,99,.22);
+:root{--bg:#eef1ef;--card:#fff;--ink:#1b2321;--mute:#68736f;--line:#d8dfdc;--acc:#1f6f63;--onacc:#fff;--bad:#a6382f;--tint:rgba(31,111,99,.22);--m1:#3f7fc4;--m2:#d49a2a;--m3:#c25d86;--ftint:rgba(63,127,196,.22);
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121715;--card:#1b2220;--ink:#e8eeec;--mute:#8d9a96;--line:#2c3733;--acc:#5fb8a8;--onacc:#0c1412;--bad:#e0766c;--tint:rgba(95,184,168,.3)}}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121715;--card:#1b2220;--ink:#e8eeec;--mute:#8d9a96;--line:#2c3733;--acc:#5fb8a8;--onacc:#0c1412;--bad:#e0766c;--tint:rgba(95,184,168,.3);--m1:#6aa6e6;--m2:#e8b455;--m3:#e07fa5;--ftint:rgba(106,166,230,.28)}}
 *{box-sizing:border-box;touch-action:pan-x pan-y}
 html{-webkit-touch-callout:none}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -104,6 +104,23 @@ li.gh:first-child{padding-top:10px}
 .dr small{color:var(--mute);margin-left:6px}
 li:not(.gh){cursor:pointer}
 #v-det h2>span,#v-shr h2>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.streak{min-height:44px;padding:0 6px}
+.btn:disabled{opacity:.45;cursor:default}
+#hero:not(.ringmode) #ringv{display:none}
+#hero.ringmode .big,#hero.ringmode .sub,#hero.ringmode .bar,#hero.ringmode .mac{display:none}
+#ringv{display:flex;align-items:center;gap:14px;margin-bottom:2px}
+#ring{width:170px;height:170px;flex:none}
+.rleg{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+.rl{display:flex;align-items:center;gap:8px;font-size:14px;font-variant-numeric:tabular-nums}
+.rl i{width:10px;height:10px;border-radius:50%;flex:none}
+.rl .n{flex:1;color:var(--mute)}
+.rl b{font-weight:600}
+#wk{margin-top:2px}
+.cal button.fz{background:var(--ftint)}
+.swatches{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:8px 2px 4px}
+.sw1{width:32px;height:32px;border-radius:50%;box-shadow:0 0 0 1px var(--line)}
+.sw1.on{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--ink)}
+.cpick{width:36px;height:34px;padding:0;margin:0;border:0;background:none;border-radius:50%}
 .fr .ic.fav{color:var(--acc)}
 .fr div.res{cursor:default}
 .tabs.small{width:75%;margin-left:auto}
@@ -119,17 +136,20 @@ li:not(.gh){cursor:pointer}
   <div class="top">
     <button class="ic" id="prev" aria-label="Vorige dag">‹</button>
     <b id="date" role="button" tabindex="0" aria-label="Kies een dag"></b>
-    <span><span class="streak" id="stk" role="img" aria-label="Dagen op rij ingevuld"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12.5 2C13.5 5.5 17.5 8.5 17.5 14A5.5 5.5 0 0 1 6.5 14C6.5 11.8 7.5 10.2 8.8 9C8.9 10.4 9.5 11.2 10.4 11.6C10 8 10.8 4.5 12.5 2ZM12 18.3A2.2 2.2 0 0 1 9.8 16.1C9.8 14.7 10.9 14 12 12.6C13.1 14 14.2 14.7 14.2 16.1A2.2 2.2 0 0 1 12 18.3Z"/></svg><b id="stn">0</b></span><button class="ic" id="stat" aria-label="Grafiek"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="2" y="10" width="4" height="8" rx="1"/><rect x="8" y="3" width="4" height="15" rx="1"/><rect x="14" y="7" width="4" height="11" rx="1"/></svg></button><button class="ic" id="next" aria-label="Volgende dag">›</button><button class="ic" id="gear" aria-label="Instellingen">⚙</button></span>
+    <span><button class="streak" id="stk" aria-label="Streak en freezes"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12.5 2C13.5 5.5 17.5 8.5 17.5 14A5.5 5.5 0 0 1 6.5 14C6.5 11.8 7.5 10.2 8.8 9C8.9 10.4 9.5 11.2 10.4 11.6C10 8 10.8 4.5 12.5 2ZM12 18.3A2.2 2.2 0 0 1 9.8 16.1C9.8 14.7 10.9 14 12 12.6C13.1 14 14.2 14.7 14.2 16.1A2.2 2.2 0 0 1 12 18.3Z"/></svg><b id="stn">0</b></button><button class="ic" id="stat" aria-label="Grafiek"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="2" y="10" width="4" height="8" rx="1"/><rect x="8" y="3" width="4" height="15" rx="1"/><rect x="14" y="7" width="4" height="11" rx="1"/></svg></button><button class="ic" id="next" aria-label="Volgende dag">›</button><button class="ic" id="gear" aria-label="Instellingen">⚙</button></span>
   </div>
-  <section class="hero">
+  <section class="hero" id="hero">
+    <div id="ringv"><svg id="ring" viewBox="0 0 200 200" role="img" aria-label="Voortgang van de dag"></svg><div class="rleg" id="rleg"></div></div>
     <div class="big" id="left">0</div>
     <div class="sub" id="sub"></div>
     <button class="cmp hide" id="cmp" aria-label="Nieuwe vergelijking"><span id="cmptxt"></span></button>
     <div class="bar"><i id="fill"></i></div>
     <div class="mac" id="mac"></div>
+    <div id="wk" class="hide"></div>
   </section>
   <ul id="list"></ul>
   <div class="empty hide" id="empty">Nog niets gegeten. Tik op Toevoegen.</div>
+  <button class="btn alt hide" id="fzbtn" style="margin-top:6px"></button>
 </main>
 <button class="fab" id="add">Toevoegen</button>
 <div class="toast hide" id="toast"><span id="tmsg"></span><button id="tundo">Ongedaan maken</button></div>
@@ -210,12 +230,20 @@ li:not(.gh){cursor:pointer}
       <div class="msg" id="impm"></div>
       <button class="btn hide" id="impgo">Voeg toe</button>
     </div>
+    <!-- streak -->
+    <div id="v-stk" class="hide">
+      <h2>Streak <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
+      <div class="avg" id="stkn"></div>
+      <div class="msg" id="stkf"></div>
+      <div class="row" style="margin-top:6px"><button class="btn alt" id="fzt"></button><button class="btn alt" id="fzy"></button></div>
+      <div class="msg">Je verdient 1 freeze voor elke 7 dagen die je op rij invult. Je kunt er maximaal 7 bewaren en je begint met 1. Een bevroren dag houdt je streak in leven, maar telt zelf niet mee. Oudere dagen bevries je via de kalender: tik op een lege dag en kies Bevries.</div>
+    </div>
     <!-- kalender -->
     <div id="v-cal" class="hide">
       <h2>Kies een dag <button class="ic" data-close aria-label="Sluiten">✕</button></h2>
       <div class="calnav"><button class="ic" id="calprev" aria-label="Vorige maand">‹</button><b id="calmonth"></b><button class="ic" id="calnext" aria-label="Volgende maand">›</button></div>
       <div class="cal" id="cal"></div>
-      <div class="msg">Gekleurde dagen hebben iets ingevuld.</div>
+      <div class="msg">Gekleurde dagen hebben iets ingevuld. Blauwe dagen zijn bevroren ❄.</div>
       <button class="btn alt" id="caltoday">Vandaag</button>
     </div>
     <!-- hoeveelheid -->
@@ -259,8 +287,18 @@ li:not(.gh){cursor:pointer}
         <label>Koolhydraten (g)<input id="gc" type="number" inputmode="numeric"></label>
         <label>Vet (g)<input id="gf" type="number" inputmode="numeric"></label>
       </div>
+      <div class="lbl">Accentkleur</div>
+      <div class="swatches" id="accsw"></div>
+      <div class="lbl">Startscherm</div>
+      <div class="msg" style="padding:0 0 4px">Weergave</div><div class="tabs" id="hsView"></div>
+      <div class="msg" style="padding:0 0 4px">Calorieën tonen als</div><div class="tabs" id="hsShow"></div>
+      <div class="swr" style="margin:10px 0 6px"><span>Weekgrafiek</span><button class="swb" id="wksw" role="switch" aria-checked="false" aria-label="Weekgrafiek"></button></div>
+      <div id="wkopts" class="hide">
+        <div class="msg" style="padding:0 0 4px">Stijl</div><div class="tabs" id="hsStyle"></div>
+        <div class="msg" style="padding:0 0 4px">Waarden</div><div class="tabs" id="hsMode"></div>
+      </div>
       <div class="lbl">Extra</div>
-      <div class="swr"><span>Grappige vergelijking onder je kcal</span><button class="swb on" id="funsw" role="switch" aria-checked="true" aria-label="Grappige vergelijking"></button></div>
+      <div class="swr"><span>Vergelijking onder je kcal</span><button class="swb on" id="funsw" role="switch" aria-checked="true" aria-label="Vergelijking onder je kcal"></button></div>
       <div class="lbl">Back-up</div>
       <div class="row"><button class="btn alt" id="exp">Kopieer data</button><button class="btn alt" id="imp">Plak data</button></div>
       <div class="msg" id="setmsg">Alles staat alleen op dit toestel. Maak af en toe een back-up.</div>
@@ -275,7 +313,8 @@ let S=null; try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 function fix(){
   S=S&&S.days?S:{days:{}};
   S.goal=S.goal||2000; S.gp=S.gp||120; S.gc=S.gc||220; S.gf=S.gf||65;
-  S.foods=S.foods||S.recent||[]; delete S.recent; S.combos=S.combos||[]; S.sort=S.sort||'recent';
+  S.foods=S.foods||S.recent||[]; delete S.recent; S.combos=S.combos||[]; S.sort=S.sort||'recent'; S.fz=S.fz||{};
+  S.hs=Object.assign({view:'num',show:'left',wk:false,wkStyle:'bar',wkMode:'abs',wkMetric:'k'},S.hs||{});
   if(!S.bf){
     S.bf=1; const use={};
     Object.keys(S.days).forEach(k=>S.days[k].forEach(e=>{const u=use[e.name]=use[e.name]||{n:0,t:0};u.n++;u.t=Math.max(u.t,e.id||0)}));
@@ -298,13 +337,167 @@ function renderMeals(){
 }
 const r0=n=>Math.round(n||0);
 
-function streak(){
-  let n=0; const d=new Date(); d.setHours(12,0,0,0);
-  if(!(S.days[iso(d)]||[]).length)d.setDate(d.getDate()-1);
-  while((S.days[iso(d)]||[]).length){n++;d.setDate(d.getDate()-1)}
-  return n;
+function streakInfo(){
+  const logged=k=>(S.days[k]||[]).length>0, tk=iso(new Date());
+  const keys=[...Object.keys(S.days).filter(logged),...Object.keys(S.fz)].sort();
+  let streak=0, avail=1; const bad=[];
+  if(!keys.length)return {streak,avail,bad};
+  const d=new Date(keys[0]+'T12:00');
+  for(let k=iso(d);k<=tk;d.setDate(d.getDate()+1),k=iso(d)){
+    if(logged(k)){streak++;if(streak%7===0)avail=Math.min(7,avail+1)}
+    else if(S.fz[k]){if(avail>0)avail--;else{bad.push(k);streak=0}}
+    else if(k!==tk)streak=0;
+  }
+  return {streak,avail,bad};
 }
-/* grappige vergelijking: [emoji, enkelvoud, meervoud, kcal per stuk] */
+function freezeDay(k){
+  if((S.days[k]||[]).length||k>iso(new Date())||S.fz[k])return false;
+  const before=streakInfo().bad.length; S.fz[k]=true;
+  if(streakInfo().bad.length>before){delete S.fz[k];toast('Geen freeze beschikbaar voor die dag');return false}
+  save(); render(); renderStk(); toast('❄ Dag bevroren',()=>unfreezeDay(k)); return true;
+}
+function unfreezeDay(k){delete S.fz[k];save();render();renderStk()}
+function renderStk(){
+  const si=streakInfo(), t=new Date(); t.setHours(12);
+  const tk=iso(t); t.setDate(t.getDate()-1); const yk=iso(t);
+  $('#stkn').innerHTML=`${si.streak} <span>dagen op rij</span>`;
+  $('#stkf').textContent=`❄ ${si.avail} van 7 freezes beschikbaar`;
+  const btn=(id,k,w)=>{
+    const b=$(id), logged=(S.days[k]||[]).length>0; b.disabled=false;
+    if(logged){b.textContent=`${w[0].toUpperCase()+w.slice(1)} al ingevuld`;b.disabled=true}
+    else if(S.fz[k]){b.textContent=`Haal bevriezing van ${w} weg`;b.onclick=()=>unfreezeDay(k)}
+    else if(si.avail>0){b.textContent=`Bevries ${w}`;b.onclick=()=>freezeDay(k)}
+    else{b.textContent='Geen freezes meer';b.disabled=true}
+  };
+  btn('#fzt',tk,'vandaag'); btn('#fzy',yk,'gisteren');
+}
+$('#stk').onclick=()=>{renderStk();view('stk')};
+function tot(key){const L=S.days[key]||[],t={k:0,p:0,c:0,f:0,n:L.length};L.forEach(e=>{t.k+=e.kcal;t.p+=e.p;t.c+=e.c;t.f+=e.f});return t}
+
+/* accentkleur */
+const ACC=[['#1f6f63','Groen-blauw'],['#2f6fb3','Blauw'],['#6b4fb0','Paars'],['#b84a7a','Roze'],['#c25e1f','Oranje'],['#3d7d34','Groen'],['#4b5a66','Leisteen'],['#8f6b12','Goud']];
+const mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
+const h2rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+function rgb2hsl(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let h=0,s=0;
+  if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h*=60}return [h,s,l]}
+function hsl2rgb(h,s,l){const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;
+  const [r,g,b]=h<60?[c,x,0]:h<120?[x,c,0]:h<180?[0,c,x]:h<240?[0,x,c]:h<300?[x,0,c]:[c,0,x];return [r,g,b].map(v=>Math.round((v+m)*255))}
+function applyAccent(){
+  const st=document.documentElement.style;
+  if(!S.accent||!/^#[0-9a-f]{6}$/i.test(S.accent)){['--acc','--onacc','--tint'].forEach(v=>st.removeProperty(v));return}
+  const [h,sa,l]=rgb2hsl(...h2rgb(S.accent)), dark=!!(mq&&mq.matches);
+  const c=hsl2rgb(h,dark?Math.min(sa,.6):sa,dark?Math.max(l,.62):Math.min(l,.42));
+  const lum=(.2126*c[0]+.7152*c[1]+.0722*c[2])/255;
+  st.setProperty('--acc','#'+c.map(v=>v.toString(16).padStart(2,'0')).join(''));
+  st.setProperty('--onacc',lum>.55?'#0c1412':'#fff');
+  st.setProperty('--tint',`rgba(${c[0]},${c[1]},${c[2]},${dark?.3:.22})`);
+}
+if(mq){if(mq.addEventListener)mq.addEventListener('change',applyAccent);else if(mq.addListener)mq.addListener(applyAccent)}
+function renderAccSw(){
+  const box=$('#accsw'); box.innerHTML='';
+  ACC.forEach(([hex,n],i)=>{
+    const b=document.createElement('button'); b.className='sw1'+((S.accent||ACC[0][0]).toLowerCase()===hex?' on':'');
+    b.style.background=hex; b.setAttribute('aria-label',n); b.onclick=()=>{S.accent=i===0?null:hex;save();applyAccent();renderAccSw()}; box.appendChild(b);
+  });
+  const inp=document.createElement('input'); inp.type='color'; inp.className='cpick'; inp.value=S.accent||ACC[0][0]; inp.setAttribute('aria-label','Eigen kleur');
+  inp.oninput=()=>{S.accent=inp.value;save();applyAccent()}; box.appendChild(inp);
+}
+
+/* instellingen: startscherm */
+function seg(id,opts,cur,fn){
+  const b=$(id); b.innerHTML='';
+  opts.forEach(([k,n])=>{const x=document.createElement('button');x.textContent=n;x.className=k===cur?'on':'';x.onclick=()=>fn(k);b.appendChild(x)});
+}
+function renderSet(){
+  ['goal','gp','gc','gf'].forEach(k=>$('#'+k).value=S[k]);
+  renderFun(); renderAccSw();
+  const H=S.hs, set=(k,v)=>{H[k]=v;save();renderSet();render()};
+  seg('#hsView',[['num','Cijfers'],['ring','Ringen']],H.view,v=>set('view',v));
+  seg('#hsShow',[['left','Nog over'],['eaten','Gegeten']],H.show,v=>set('show',v));
+  const w=$('#wksw'); w.classList.toggle('on',H.wk); w.setAttribute('aria-checked',H.wk); $('#wkopts').classList.toggle('hide',!H.wk);
+  seg('#hsStyle',[['bar','Staven'],['line','Lijn']],H.wkStyle,v=>set('wkStyle',v));
+  seg('#hsMode',[['abs','Absoluut'],['pct','Percentage']],H.wkMode,v=>set('wkMode',v));
+}
+$('#wksw').onclick=()=>{S.hs.wk=!S.hs.wk;save();renderSet();render()};
+
+/* ringen en weekgrafiek */
+const MET=[['k','kcal','var(--acc)','goal'],['p','Eiwit','var(--m1)','gp'],['c','Koolh.','var(--m2)','gc'],['f','Vet','var(--m3)','gf']];
+function renderRing(t){
+  const on=S.hs.view==='ring'; $('#hero').classList.toggle('ringmode',on); if(!on)return;
+  let g='';
+  [['k',S.goal,'var(--acc)',90],['p',S.gp,'var(--m1)',74],['c',S.gc,'var(--m2)',58],['f',S.gf,'var(--m3)',42]].forEach(([k,goal,col,r])=>{
+    const c=2*Math.PI*r, p=Math.min(1,t[k]/goal);
+    g+=`<circle cx="100" cy="100" r="${r}" fill="none" stroke-width="12" style="stroke:${col};stroke-opacity:.18"/>`;
+    if(p>.002)g+=`<circle cx="100" cy="100" r="${r}" fill="none" stroke-width="12" stroke-linecap="round" stroke-dasharray="${(c*p).toFixed(2)} ${c.toFixed(2)}" transform="rotate(-90 100 100)" style="stroke:${col}"/>`;
+  });
+  const left=S.goal-t.k, eaten=S.hs.show==='eaten', num=eaten?r0(t.k):Math.abs(r0(left));
+  g+=`<text x="100" y="103" text-anchor="middle" font-size="20" font-weight="700" style="fill:${!eaten&&left<0?'var(--bad)':'var(--ink)'}">${num.toLocaleString('nl-NL')}</text>`;
+  g+=`<text x="100" y="118" text-anchor="middle" font-size="10" style="fill:var(--mute)">${eaten?'gegeten':left<0?'te veel':'over'}</text>`;
+  $('#ring').innerHTML=g;
+  $('#rleg').innerHTML=[['Kcal','k','var(--acc)',S.goal],['Eiwit','p','var(--m1)',S.gp],['Koolh.','c','var(--m2)',S.gc],['Vet','f','var(--m3)',S.gf]]
+    .map(([n,k,c,g2])=>`<div class="rl"><i style="background:${c}"></i><span class="n">${n}</span><span><b>${r0(t[k])}</b>/${g2}</span></div>`).join('');
+}
+function smoothPath(P){
+  if(P.length===1)return `M${P[0].x} ${P[0].y}`;
+  let d=`M${P[0].x.toFixed(1)} ${P[0].y.toFixed(1)}`;
+  for(let i=0;i<P.length-1;i++){
+    const p0=P[i-1]||P[i], p1=P[i], p2=P[i+1], p3=P[i+2]||P[i+1];
+    const lo=Math.min(p1.y,p2.y), hi=Math.max(p1.y,p2.y), cl=v=>Math.max(lo,Math.min(hi,v));
+    d+=` C${(p1.x+(p2.x-p0.x)/6).toFixed(1)} ${cl(p1.y+(p2.y-p0.y)/6).toFixed(1)} ${(p2.x-(p3.x-p1.x)/6).toFixed(1)} ${cl(p2.y-(p3.y-p1.y)/6).toFixed(1)} ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
+  }
+  return d;
+}
+function renderWeek(){
+  const box=$('#wk'), H=S.hs; box.classList.toggle('hide',!H.wk); if(!H.wk)return; box.innerHTML='';
+  const sel=new Date(day+'T12:00'), mon=new Date(sel); mon.setDate(sel.getDate()-((sel.getDay()+6)%7));
+  const tk=iso(new Date()), days=[];
+  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const key=iso(d);days.push({key,d,t:tot(key),fut:key>tk,sel:key===day})}
+  const pct=H.wkMode==='pct', bars=H.wkStyle==='bar', ser=pct?MET:MET.filter(m=>m[0]===H.wkMetric);
+  const chips=document.createElement('div'); chips.className='chips'; chips.style.margin='12px 0 2px';
+  MET.forEach(m=>{
+    const b=document.createElement('button'); b.textContent=m[1];
+    if(pct){const i=document.createElement('i');i.style.cssText=`display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:${m[2]}`;b.prepend(i);b.disabled=true;b.style.opacity=1;b.style.cursor='default'}
+    else{b.className=m[0]===H.wkMetric?'on':'';b.onclick=()=>{S.hs.wkMetric=m[0];save();renderWeek()}}
+    chips.appendChild(b);
+  });
+  box.appendChild(chips);
+  const W=320,Ht=112,pt=16,pb=18,base=pt+(Ht-pt-pb), cw=W/7, cx=i=>i*cw+cw/2;
+  const val=(d,m)=>pct?d.t[m[0]]/S[m[3]]:d.t[m[0]], ref=pct?1:S[ser[0][3]];
+  const vals=days.flatMap(d=>d.t.n&&!d.fut?ser.map(m=>val(d,m)):[]);
+  const max=Math.max(pct?1.2:ref*1.15,...vals.map(v=>v*1.08)), Y=v=>pt+(Ht-pt-pb)*(1-v/max);
+  let g=`<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Weekoverzicht">`;
+  days.forEach((d,i)=>{if(d.sel)g+=`<rect x="${(i*cw+2).toFixed(1)}" y="2" width="${(cw-4).toFixed(1)}" height="${base-2}" rx="8" style="fill:var(--line);opacity:.65"/>`});
+  g+=`<line x1="0" x2="${W}" y1="${base}" y2="${base}" style="stroke:var(--line)"/>`;
+  g+=`<line x1="0" x2="${W}" y1="${Y(ref).toFixed(1)}" y2="${Y(ref).toFixed(1)}" stroke-dasharray="4 3" style="stroke:var(--mute);opacity:.6"/>`;
+  g+=`<text x="2" y="${(Y(ref)-3).toFixed(1)}" font-size="9" style="fill:var(--mute)">${pct?'100%':'doel '+ref}</text>`;
+  if(bars){
+    days.forEach((d,i)=>{
+      if(d.fut||!d.t.n)return;
+      const n=ser.length, bw=n>1?cw*.17:cw*.5, gap=n>1?1.5:0, x0=cx(i)-(n*bw+(n-1)*gap)/2;
+      ser.forEach((m,j)=>{const y=Y(val(d,m));g+=`<rect x="${(x0+j*(bw+gap)).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1,base-y).toFixed(1)}" rx="${n>1?1.5:3}" style="fill:${m[2]};opacity:${d.sel?1:.5}"/>`});
+    });
+  }else{
+    ser.forEach(m=>{
+      const segs=[]; let cur=[];
+      days.forEach((d,i)=>{if(!d.fut&&d.t.n)cur.push({x:cx(i),y:Y(val(d,m)),d});else if(cur.length){segs.push(cur);cur=[]}});
+      if(cur.length)segs.push(cur);
+      segs.forEach(P=>{
+        if(!pct&&P.length>1)g+=`<path d="${smoothPath(P)} L${P[P.length-1].x.toFixed(1)} ${base} L${P[0].x.toFixed(1)} ${base}Z" style="fill:${m[2]};opacity:.12"/>`;
+        if(P.length>1)g+=`<path d="${smoothPath(P)}" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="stroke:${m[2]}"/>`;
+        P.forEach(q=>{g+=`<circle cx="${q.x.toFixed(1)}" cy="${q.y.toFixed(1)}" r="${q.d.sel?4.5:2.6}" style="fill:${m[2]};${q.d.sel?'stroke:var(--bg);stroke-width:2':''}"/>`});
+      });
+    });
+  }
+  const sd=days.find(d=>d.sel);
+  if(!pct&&sd&&sd.t.n&&!sd.fut){const v=val(sd,ser[0]);g+=`<text x="${cx(days.indexOf(sd)).toFixed(1)}" y="${Math.max(10,Y(v)-(bars?5:9)).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" style="fill:var(--ink)">${r0(v)}</text>`}
+  days.forEach((d,i)=>{g+=`<text x="${cx(i).toFixed(1)}" y="${Ht-4}" text-anchor="middle" font-size="10" font-weight="${d.sel?700:400}" style="fill:${d.sel?'var(--ink)':'var(--mute)'};opacity:${d.fut?.4:1}">${d.d.toLocaleDateString('nl-NL',{weekday:'short'}).replace('.','')}</text>`});
+  g+='</svg>';
+  const wrap=document.createElement('div'); wrap.innerHTML=g; const svg=wrap.firstChild; svg.style.cssText='display:block;width:100%;height:auto';
+  svg.onclick=e=>{const r=svg.getBoundingClientRect(),i=Math.min(6,Math.max(0,Math.floor((e.clientX-r.left)/r.width*7)));if(!days[i].fut&&days[i].key!==day){day=days[i].key;render()}};
+  box.appendChild(wrap);
+}
+
+/* vergelijking onder je kcal: [emoji, enkelvoud, meervoud, kcal per stuk] */
 const FUN=[
 ['🍬','suikerkorrel','suikerkorrels',0.00116],['🥗','sesamzaadje','sesamzaadjes',0.017],['🍚','rijstkorrel (droog)','rijstkorrels (droog)',0.09],
 ['🌽','maiskorrel','maiskorrels',0.215],['🫛','doperwtje','doperwtjes',0.243],['☕','koffieboon','koffiebonen',0.45],
@@ -336,16 +529,15 @@ $('#cmp').onclick=()=>updateCmp(lastLeft,true);
 function renderFun(){const on=S.fun!==false,b=$('#funsw');b.classList.toggle('on',on);b.setAttribute('aria-checked',on)}
 $('#funsw').onclick=()=>{S.fun=S.fun===false;save();renderFun();render()};
 function render(){
-  const sk=streak(); $('#stn').textContent=sk; $('#stk').classList.toggle('on',sk>0);
-  const L=S.days[day]||[], t={k:0,p:0,c:0,f:0};
-  L.forEach(e=>{t.k+=e.kcal;t.p+=e.p;t.c+=e.c;t.f+=e.f});
-  const left=S.goal-t.k, el=$('#left');
-  el.textContent=Math.abs(r0(left)); el.classList.toggle('over',left<0);
-  $('#sub').textContent=left<0?`kcal te veel (doel ${S.goal})`:`kcal over van ${S.goal}`;
-  updateCmp(left);
+  const si=streakInfo(); $('#stn').textContent=si.streak; $('#stk').classList.toggle('on',si.streak>0);
+  const L=S.days[day]||[], t=tot(day), H=S.hs, left=S.goal-t.k, eaten=H.show==='eaten', el=$('#left');
+  el.textContent=eaten?r0(t.k):Math.abs(r0(left)); el.classList.toggle('over',!eaten&&left<0);
+  $('#sub').textContent=eaten?`kcal gegeten van ${S.goal}`:(left<0?`kcal te veel (doel ${S.goal})`:`kcal over van ${S.goal}`);
+  updateCmp(eaten?t.k:left);
   $('#fill').style.width=Math.min(100,t.k/S.goal*100)+'%';
   $('#mac').innerHTML=[['Eiwit','p','gp'],['Koolh.','c','gc'],['Vet','f','gf']].map(([l,k,g])=>
     `<div><div class="mh"><span>${l}</span><span><b>${r0(t[k])}</b>/${S[g]}</span></div><div class="mb"><i style="width:${Math.min(100,t[k]/S[g]*100)}%"></i></div></div>`).join('');
+  renderRing(t); renderWeek();
   const today=iso(new Date());
   $('#date').textContent=day===today?'Vandaag':new Date(day+'T12:00').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'});
   $('#next').style.visibility=day>=today?'hidden':'visible';
@@ -369,6 +561,13 @@ function render(){
     });
   });
   ul.classList.toggle('hide',!L.length); $('#empty').classList.toggle('hide',!!L.length);
+  const fb=$('#fzbtn'), fk=!L.length&&day<=today; fb.classList.toggle('hide',!fk);
+  if(!L.length)$('#empty').textContent=S.fz[day]?'❄ Deze dag is bevroren. Je streak blijft behouden.':'Nog niets gegeten. Tik op Toevoegen.';
+  if(fk){
+    fb.disabled=false;
+    if(S.fz[day]){fb.textContent='Maak bevriezing ongedaan';fb.onclick=()=>unfreezeDay(day)}
+    else{fb.textContent=si.avail>0?`❄ Bevries deze dag (${si.avail} over)`:'❄ Geen freezes meer';fb.disabled=si.avail<=0;fb.onclick=()=>freezeDay(day)}
+  }
 }
 let calM=new Date();
 function renderCal(){
@@ -383,7 +582,7 @@ function renderCal(){
   for(let d=1;d<=n;d++){
     const key=iso(new Date(y,m,d,12)), b=document.createElement('button');
     b.textContent=d; b.setAttribute('aria-label',new Date(y,m,d,12).toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'}));
-    if((S.days[key]||[]).length)b.classList.add('has');
+    if((S.days[key]||[]).length)b.classList.add('has'); else if(S.fz[key])b.classList.add('fz');
     if(key===today)b.classList.add('today');
     if(key===day)b.classList.add('sel');
     if(key>today)b.disabled=true; else b.onclick=()=>{day=key;render();closeAll()};
@@ -400,7 +599,7 @@ const shift=n=>{const d=new Date(day+'T12:00');d.setDate(d.getDate()+n);day=iso(
 $('#prev').onclick=()=>shift(-1); $('#next').onclick=()=>shift(1);
 
 /* sheets */
-const views=['add','food','amt','combo','stats','cal','det','qe','shr','imp','set'];
+const views=['add','food','amt','combo','stats','cal','det','qe','shr','imp','stk','set'];
 function view(v){curView=v;views.forEach(x=>$('#v-'+x).classList.toggle('hide',x!==v));$('#sh').classList.add('on')}
 function closeAll(){endEdit();det=null;cancelSearch();target='day';$('#sh').classList.remove('on')}
 function back(){
@@ -420,7 +619,7 @@ function openAdd(clear){
   renderOwn(); baseMatches(); suggest(); view('add');
 }
 $('#add').onclick=()=>{if(!manual)curMeal=defMeal();renderMeals();openAdd(true);setTimeout(()=>$('#q').focus(),60)};
-$('#gear').onclick=()=>{['goal','gp','gc','gf'].forEach(k=>$('#'+k).value=S[k]);renderFun();view('set')};
+$('#gear').onclick=()=>{renderSet();view('set')};
 ['goal','gp','gc','gf'].forEach(k=>$('#'+k).onchange=e=>{const v=+e.target.value;if(v>0){S[k]=v;save();render()}});
 $('#exp').onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(S));$('#setmsg').textContent='Gekopieerd. Plak het ergens veilig, bijvoorbeeld in Notities.'}catch(e){$('#setmsg').textContent='Kopiëren lukte niet.'}};
 $('#imp').onclick=async()=>{try{const d=JSON.parse(await navigator.clipboard.readText());if(d&&d.days){S=d;fix();save();render();$('#setmsg').textContent='Hersteld.'}else throw 0}catch(e){$('#setmsg').textContent='Geen geldige back-up op het klembord.'}};
@@ -444,7 +643,7 @@ function stats(){
   const W=320,H=150,pt=8,pb=18,ph=H-pt-pb, max=Math.max(goal*1.15,...days.map(x=>x.v*1.08),1);
   const cw=W/stN, bw=cw*(stN>30?.8:stN>7?.66:.58), Y=v=>pt+ph*(1-v/max);
   let g=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Staafgrafiek per dag">`;
-  g+=`<line x1="0" x2="${W}" y1="${pt+ph}" y2="${pt+ph}" stroke="var(--line)"/>`;
+  g+=`<line x1="0" x2="${W}" y1="${pt+ph}" y2="${pt+ph}" style="stroke:var(--line)"/>`;
   days.forEach((x,i)=>{
     const cx=i*cw+cw/2;
     if(x.n>0){const y=Y(x.v);g+=`<rect class="bar1" x="${cx-bw/2}" y="${y}" width="${bw}" height="${pt+ph-y}" rx="${stN>30?0:2}" opacity="${stSel<0||stSel===i?1:.35}"/>`}
@@ -861,6 +1060,7 @@ $('#mgo').onclick=()=>{
 
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
 document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
+applyAccent();
 render();
 </script>
 </body>
