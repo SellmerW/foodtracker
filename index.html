@@ -43,12 +43,12 @@ button{background:none;border:0;cursor:pointer;padding:0}
 .big.over{color:var(--bad)}
 .sub{color:var(--mute);margin-top:4px}
 .bar{height:8px;border-radius:4px;background:var(--line);margin:12px 0 14px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--acc);width:0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--c0),var(--c0b));width:0;border-radius:4px}
 .mac{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .mh{display:flex;justify-content:space-between;font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums;margin-bottom:4px}
 .mh b{color:var(--ink);font-weight:600}
 .mb{height:4px;border-radius:2px;background:var(--line);overflow:hidden}
-.mb i{display:block;height:100%;background:var(--acc)}
+.mb i{display:block;height:100%;border-radius:2px}
 ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 li .n{flex:1;min-width:0}
@@ -121,6 +121,11 @@ li:not(.gh){cursor:pointer}
 .sw1{width:32px;height:32px;border-radius:50%;box-shadow:0 0 0 1px var(--line)}
 .sw1.on{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--ink)}
 .cpick{width:36px;height:34px;padding:0;margin:0;border:0;background:none;border-radius:50%}
+.themes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{border-radius:14px;padding:5px 5px 8px;text-align:left;border:2px solid transparent;background:var(--bg)}
+.tile.on{border-color:var(--acc)}
+.tile svg{display:block;width:100%;height:auto;border-radius:10px}
+.tile span{display:block;font-size:14px;font-weight:600;margin:6px 4px 0}
 .sh{margin:20px 4px 6px;font-size:12px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
 .sh:first-of-type{margin-top:4px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 12px 10px}
@@ -305,11 +310,8 @@ li:not(.gh){cursor:pointer}
         <label>Koolhydraten (g)<input id="gc" type="number" inputmode="numeric"></label>
         <label>Vet (g)<input id="gf" type="number" inputmode="numeric"></label>
       </div></div>
-      <div class="sh">Uiterlijk</div>
-      <div class="card">
-        <div class="sl">Accentkleur</div>
-        <div class="swatches" id="accsw" style="margin-top:0"></div>
-      </div>
+      <div class="sh">Thema</div>
+      <div class="card"><div class="themes" id="themes"></div></div>
       <div class="sh">Startscherm</div>
       <div class="card">
         <div class="sl">Weergave</div><div class="tabs" id="hsView"></div>
@@ -321,7 +323,7 @@ li:not(.gh){cursor:pointer}
         </div>
       </div>
       <div class="sh">Extra</div>
-      <div class="card"><div class="swr"><span>Vergelijking onder je kcal</span><button class="swb on" id="funsw" role="switch" aria-checked="true" aria-label="Vergelijking onder je kcal"></button></div></div>
+      <div class="card"><div class="swr"><span>Vergelijking onder je kcal</span><button class="swb" id="funsw" role="switch" aria-checked="false" aria-label="Vergelijking onder je kcal"></button></div></div>
       <div class="sh">Back-up</div>
       <div class="card">
         <div class="row"><button class="btn alt" id="exp">Kopieer data</button><button class="btn alt" id="imp">Plak data</button></div>
@@ -335,11 +337,26 @@ li:not(.gh){cursor:pointer}
 const $=s=>document.querySelector(s), KEY='eten-v1';
 const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
 let S=null; try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+const THEMES=[
+{id:'apple',n:'Apple',acc:'#007aff',accD:'#0a84ff',l:{bg:'#f2f2f7',card:'#ffffff',line:'#d1d1d6'},d:{bg:'#000000',card:'#1c1c1e',line:'#38383a'},
+ r:[['#fa114f','#ff7a9a'],['#30d158','#9af5ae'],['#0a84ff','#6fd6ff'],['#ff9f0a','#ffe066']]},
+{id:'bos',n:'Bos',acc:'#1f6f63',accD:'#5fb8a8',l:{bg:'#eef1ef',card:'#ffffff',line:'#d8dfdc'},d:{bg:'#121715',card:'#1b2220',line:'#2c3733'},
+ r:[['#1f8a70','#7fd1b9'],['#8bb13a','#d4e87c'],['#e0a43a','#f6d98a'],['#c8644a','#f0a58e']]},
+{id:'oceaan',n:'Oceaan',acc:'#0f7c8c',accD:'#4fc3d4',l:{bg:'#edf3f7',card:'#ffffff',line:'#d3dfe8'},d:{bg:'#0e1519',card:'#162026',line:'#25343d'},
+ r:[['#0a6cc4','#6fb8f2'],['#12b5b0','#8ae6e0'],['#5b7cfa','#aab8ff'],['#f08a5d','#ffc3a0']]},
+{id:'zonsondergang',n:'Zonsondergang',acc:'#d2552b',accD:'#ff8a5c',l:{bg:'#f7f1ec',card:'#fffdfb',line:'#e6d9cf'},d:{bg:'#17110f',card:'#221a17',line:'#3a2d27'},
+ r:[['#e8453c','#ff9a8b'],['#f28c28','#ffd08a'],['#d6336c','#f59ac0'],['#7a4fd0','#bda3f0']]},
+{id:'lavendel',n:'Lavendel',acc:'#6a4bd6',accD:'#a58bff',l:{bg:'#f1eff8',card:'#ffffff',line:'#dcd8ea'},d:{bg:'#131120',card:'#1c1930',line:'#2f2b48'},
+ r:[['#7c4dff','#c2adff'],['#4f8cff','#a8c8ff'],['#d05ce3','#ecaaf5'],['#ff7eb6','#ffc2dc']]},
+{id:'roos',n:'Roos',acc:'#b5465f',accD:'#ec8aa0',l:{bg:'#f8f0f1',card:'#fffcfc',line:'#e8d6d9'},d:{bg:'#1a1214',card:'#241a1d',line:'#3d2b30'},
+ r:[['#b5465f','#e8a3b3'],['#6f9a7e','#b9d6c1'],['#d6a24b','#f1d79a'],['#7d4a78','#c09abb']]}
+];
 function fix(){
   S=S&&S.days?S:{days:{}};
   S.goal=S.goal||2000; S.gp=S.gp||120; S.gc=S.gc||220; S.gf=S.gf||65;
-  S.foods=S.foods||S.recent||[]; delete S.recent; S.combos=S.combos||[]; S.sort=S.sort||'recent'; S.fz=S.fz||{};
-  S.hs=Object.assign({view:'num',show:'left',wk:false,wkStyle:'bar',wkMode:'abs',wkMetric:'k'},S.hs||{});
+  S.foods=S.foods||S.recent||[]; delete S.recent; S.combos=S.combos||[]; S.sort=S.sort||'recent'; S.fz=S.fz||{}; delete S.accent;
+  if(!THEMES.some(t=>t.id===S.theme))S.theme='apple';
+  S.hs=Object.assign({view:'ring',show:'eaten',wk:true,wkStyle:'bar',wkMode:'abs',wkMetric:'k'},S.hs||{});
   if(!S.bf){
     S.bf=1; const use={};
     Object.keys(S.days).forEach(k=>S.days[k].forEach(e=>{const u=use[e.name]=use[e.name]||{n:0,t:0};u.n++;u.t=Math.max(u.t,e.id||0)}));
@@ -399,33 +416,48 @@ function renderStk(){
 $('#stk').onclick=()=>{renderStk();view('stk')};
 function tot(key){const L=S.days[key]||[],t={k:0,p:0,c:0,f:0,n:L.length};L.forEach(e=>{t.k+=e.kcal;t.p+=e.p;t.c+=e.c;t.f+=e.f});return t}
 
-/* accentkleur */
-const ACC=[['#1f6f63','Groen-blauw'],['#2f6fb3','Blauw'],['#6b4fb0','Paars'],['#b84a7a','Roze'],['#c25e1f','Oranje'],['#3d7d34','Groen'],['#4b5a66','Leisteen'],['#8f6b12','Goud']];
+/* thema's: accent + ringkleuren + achtergrond horen bij elkaar */
 const mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
 const h2rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
-function rgb2hsl(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let h=0,s=0;
-  if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h*=60}return [h,s,l]}
-function hsl2rgb(h,s,l){const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;
-  const [r,g,b]=h<60?[c,x,0]:h<120?[x,c,0]:h<180?[0,c,x]:h<240?[0,x,c]:h<300?[x,0,c]:[c,0,x];return [r,g,b].map(v=>Math.round((v+m)*255))}
-function applyAccent(){
-  const st=document.documentElement.style;
-  if(!S.accent||!/^#[0-9a-f]{6}$/i.test(S.accent)){['--acc','--onacc','--tint'].forEach(v=>st.removeProperty(v));return}
-  const [h,sa,l]=rgb2hsl(...h2rgb(S.accent)), dark=!!(mq&&mq.matches);
-  const c=hsl2rgb(h,dark?Math.min(sa,.6):sa,dark?Math.max(l,.62):Math.min(l,.42));
-  const lum=(.2126*c[0]+.7152*c[1]+.0722*c[2])/255;
-  st.setProperty('--acc','#'+c.map(v=>v.toString(16).padStart(2,'0')).join(''));
-  st.setProperty('--onacc',lum>.55?'#0c1412':'#fff');
+const thm=()=>THEMES.find(t=>t.id===S.theme)||THEMES[0];
+const isDark=()=>!!(mq&&mq.matches);
+function applyTheme(){
+  const T=thm(), dark=isDark(), st=document.documentElement.style, pal=dark?T.d:T.l, acc=dark?T.accD:T.acc, c=h2rgb(acc);
+  st.setProperty('--bg',pal.bg); st.setProperty('--card',pal.card); st.setProperty('--line',pal.line);
+  st.setProperty('--acc',acc);
+  st.setProperty('--onacc',(.2126*c[0]+.7152*c[1]+.0722*c[2])/255>.55?'#0c1412':'#fff');
   st.setProperty('--tint',`rgba(${c[0]},${c[1]},${c[2]},${dark?.3:.22})`);
+  T.r.forEach(([A,B],i)=>{st.setProperty('--c'+i,dark?lerpHex(A,B,.25):A);st.setProperty('--c'+i+'b',B)});
+  const m=document.querySelector('meta[name=theme-color]'); if(m)m.setAttribute('content',pal.bg);
 }
-if(mq){if(mq.addEventListener)mq.addEventListener('change',applyAccent);else if(mq.addListener)mq.addListener(applyAccent)}
-function renderAccSw(){
-  const box=$('#accsw'); box.innerHTML='';
-  ACC.forEach(([hex,n],i)=>{
-    const b=document.createElement('button'); b.className='sw1'+((S.accent||ACC[0][0]).toLowerCase()===hex?' on':'');
-    b.style.background=hex; b.setAttribute('aria-label',n); b.onclick=()=>{S.accent=i===0?null:hex;save();applyAccent();renderAccSw()}; box.appendChild(b);
+function onSchemeChange(){applyTheme();if(curView==='set')renderThemes()}
+if(mq){if(mq.addEventListener)mq.addEventListener('change',onSchemeChange);else if(mq.addListener)mq.addListener(onSchemeChange)}
+function miniArc(cx,cy,r,w,f,A,B){
+  const pt=a=>[cx+r*Math.sin(2*Math.PI*a),cy-r*Math.cos(2*Math.PI*a)], n=Math.max(2,Math.ceil(f*28));
+  let o=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke-width="${w}" stroke="${A}" stroke-opacity=".2"/>`;
+  const [sx,sy]=pt(0), [ex,ey]=pt(f);
+  o+=`<circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${w/2}" fill="${A}"/>`;
+  for(let i=0;i<n;i++){
+    const a=f*i/n, b=Math.min(f,f*(i+1)/n+.006), [x0,y0]=pt(a), [x1,y1]=pt(b);
+    o+=`<path d="M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}" fill="none" stroke-width="${w}" stroke="${lerpHex(A,B,(i+.5)/n)}"/>`;
+  }
+  return o+`<circle cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="${w/2}" fill="${B}"/>`;
+}
+function themeSvg(T,dark){
+  const pal=dark?T.d:T.l, acc=dark?T.accD:T.acc, ink=dark?'#e8eeec':'#1b2321', mute=dark?'#8d9a96':'#68736f';
+  let g=`<svg viewBox="0 0 160 92" aria-hidden="true"><rect width="160" height="92" fill="${pal.bg}"/><rect x="6" y="6" width="148" height="80" rx="10" fill="${pal.card}" stroke="${pal.line}"/>`;
+  [[33,.88],[26,.7],[19,.54],[12,.36]].forEach(([r,f],i)=>{g+=miniArc(50,46,r,5.5,f,T.r[i][0],T.r[i][1])});
+  g+=`<rect x="98" y="22" width="40" height="6" rx="3" fill="${ink}"/><rect x="98" y="34" width="46" height="4" rx="2" fill="${mute}" opacity=".55"/><rect x="98" y="43" width="32" height="4" rx="2" fill="${mute}" opacity=".55"/>`;
+  g+=`<rect x="98" y="58" width="46" height="16" rx="8" fill="${acc}"/></svg>`;
+  return g;
+}
+function renderThemes(){
+  const box=$('#themes'); box.innerHTML=''; const dark=isDark();
+  THEMES.forEach(T=>{
+    const b=document.createElement('button'); b.className='tile'+(T.id===thm().id?' on':''); b.setAttribute('aria-label','Thema '+T.n);
+    b.innerHTML=themeSvg(T,dark)+'<span></span>'; b.querySelector('span').textContent=T.n;
+    b.onclick=()=>{S.theme=T.id;save();applyTheme();render();renderThemes()}; box.appendChild(b);
   });
-  const inp=document.createElement('input'); inp.type='color'; inp.className='cpick'; inp.value=S.accent||ACC[0][0]; inp.setAttribute('aria-label','Eigen kleur');
-  inp.oninput=()=>{S.accent=inp.value;save();applyAccent()}; box.appendChild(inp);
 }
 
 /* instellingen: startscherm */
@@ -435,7 +467,7 @@ function seg(id,opts,cur,fn){
 }
 function renderSet(){
   ['goal','gp','gc','gf'].forEach(k=>$('#'+k).value=S[k]);
-  renderFun(); renderAccSw();
+  renderFun(); renderThemes();
   const H=S.hs, set=(k,v)=>{H[k]=v;save();renderSet();render()};
   seg('#hsView',[['num','Cijfers'],['ring','Ringen']],H.view,v=>set('view',v));
   seg('#hsShow',[['left','Nog over'],['eaten','Gegeten']],H.show,v=>set('show',v));
@@ -447,35 +479,40 @@ $('#wksw').onclick=()=>{S.hs.wk=!S.hs.wk;save();renderSet();render()};
 
 /* ringen en weekgrafiek */
 const MET=[['k','kcal','var(--c0)','goal'],['p','Eiwit','var(--c1)','gp'],['c','Koolh.','var(--c2)','gc'],['f','Vet','var(--c3)','gf']];
-const RING=[['k','var(--c0)',['#fa114f','#ff7a9a'],90],['p','var(--c1)',['#30d158','#9af5ae'],74],['c','var(--c2)',['#0a84ff','#6fd6ff'],58],['f','var(--c3)',['#ff9f0a','#ffe066'],42]];
+const ringDefs=()=>{const R=thm().r;return [['k','var(--c0)',R[0],90],['p','var(--c1)',R[1],74],['c','var(--c2)',R[2],58],['f','var(--c3)',R[3],42]]};
 const lerpHex=(A,B,t)=>{const a=h2rgb(A),b=h2rgb(B);return '#'+a.map((v,i)=>Math.round(v+(b[i]-v)*t).toString(16).padStart(2,'0')).join('')};
 const rpt=(r,f)=>{const a=2*Math.PI*f;return [100+r*Math.sin(a),100-r*Math.cos(a)]};
-function arcSegs(r,f,A,B){
-  const n=Math.max(2,Math.ceil(f*60)); let o='';
+const clamp01=v=>Math.max(0,Math.min(1,v));
+function arcSegs(r,f0,f1,col){
+  const n=Math.max(2,Math.ceil((f1-f0)*60)); let o='';
   for(let i=0;i<n;i++){
-    const a=f*i/n, b=Math.min(f,f*(i+1)/n+.004), [x0,y0]=rpt(r,a), [x1,y1]=rpt(r,b);
-    o+=`<path d="M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}" fill="none" stroke-width="12" stroke="${lerpHex(A,B,(i+.5)/n)}"/>`;
+    const a=f0+(f1-f0)*i/n, b=Math.min(f1,f0+(f1-f0)*(i+1)/n+.004), [x0,y0]=rpt(r,a), [x1,y1]=rpt(r,b);
+    o+=`<path d="M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}" fill="none" stroke-width="12" stroke="${col(f0+(f1-f0)*(i+.5)/n)}"/>`;
   }
   return o;
 }
-function ringLap(r,f,A,B){
-  if(f<=.002)return '';
-  const [sx,sy]=rpt(r,0), [ex,ey]=rpt(r,f);
-  return `<circle cx="${sx.toFixed(2)}" cy="${sy.toFixed(2)}" r="6" fill="${A}"/>${arcSegs(r,f,A,B)}<circle cx="${ex.toFixed(2)}" cy="${ey.toFixed(2)}" r="6" fill="${B}"/>`;
-}
+const cap=(r,f,c)=>{const [x,y]=rpt(r,f);return `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="6" fill="${c}"/>`};
 function renderRing(t){
   const on=S.hs.view==='ring'; $('#hero').classList.toggle('ringmode',on); if(!on)return;
   let defs='<defs><filter id="rb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.2"/></filter>', g='';
-  RING.forEach(([k,v,[A,B],r],i)=>{
+  ringDefs().forEach(([k,v,[A,B],r],i)=>{
     const R=r+6, Rn=r-6;
     defs+=`<clipPath id="rc${i}"><path clip-rule="evenodd" fill-rule="evenodd" d="M${100-R} 100a${R} ${R} 0 1 0 ${2*R} 0a${R} ${R} 0 1 0 ${-2*R} 0ZM${100-Rn} 100a${Rn} ${Rn} 0 1 0 ${2*Rn} 0a${Rn} ${Rn} 0 1 0 ${-2*Rn} 0Z"/></clipPath>`;
     const goal=k==='k'?S.goal:S[{p:'gp',c:'gc',f:'gf'}[k]], p=t[k]/goal;
     g+=`<circle cx="100" cy="100" r="${r}" fill="none" stroke-width="12" stroke="${A}" stroke-opacity=".2"/>`;
-    g+=ringLap(r,Math.min(p,1),A,B);
-    if(p>1){
-      const q=(p-1)%1||1, a=2*Math.PI*q, [hx,hy]=rpt(r,q);
-      g+=`<g clip-path="url(#rc${i})"><circle cx="${(hx+Math.cos(a)*2.5).toFixed(2)}" cy="${(hy+Math.sin(a)*2.5).toFixed(2)}" r="6" fill="#000" fill-opacity=".5" filter="url(#rb)"/></g>`;
-      g+=ringLap(r,q,A,B);
+    /* De kleur hangt af van de afstand tot het uiteinde (D, in rondes), niet van de hoek.
+       Zo loopt het verloop gewoon door als de lijn over 100% gaat. */
+    if(p>.002){
+      const over=p>1.002, q=over?((p-1)%1||1):0, pe=over?1+q:Math.min(p,1), L=Math.min(pe,1);
+      const G=D=>lerpHex(A,B,clamp01(1-D/L));
+      if(!over){
+        g+=cap(r,0,G(pe))+arcSegs(r,0,pe,f=>G(pe-f))+cap(r,pe,B);
+      }else{
+        g+=arcSegs(r,0,1,f=>G(pe-f));
+        const a=2*Math.PI*q, [hx,hy]=rpt(r,q);
+        g+=`<g clip-path="url(#rc${i})"><circle cx="${(hx+Math.cos(a)*2.5).toFixed(2)}" cy="${(hy+Math.sin(a)*2.5).toFixed(2)}" r="6" fill="#000" fill-opacity=".5" filter="url(#rb)"/></g>`;
+        g+=arcSegs(r,0,q,f=>G(q-f))+cap(r,q,B);
+      }
     }
   });
   const left=S.goal-t.k, eaten=S.hs.show==='eaten', num=eaten?r0(t.k):Math.abs(r0(left));
@@ -512,7 +549,8 @@ function renderWeek(){
     else{b.className=m[0]===H.wkMetric?'on':'';b.onclick=()=>{S.hs.wkMetric=m[0];save();renderWeek()}}
     chips.appendChild(b);
   });
-  box.appendChild(chips);
+  const hideLegend=pct&&H.view==='ring';   // de ringen hebben al een legenda
+  if(!hideLegend)box.appendChild(chips);
   const W=320,Ht=112,pt=16,pb=18,base=pt+(Ht-pt-pb), cw=W/7, cx=i=>i*cw+cw/2;
   const val=(d,m)=>pct?d.t[m[0]]/S[m[3]]:d.t[m[0]], ref=pct?1:S[ser[0][3]];
   const vals=weeks.flat().flatMap(d=>d.t.n&&!d.fut?ser.map(m=>val(d,m)):[]);
@@ -546,7 +584,7 @@ function renderWeek(){
     days.forEach((d,i)=>{g+=`<text x="${cx(i).toFixed(1)}" y="${Ht-4}" text-anchor="middle" font-size="10" font-weight="${d.sel?700:400}" style="fill:${d.sel?'var(--ink)':'var(--mute)'};opacity:${d.fut?.4:1}">${d.d.toLocaleDateString('nl-NL',{weekday:'short'}).replace('.','')}</text>`});
     return g+'</svg>';
   }
-  const wrap=document.createElement('div'); wrap.className='wkscroll';
+  const wrap=document.createElement('div'); wrap.className='wkscroll'; if(hideLegend)wrap.style.marginTop='8px';
   weeks.forEach(days=>{
     const cell=document.createElement('div'); cell.className='wkw'; cell.innerHTML=weekSvg(days);
     cell.firstChild.onclick=e=>{const r=cell.firstChild.getBoundingClientRect(),i=Math.min(6,Math.max(0,Math.floor((e.clientX-r.left)/r.width*7)));if(!days[i].fut&&days[i].key!==day){day=days[i].key;render()}};
@@ -581,27 +619,27 @@ function fmtN(n){
 }
 function updateCmp(left,reroll){
   const el=$('#cmp'); lastLeft=left;
-  if(S.fun===false||left<1){el.classList.add('hide');return}
+  if(S.fun!==true||left<1){el.classList.add('hide');return}
   const E=FUN.filter(f=>left/f[3]>=1); if(!E.length){el.classList.add('hide');return}
   if(reroll||!cmpItem||!E.includes(cmpItem)){
     const pool=E.length>1?E.filter(f=>f!==cmpItem):E; cmpItem=pool[Math.floor(Math.random()*pool.length)];
   }
   const t=fmtN(left/cmpItem[3]);
-  $('#cmptxt').textContent=`≈ ${t} ${t==='1'?cmpItem[1]:cmpItem[2]} ${cmpItem[0]}`;
+  $('#cmptxt').textContent=`Nog ruimte voor ongeveer ${t} ${t==='1'?cmpItem[1]:cmpItem[2]} ${cmpItem[0]}`;
   el.classList.remove('hide');
 }
 $('#cmp').onclick=()=>updateCmp(lastLeft,true);
-function renderFun(){const on=S.fun!==false,b=$('#funsw');b.classList.toggle('on',on);b.setAttribute('aria-checked',on)}
-$('#funsw').onclick=()=>{S.fun=S.fun===false;save();renderFun();render()};
+function renderFun(){const on=S.fun===true,b=$('#funsw');b.classList.toggle('on',on);b.setAttribute('aria-checked',on)}
+$('#funsw').onclick=()=>{S.fun=S.fun!==true;save();renderFun();render()};
 function render(){
   const si=streakInfo(); $('#stn').textContent=si.streak; $('#stk').classList.toggle('on',si.streak>0);
   const L=S.days[day]||[], t=tot(day), H=S.hs, left=S.goal-t.k, eaten=H.show==='eaten', el=$('#left');
   el.textContent=eaten?r0(t.k):Math.abs(r0(left)); el.classList.toggle('over',!eaten&&left<0);
   $('#sub').textContent=eaten?`kcal gegeten van ${S.goal}`:(left<0?`kcal te veel (doel ${S.goal})`:`kcal over van ${S.goal}`);
-  updateCmp(eaten?t.k:left);
+  updateCmp(left);
   $('#fill').style.width=Math.min(100,t.k/S.goal*100)+'%';
-  $('#mac').innerHTML=[['Eiwit','p','gp'],['Koolh.','c','gc'],['Vet','f','gf']].map(([l,k,g])=>
-    `<div><div class="mh"><span>${l}</span><span><b>${r0(t[k])}</b>/${S[g]}</span></div><div class="mb"><i style="width:${Math.min(100,t[k]/S[g]*100)}%"></i></div></div>`).join('');
+  $('#mac').innerHTML=[['Eiwit','p','gp',1],['Koolh.','c','gc',2],['Vet','f','gf',3]].map(([l,k,g,n])=>
+    `<div><div class="mh"><span><i class="td" style="background:var(--c${n})"></i>${l}</span><span><b>${r0(t[k])}</b>/${S[g]}</span></div><div class="mb"><i style="width:${Math.min(100,t[k]/S[g]*100)}%;background:linear-gradient(90deg,var(--c${n}),var(--c${n}b))"></i></div></div>`).join('');
   renderRing(t); renderWeek();
   const today=iso(new Date());
   $('#date').textContent=day===today?'Vandaag':new Date(day+'T12:00').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'});
@@ -1126,7 +1164,7 @@ $('#mgo').onclick=()=>{
 
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
 document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
-applyAccent();
+applyTheme();
 render();
 </script>
 </body>
