@@ -246,11 +246,15 @@ li:not(.gh){cursor:pointer}
     <!-- importeren -->
     <div id="v-imp" class="hide">
       <h2>Importeren <button class="ic" data-close aria-label="Terug">✕</button></h2>
-      <div class="msg" style="padding-top:0">Plak het bericht of de code die je hebt gekregen.</div>
-      <textarea id="impt" rows="4" placeholder="MT1.…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+      <div class="msg" style="padding-top:0">Plak een gedeelde code of het antwoord van een AI.</div>
+      <textarea id="impt" rows="5" placeholder="Plak hier de code of het JSON-blok" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
       <button class="btn alt" id="impp">Plak van klembord</button>
-      <div class="msg" id="impm"></div>
-      <button class="btn hide" id="impgo">Voeg toe</button>
+      <div class="msg" id="impm" style="white-space:pre-line"></div>
+      <div class="row"><button class="btn hide" id="impgo">Voeg toe</button><button class="btn alt hide" id="impgo2">Voeg toe en log</button></div>
+      <div class="sh" style="margin-top:24px">Een AI laten schatten</div>
+      <div class="msg" style="padding-top:0">Eet je buiten de deur of wil je een recept laten uitrekenen? Laat een AI de voedingswaarden schatten en plak het antwoord hierboven. Kopieer eerst deze instructie en plak die als eerste bericht in een nieuwe chat met een AI.</div>
+      <button class="btn alt" id="impai">Kopieer instructie voor AI</button>
+      <textarea id="aip" class="hide" rows="6" readonly style="margin-top:10px"></textarea>
     </div>
     <!-- streak -->
     <div id="v-stk" class="hide">
@@ -851,37 +855,178 @@ function validate(o){
   }
   throw 0;
 }
-function parseCode(text){
-  const m=String(text).match(/MT1\.[A-Za-z0-9_-]+/); if(!m)return null;
-  try{return validate(JSON.parse(b64d(m[0].slice(4))))}catch(e){return null}
+/* --- instructie die de gebruiker aan een AI kan geven --- */
+const AI_PROMPT=`Je helpt me voedingswaarden te bepalen voor mijn voedingsapp (MacroTracker). Als ik je vraag naar een product, gerecht of recept, geef je altijd:
+1. Eerst één of twee zinnen uitleg, inclusief hoe zeker je schatting is.
+2. Daarna precies één codeblok met JSON in het formaat hieronder. In het codeblok staat alleen JSON, geen extra velden en geen opmerkingen.
+
+FORMAAT VOOR EEN PRODUCT OF GERECHT
+{
+  "type": "product",
+  "naam": "Caesar salade (Restaurant X)",
+  "per": "portie",
+  "gram": 320,
+  "portienaam": "portie",
+  "kcal": 540,
+  "eiwit": 28,
+  "koolhydraten": 22,
+  "vet": 36,
+  "opmerking": "Schatting op basis van een standaardrecept"
+}
+- "per": "portie" betekent dat kcal, eiwit, koolhydraten en vet gelden voor de hele portie die ik at. "gram" is dan het gewicht van die portie.
+- "per": "100g" betekent dat de waarden gelden per 100 gram. Je mag dan ook "porties" toevoegen, bijvoorbeeld "porties": [{"naam": "stuk", "gram": 150}].
+- Weet je het gewicht niet zeker? Schat het en zeg dat in "opmerking".
+
+FORMAAT VOOR EEN RECEPT (COMBINATIE VAN PRODUCTEN)
+{
+  "type": "combinatie",
+  "naam": "Havermout met banaan",
+  "porties": 1,
+  "producten": [
+    {"naam": "Havermout", "gram": 50, "kcal": 185, "eiwit": 6.5, "koolhydraten": 30, "vet": 3.5},
+    {"naam": "Banaan", "gram": 120, "kcal": 107, "eiwit": 1.3, "koolhydraten": 27, "vet": 0.4}
+  ]
+}
+- Bij elk product gelden de waarden voor de hoeveelheid die in het gerecht zit (dus voor die "gram", niet per 100 gram).
+- "porties" is het aantal porties dat het hele recept oplevert.
+
+Wil ik meerdere dingen tegelijk (bijvoorbeeld voorgerecht, hoofdgerecht en toetje apart)? Geef dan één lijst met meerdere objecten tussen blokhaken: [ {...}, {...} ].
+
+REGELS
+- Alle getallen zijn gewone getallen met een punt als decimaalteken, zonder eenheid en zonder aanhalingstekens.
+- kcal is in kilocalorieën (niet kJ). eiwit, koolhydraten en vet zijn in gram.
+- De waarden moeten bij elkaar kloppen: kcal is ongeveer 4 × eiwit + 4 × koolhydraten + 9 × vet.
+- Gebruik de naam zoals ik hem noem. Zet een restaurantnaam tussen haakjes.
+- Weet je echt te weinig (bijvoorbeeld de grootte van de portie), stel dan eerst één korte vraag voordat je de JSON geeft.`;
+
+/* --- leesbare invoer (JSON van een AI) --- */
+const nk=k=>String(k).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+const AL={type:['type','soort'],naam:['naam','name','product','gerecht','titel'],per:['per','basis'],gram:['gram','g','gewicht','grammen'],
+  kcal:['kcal','calorieen','calorie','calories','energie','kilocalorieen'],eiwit:['eiwit','eiwitten','proteine','proteinen','protein'],
+  kh:['koolhydraten','koolhydraat','carbs','carbohydrates','carb'],vet:['vet','vetten','fat','fats'],
+  pn:['portienaam'],por:['porties','portions'],note:['opmerking','note','notitie','toelichting'],prod:['producten','ingredienten','ingredients','items']};
+function gv(o,key){for(const k of Object.keys(o||{})){if(AL[key].includes(nk(k)))return o[k]}return undefined}
+function toNum(x,label,{min=0,max=1e6,req=true}={}){
+  if(x===undefined||x===null||x===''){if(req)throw new Error(`"${label}" ontbreekt`);return 0}
+  const v=typeof x==='number'?x:parseFloat(String(x).replace(',','.').replace(/[^0-9.\-]/g,''));
+  if(!isFinite(v))throw new Error(`"${label}" is geen getal`);
+  if(v<min||v>max)throw new Error(`"${label}" lijkt niet te kloppen (${v})`);
+  return v;
+}
+function extractJSON(text){
+  const t=String(text).replace(/[\u201C\u201D\u201E\u201F]/g,'"').replace(/[\u2018\u2019]/g,"'"), cands=[], re=/```[a-zA-Z]*\s*([\s\S]*?)```/g;
+  let m; while((m=re.exec(t)))cands.push(m[1]); cands.push(t);
+  for(const c of cands){
+    const a=c.search(/[\[{]/); if(a<0)continue;
+    const close=c[a]==='['?']':'}', b=c.lastIndexOf(close); if(b<=a)continue;
+    const j=c.slice(a,b+1);
+    for(const x of [j,j.replace(/,\s*([}\]])/g,'$1')]){try{return JSON.parse(x)}catch(e){}}
+  }
+  return null;
+}
+function normProduct(o){
+  const name=str(gv(o,'naam')); if(!name)throw new Error('De naam ontbreekt');
+  const gram=toNum(gv(o,'gram'),'gram',{req:false,max:5000}), pnr=gv(o,'pn'), pnm=str(pnr,40)||'portie';
+  let per=nk(gv(o,'per')||''); if(!per)per=gram>0?'portie':'100g';
+  const isPortion=/^(portie|portion|serving)/.test(per);
+  let kcal=toNum(gv(o,'kcal'),'kcal'), p=toNum(gv(o,'eiwit'),'eiwit',{req:false}), c=toNum(gv(o,'kh'),'koolhydraten',{req:false}), f=toNum(gv(o,'vet'),'vet',{req:false});
+  const warns=[]; let portions=[];
+  const raw=gv(o,'por'); if(Array.isArray(raw))portions=raw.slice(0,20).map(x=>({n:str(gv(x,'naam'),40),g:toNum(gv(x,'gram'),'gram van een portie',{req:false,max:5000})})).filter(x=>x.n&&x.g>0);
+  if(isPortion){
+    if(!(gram>0))throw new Error('Bij "per": "portie" hoort ook het gewicht van de portie ("gram")');
+    const k=100/gram; kcal*=k;p*=k;c*=k;f*=k; portions=[{n:pnm,g:gram},...portions.filter(x=>x.n!==pnm)];
+  }else if(gram>0&&pnr!==undefined)portions=[{n:pnm,g:gram},...portions.filter(x=>x.n!==pnm)];
+  if(kcal>1000)throw new Error(`${name}: meer dan 1000 kcal per 100 g, dat lijkt niet te kloppen. Is het per portie of per 100 g?`);
+  if(p+c+f>110)throw new Error(`${name}: de macro's kloppen niet (samen meer dan 100 g per 100 g). Is het per portie of per 100 g?`);
+  const est=4*p+4*c+9*f;
+  if(!(p||c||f))warns.push(`${name}: eiwit, koolhydraten en vet ontbreken`);
+  else if(est>20&&Math.abs(kcal-est)/est>.4)warns.push(`${name}: de calorieën passen niet goed bij de macro's (verwacht ongeveer ${r0(est*(portions[0]?portions[0].g/100:1))} kcal per ${portions[0]?portions[0].n:'100 g'})`);
+  return {t:'f',name,kcal:r3(kcal),p:r3(p),c:r3(c),f:r3(f),portions:portions.map(x=>({n:x.n,g:r3(x.g)})),note:str(gv(o,'note'),120),warns};
+}
+function normCombo(o){
+  const name=str(gv(o,'naam')); if(!name)throw new Error('De naam ontbreekt');
+  const list=gv(o,'prod'); if(!Array.isArray(list)||!list.length||list.length>60)throw new Error(`${name}: een combinatie heeft een lijst "producten" nodig`);
+  const warns=[];
+  const items=list.map((x,i)=>{
+    const g=toNum(gv(x,'gram'),`gram van product ${i+1}`,{max:100000}); if(!(g>0))throw new Error(`product ${i+1}: "gram" moet groter zijn dan 0`);
+    const n=str(gv(x,'naam'))||`Product ${i+1}`, kcal=toNum(gv(x,'kcal'),`kcal van ${n}`), p=toNum(gv(x,'eiwit'),'eiwit',{req:false}), c=toNum(gv(x,'kh'),'koolhydraten',{req:false}), f=toNum(gv(x,'vet'),'vet',{req:false});
+    if(p+c+f>g*1.1)throw new Error(`${n}: de macro's wegen meer dan het product zelf. Gelden de waarden wel voor die ${g} g?`);
+    const est=4*p+4*c+9*f; if(est>20&&Math.abs(kcal-est)/est>.4)warns.push(`${n}: de calorieën passen niet goed bij de macro's`);
+    return {name:n,g:r3(g),kcal:r3(kcal),p:r3(p),c:r3(c),f:r3(f),label:''};
+  });
+  const por=gv(o,'por'), porties=Array.isArray(por)||por===undefined?1:toNum(por,'porties',{min:.1,max:1000,req:false})||1;
+  return {t:'c',name,porties,items,note:str(gv(o,'note'),120),warns};
+}
+function normItem(o){
+  if(!o||typeof o!=='object'||Array.isArray(o))throw new Error('Onverwacht formaat');
+  const ty=nk(gv(o,'type')||'');
+  return (['combinatie','recept','combo','recipe'].includes(ty)||(!ty&&Array.isArray(gv(o,'prod'))))?normCombo(o):normProduct(o);
+}
+function parseImport(text){
+  const t=String(text||'').trim(); if(!t)return null;
+  const m=t.match(/MT1\.[A-Za-z0-9_-]+/);
+  if(m){try{return {items:[validate(JSON.parse(b64d(m[0].slice(4))))]}}catch(e){return {error:'Deze code is beschadigd of niet compleet. Kopieer het hele bericht opnieuw.'}}}
+  const raw=extractJSON(t);
+  if(raw==null)return {error:'Ik vind geen bruikbare code in deze tekst. Plak de code van een vriend(in) of het JSON-blok van een AI.'};
+  const arr=Array.isArray(raw)?raw:(raw&&typeof raw==='object'&&Array.isArray(raw.items)&&!gv(raw,'naam')?raw.items:[raw]);
+  if(!arr.length||arr.length>30)return {error:'Ik vind geen producten in deze tekst.'};
+  try{return {items:arr.map(normItem)}}
+  catch(e){return {error:'Dit kan ik niet inlezen: '+e.message+'. Vraag de AI om het opnieuw te geven in het afgesproken formaat.'}}
 }
 const uniq=(n,list)=>{let r=n,i=2;while(list.some(x=>x.name===r))r=`${n} (${i++})`;return r};
 const comboKcal=c=>c.items.reduce((a,i)=>a+i.kcal,0);
 let impObj=null;
 function impPreview(){
-  const t=$('#impt').value, m=$('#impm'), go=$('#impgo'); impObj=t.trim()?parseCode(t):null;
-  go.classList.toggle('hide',!impObj);
+  const t=$('#impt').value, m=$('#impm'); impObj=null; $('#impgo').classList.add('hide'); $('#impgo2').classList.add('hide');
   if(!t.trim()){m.textContent='';return}
-  if(!impObj){m.textContent='Dit is geen geldige code. Plak het hele bericht, inclusief de code die met MT1. begint.';return}
-  const o=impObj;
-  m.textContent=o.t==='f'?`Product: ${o.name} · ${r0(o.kcal)} kcal per 100 g · E ${f1(o.p)} · K ${f1(o.c)} · V ${f1(o.f)}`:`Combinatie: ${o.name} · ${o.items.length} producten · ${r0(comboKcal(o)/o.porties)} kcal per portie`;
+  const r=parseImport(t); if(!r){m.textContent='';return}
+  if(r.error){m.textContent=r.error;return}
+  impObj=r;
+  const lines=r.items.map(o=>{
+    if(o.t==='c')return `${o.name} (combinatie) · ${o.items.length} producten · ${r0(comboKcal(o)/o.porties)} kcal per portie`;
+    const q=o.portions[0], k=q?q.g/100:1;
+    return `${o.name} · ${r0(o.kcal*k)} kcal per ${q?q.n+' ('+r0(q.g)+' g)':'100 g'} · E ${f1(o.p*k)} · K ${f1(o.c*k)} · V ${f1(o.f*k)}`;
+  });
+  const extra=[...r.items.filter(o=>o.note).map(o=>'ℹ '+o.note),...r.items.flatMap(o=>(o.warns||[]).map(w=>'⚠ '+w))];
+  m.textContent=(r.items.length>1?`${r.items.length} items gevonden:\n`:'')+lines.join('\n')+(extra.length?'\n'+extra.join('\n'):'');
+  $('#impgo').textContent=r.items.length>1?`Voeg ${r.items.length} toe`:'Voeg toe'; $('#impgo').classList.remove('hide');
+  if(r.items.length===1)$('#impgo2').classList.remove('hide');
+}
+function addItems(items){
+  const added=[], dup=[];
+  items.forEach(o=>{
+    const list=o.t==='f'?S.foods:S.combos;
+    const same=list.find(x=>x.name===o.name&&(o.t==='f'?Math.round(x.kcal)===Math.round(o.kcal)&&Math.round(x.p*10)===Math.round(o.p*10):x.items.length===o.items.length&&Math.round(comboKcal(x))===Math.round(comboKcal(o))));
+    if(same){dup.push(same);return}
+    const name=uniq(o.name,list); let item;
+    if(o.t==='f'){item={code:'',name,kcal:o.kcal,p:o.p,c:o.c,f:o.f,portions:o.portions,added:Date.now()};if(o.note)item.note=o.note;S.foods.push(item)}
+    else{item={id:Date.now()+added.length,name,porties:o.porties,items:o.items,added:Date.now()};S.combos.push(item)}
+    added.push({item,list});
+  });
+  return {added,dup};
+}
+function doImport(thenLog){
+  if(!impObj)return;
+  const {added,dup}=addItems(impObj.items);
+  if(!added.length){$('#impm').textContent='Dit staat al in je lijst.';return}
+  S.sort='recent'; save(); $('#impt').value=''; impPreview(); target='day';
+  if(thenLog&&added.length===1){const it=added[0].item; renderOwn(); amount(it.items?comboFood(it):it); return}
+  openAdd(true);
+  toast(added.length===1?'Toegevoegd: '+added[0].item.name:`${added.length} toegevoegd`+(dup.length?` (${dup.length} stond er al)`:''),
+    ()=>{added.forEach(({item,list})=>{const i=list.indexOf(item);if(i>=0)list.splice(i,1)});save();renderOwn()});
 }
 $('#impt').oninput=impPreview;
-$('#impb').onclick=()=>{$('#impt').value='';impPreview();view('imp')};
+$('#impb').onclick=()=>{$('#impt').value='';$('#aip').classList.add('hide');impPreview();view('imp')};
 $('#impp').onclick=async()=>{
   try{$('#impt').value=await navigator.clipboard.readText()}
   catch(e){$('#impm').textContent='Plakken lukte niet. Houd in het vak ingedrukt en kies Plak.';return}
   impPreview();
 };
-$('#impgo').onclick=()=>{
-  const o=impObj; if(!o)return; const list=o.t==='f'?S.foods:S.combos;
-  const dup=list.find(x=>x.name===o.name&&(o.t==='f'?Math.round(x.kcal)===Math.round(o.kcal)&&Math.round(x.p*10)===Math.round(o.p*10):x.items.length===o.items.length&&Math.round(comboKcal(x))===Math.round(comboKcal(o))));
-  if(dup){$('#impm').textContent='Dit staat al in je lijst.';return}
-  const name=uniq(o.name,list); let item;
-  if(o.t==='f'){item={code:'',name,kcal:o.kcal,p:o.p,c:o.c,f:o.f,portions:o.portions,added:Date.now()};S.foods.push(item)}
-  else{item={id:Date.now(),name,porties:o.porties,items:o.items,added:Date.now()};S.combos.push(item)}
-  S.sort='recent'; save(); $('#impt').value=''; impPreview(); target='day'; openAdd(true);
-  toast('Toegevoegd: '+name,()=>{const i=list.indexOf(item);if(i>=0){list.splice(i,1);save();renderOwn()}});
+$('#impgo').onclick=()=>doImport(false);
+$('#impgo2').onclick=()=>doImport(true);
+$('#impai').onclick=async()=>{
+  try{await navigator.clipboard.writeText(AI_PROMPT);$('#aip').classList.add('hide');$('#impm').textContent='Instructie gekopieerd. Plak die als eerste bericht in een nieuwe chat met een AI.'}
+  catch(e){const a=$('#aip');a.value=AI_PROMPT;a.classList.remove('hide');a.focus();a.select();$('#impm').textContent='Kopiëren lukte niet. Houd de tekst hieronder ingedrukt en kies Kopieer.'}
 };
 
 /* combinaties */
@@ -1128,7 +1273,7 @@ async function suggest(){
 /* hoeveelheid */
 let mode=-1;
 function amount(p,init){
-  renderMeals(); pick=p; $('#an').firstChild.textContent=p.name; $('#ap').textContent=p._c?`${r0(p.kcal*p.portions[0].g/100)} kcal per portie · ${p._c.items.length} producten`:info(p);
+  renderMeals(); pick=p; $('#an').firstChild.textContent=p.name; $('#ap').textContent=(p._c?`${r0(p.kcal*p.portions[0].g/100)} kcal per portie · ${p._c.items.length} producten`:info(p))+(p.note?' · '+p.note:'');
   $('#ms2').classList.toggle('hide',target==='combo'); $('#ago').textContent=ed?'Opslaan':target==='combo'?'Toevoegen aan combinatie':'Toevoegen';
   let m=p.portions&&p.portions.length?0:-1, val=null;
   if(init){m=-1;val=init.g;if(init.pn&&init.qty>0){const i=(p.portions||[]).findIndex(x=>x.n===init.pn);if(i>=0){m=i;val=init.qty}}}
