@@ -557,9 +557,11 @@ function renderWeek(){
   if(!hideLegend)box.appendChild(chips);
   const W=320,Ht=112,pt=16,pb=18,base=pt+(Ht-pt-pb), cw=W/7, cx=i=>i*cw+cw/2;
   const val=(d,m)=>pct?d.t[m[0]]/S[m[3]]:d.t[m[0]], ref=pct?1:S[ser[0][3]];
-  const vals=weeks.flat().flatMap(d=>d.t.n&&!d.fut?ser.map(m=>val(d,m)):[]);
-  const lo=pct?1.2:ref*1.15, max=Math.min(Math.max(lo,...vals.map(v=>v*1.08)),lo*1.8), Y=v=>Math.max(3,pt+(Ht-pt-pb)*(1-v/max));
+  const lo=pct?1.2:ref*1.15;
   function weekSvg(days){
+    /* de schaal hoort bij alleen deze week */
+    const wv=days.flatMap(d=>d.t.n&&!d.fut?ser.map(m=>val(d,m)):[]);
+    const max=Math.max(lo,...wv.map(v=>v*1.08)), Y=v=>Math.max(3,pt+(Ht-pt-pb)*(1-v/max));
     let g=`<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Weekoverzicht">`;
     days.forEach((d,i)=>{if(d.sel)g+=`<rect x="${(i*cw+2).toFixed(1)}" y="2" width="${(cw-4).toFixed(1)}" height="${base-2}" rx="8" style="fill:var(--line);opacity:.65"/>`});
     g+=`<line x1="0" x2="${W}" y1="${base}" y2="${base}" style="stroke:var(--line)"/>`;
