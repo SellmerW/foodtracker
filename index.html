@@ -113,7 +113,6 @@ li:not(.gh){cursor:pointer}
 .rl i{width:10px;height:10px;border-radius:50%;flex:none}
 .rl .n{flex:1;color:var(--mute)}
 .rl b{font-weight:600}
-#wk{margin-top:2px}
 .cal button.fz{background:var(--ftint)}
 .swatches{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:8px 2px 4px}
 .sw1{width:32px;height:32px;border-radius:50%;box-shadow:0 0 0 1px var(--line)}
@@ -141,8 +140,8 @@ li:not(.gh){cursor:pointer}
 .wkw{flex:none;width:100%;scroll-snap-align:start}
 .wkw svg{display:block;width:100%;height:auto}
 .wkcap{color:var(--mute);font-size:12px;text-align:right;margin:2px 2px 0;min-height:1.2em}
-.pg{max-width:480px;margin:0 auto;padding:12px 16px 175px}
-#pg-meals,#pg-stats,#pg-prof{padding-bottom:110px}
+.pg{max-width:480px;margin:0 auto;padding:12px 16px 150px}
+#pg-meals,#pg-stats,#pg-prof{padding-bottom:100px}
 .brand{display:flex;align-items:center;gap:10px;margin:2px 0 4px}
 .brand b{font-size:21px;letter-spacing:-.01em}
 .brand .streak{margin-left:auto}
@@ -153,12 +152,12 @@ li:not(.gh){cursor:pointer}
 .dsel::after{content:' ▾';font-size:14px;color:var(--mute);font-weight:400}
 .dnav{display:flex;flex:none}
 h1.pt{font-size:30px;font-weight:700;letter-spacing:-.02em;margin:10px 2px 14px}
-#tabbar{position:fixed;left:0;right:0;bottom:0;z-index:4;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+#tabbar{position:fixed;left:0;right:0;bottom:0;z-index:4;background:var(--card);border-top:1px solid var(--line);padding-bottom:calc(env(safe-area-inset-bottom,0px)*.35)}
 .tbin{display:flex;max-width:480px;margin:0 auto}
-#tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0 7px;font-size:11px;color:var(--mute)}
+#tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0 5px;font-size:11px;color:var(--mute)}
 #tabbar button.on{color:var(--acc);font-weight:600}
 #tabbar svg{width:25px;height:25px}
-.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom,0px));width:calc(100% - 32px);max-width:448px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--acc);color:var(--onacc);font-weight:600;font-size:17px;border-radius:18px;padding:15px 20px;box-shadow:0 4px 16px rgba(0,0,0,.18);z-index:4}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom,0px)*.35);width:calc(100% - 32px);max-width:448px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--acc);color:var(--onacc);font-weight:600;font-size:17px;border-radius:18px;padding:15px 20px;box-shadow:0 4px 16px rgba(0,0,0,.18);z-index:4}
 .ico{flex:none;display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;color:var(--acc)}
 .ico svg{width:100%;height:100%;stroke-width:1.5}
 .res.rr{display:flex;align-items:center;gap:10px}
@@ -178,6 +177,19 @@ li .k{font-size:17px}
 .icb svg{width:36px;height:36px;stroke-width:1.5}
 .lnk{display:block;width:100%;text-align:center;padding:12px;color:var(--mute);margin-top:4px}
 .lnk.bad{color:var(--bad)}
+.selrow{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:38px;font-size:15px;margin:4px 2px 4px}
+.lnk2{color:var(--acc);font-weight:600;white-space:nowrap}
+.avgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.ag small{display:block;color:var(--mute);font-size:12px}
+.ag b{display:block;font-size:20px;font-variant-numeric:tabular-nums;margin:2px 0}
+.mixbar{display:flex;height:14px;border-radius:7px;overflow:hidden;gap:2px;margin-bottom:4px}
+.mixbar div{min-width:3px}
+.tp{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.tp:last-child{border-bottom:0}
+.tp .ico{width:38px;height:38px}
+.tp .rt{flex:1;min-width:0}
+.tp .rt span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tp .rt small{color:var(--mute)}
 .fr .ic.fav{color:var(--acc)}
 .fr div.res{cursor:default}
 .tabs.small{width:75%;margin-left:auto}
@@ -200,7 +212,6 @@ li .k{font-size:17px}
     <button class="cmp hide" id="cmp" aria-label="Nieuwe vergelijking"><span id="cmptxt"></span></button>
     <div class="bar"><i id="fill"></i></div>
     <div class="mac" id="mac"></div>
-    <div id="wk" class="hide"></div>
   </section>
   <ul id="list"></ul>
   <div class="empty hide" id="empty">Nog niets gegeten. Tik op Toevoegen.</div>
@@ -219,12 +230,15 @@ li .k{font-size:17px}
 </main>
 <main id="pg-stats" class="pg hide">
   <h1 class="pt">Statistieken</h1>
-      <div class="tabs" id="tabs"></div>
-      <div class="tabs small" id="per"></div>
-      <div id="chart"></div>
-      <div class="avg" id="avg"></div>
-      <div class="msg" id="avs"></div>
-      <div class="msg" id="sel" style="color:var(--ink);min-height:1.4em;padding-top:0"></div>
+  <div class="tabs" id="spm"></div>
+  <div class="row" style="gap:8px;margin-bottom:2px"><div class="tabs" id="sst" style="margin:0"></div><div class="tabs" id="smd" style="margin:0"></div></div>
+  <div class="chips" id="smt" style="margin:10px 0 2px"></div>
+  <div id="sch" style="margin-top:4px"></div>
+  <div class="wkcap" id="scap"></div>
+  <div class="selrow"><span id="ssel"></span><button class="lnk2 hide" id="sgo"></button></div>
+  <div class="sh">Samenvatting</div><div class="card" id="ssum"></div>
+  <div class="sh">Verdeling van je macro's</div><div class="card" id="smix"></div>
+  <div class="sh">Meest gegeten</div><div class="card" id="stop"></div>
 </main>
 <main id="pg-prof" class="pg hide">
   <h1 class="pt">Profiel</h1>
@@ -238,16 +252,14 @@ li .k{font-size:17px}
         <label>Vet (g)<input id="gf" type="number" inputmode="numeric"></label>
       </div></div>
       <div class="sh">Thema</div>
-      <div class="card"><div class="themes" id="themes"></div></div>
+      <div class="card"><div class="themes" id="themes"></div>
+        <div class="sl">Achtergrond</div><div class="tabs" id="bgSeg"></div>
+        <div class="msg" id="bgHint" style="padding:8px 0 0"></div></div>
       <div class="sh">Startscherm</div>
       <div class="card">
         <div class="sl">Weergave</div><div class="tabs" id="hsView"></div>
         <div class="sl">Calorieën tonen als</div><div class="tabs" id="hsShow"></div>
-        <div class="swr sep"><span>Weekgrafiek</span><button class="swb" id="wksw" role="switch" aria-checked="false" aria-label="Weekgrafiek"></button></div>
-        <div id="wkopts" class="hide">
-          <div class="sl">Stijl</div><div class="tabs" id="hsStyle"></div>
-          <div class="sl">Waarden</div><div class="tabs" id="hsMode"></div>
-        </div>
+        <div id="rcrow" class="hide"><div class="sl">Kleur van de ring</div><div class="swatches" id="rcsw" style="margin:0 2px 2px"></div></div>
       </div>
       <div class="sh">Extra</div>
       <div class="card"><div class="swr"><span>Vergelijking onder je kcal</span><button class="swb" id="funsw" role="switch" aria-checked="false" aria-label="Vergelijking onder je kcal"></button></div></div>
@@ -468,9 +480,9 @@ function entryIcon(e){
 function fix(){
   S=S&&S.days?S:{days:{}};
   S.goal=S.goal||2000; S.gp=S.gp||120; S.gc=S.gc||220; S.gf=S.gf||65;
-  S.foods=S.foods||S.recent||[]; delete S.recent; S.combos=S.combos||[]; S.sort=S.sort||'recent'; S.fz=S.fz||{}; S.msort=S.msort||'az'; delete S.accent;
+  S.foods=S.foods||S.recent||[]; delete S.recent; S.combos=S.combos||[]; S.sort=S.sort||'recent'; S.fz=S.fz||{}; S.bg=S.bg==='neutral'?'neutral':'theme'; S.msort=S.msort||'az'; delete S.accent;
   if(!THEMES.some(t=>t.id===S.theme))S.theme='apple';
-  S.hs=Object.assign({view:'ring',show:'eaten',wk:true,wkStyle:'bar',wkMode:'abs',wkMetric:'k'},S.hs||{});
+  S.hs=Object.assign({view:'ring',show:'eaten',wkStyle:'bar',wkMode:'abs',wkMetric:'k',ringColor:0},S.hs||{});
   if(!S.bf){
     S.bf=1; const use={};
     Object.keys(S.days).forEach(k=>S.days[k].forEach(e=>{const u=use[e.name]=use[e.name]||{n:0,t:0};u.n++;u.t=Math.max(u.t,e.id||0)}));
@@ -532,17 +544,20 @@ $('#stk').onclick=()=>{renderStk();view('stk')};
 function tot(key){const L=S.days[key]||[],t={k:0,p:0,c:0,f:0,n:L.length};L.forEach(e=>{t.k+=e.kcal;t.p+=e.p;t.c+=e.c;t.f+=e.f});return t}
 
 /* thema's: accent + ringkleuren + achtergrond horen bij elkaar */
+/* neutrale achtergrond (los van het thema): zwart in donkere modus, lichtgrijs in lichte modus */
+const NEUTRAL={l:{bg:'#f2f2f7',card:'#ffffff',line:'#d1d1d6'},d:{bg:'#000000',card:'#1c1c1e',line:'#38383a'}};
+function palFor(T,dark){return S.bg==='neutral'?(dark?NEUTRAL.d:NEUTRAL.l):(dark?T.d:T.l)}
 const mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
 const h2rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
 const thm=()=>THEMES.find(t=>t.id===S.theme)||THEMES[0];
 const isDark=()=>!!(mq&&mq.matches);
 function applyTheme(){
-  const T=thm(), dark=isDark(), st=document.documentElement.style, pal=dark?T.d:T.l, acc=dark?T.accD:T.acc, c=h2rgb(acc);
+  const T=thm(), dark=isDark(), st=document.documentElement.style, pal=palFor(T,dark), acc=dark?T.accD:T.acc, c=h2rgb(acc);
   st.setProperty('--bg',pal.bg); st.setProperty('--card',pal.card); st.setProperty('--line',pal.line);
   st.setProperty('--acc',acc);
   st.setProperty('--onacc',(.2126*c[0]+.7152*c[1]+.0722*c[2])/255>.55?'#0c1412':'#fff');
   st.setProperty('--tint',`rgba(${c[0]},${c[1]},${c[2]},${dark?.3:.22})`);
-  T.r.forEach(([A,B],i)=>{st.setProperty('--c'+i,dark?lerpHex(A,B,.25):A);st.setProperty('--c'+i+'b',B)});
+  [kcalPair(),...T.r.slice(1)].forEach(([A,B],i)=>{st.setProperty('--c'+i,dark?lerpHex(A,B,.25):A);st.setProperty('--c'+i+'b',B)});
   const m=document.querySelector('meta[name=theme-color]'); if(m)m.setAttribute('content',pal.bg);
 }
 function onSchemeChange(){applyTheme();if(tab==='prof')renderThemes()}
@@ -559,7 +574,7 @@ function miniArc(cx,cy,r,w,f,A,B){
   return o+`<circle cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="${w/2}" fill="${B}"/>`;
 }
 function themeSvg(T,dark){
-  const pal=dark?T.d:T.l, acc=dark?T.accD:T.acc, ink=dark?'#e8eeec':'#1b2321', mute=dark?'#8d9a96':'#68736f';
+  const pal=palFor(T,dark), acc=dark?T.accD:T.acc, ink=dark?'#e8eeec':'#1b2321', mute=dark?'#8d9a96':'#68736f';
   let g=`<svg viewBox="0 0 160 92" aria-hidden="true"><rect width="160" height="92" fill="${pal.bg}"/><rect x="6" y="6" width="148" height="80" rx="10" fill="${pal.card}" stroke="${pal.line}"/>`;
   [[33,.88],[26,.7],[19,.54],[12,.36]].forEach(([r,f],i)=>{g+=miniArc(50,46,r,5.5,f,T.r[i][0],T.r[i][1])});
   g+=`<rect x="98" y="22" width="40" height="6" rx="3" fill="${ink}"/><rect x="98" y="34" width="46" height="4" rx="2" fill="${mute}" opacity=".55"/><rect x="98" y="43" width="32" height="4" rx="2" fill="${mute}" opacity=".55"/>`;
@@ -583,56 +598,74 @@ function seg(id,opts,cur,fn){
 function renderSet(){
   ['goal','gp','gc','gf'].forEach(k=>$('#'+k).value=S[k]);
   renderFun(); renderThemes();
-  const H=S.hs, set=(k,v)=>{H[k]=v;save();renderSet();render()};
-  seg('#hsView',[['num','Cijfers'],['ring','Ringen']],H.view,v=>set('view',v));
+  seg('#bgSeg',[['theme','Van thema'],['neutral','Neutraal']],S.bg,v=>{S.bg=v;save();applyTheme();renderSet();render()});
+  $('#bgHint').textContent=S.bg==='neutral'?'Neutraal: zwart in donkere modus en lichtgrijs in lichte modus, welk thema je ook kiest.':'De achtergrond krijgt een lichte tint van je thema.';
+  const H=S.hs, set=(k,v)=>{H[k]=v;save();applyTheme();renderSet();render()};
+  seg('#hsView',[['num','Cijfers'],['ring','Ring'],['rings','Ringen']],H.view,v=>set('view',v));
   seg('#hsShow',[['left','Nog over'],['eaten','Gegeten']],H.show,v=>set('show',v));
-  const w=$('#wksw'); w.classList.toggle('on',H.wk); w.setAttribute('aria-checked',H.wk); $('#wkopts').classList.toggle('hide',!H.wk);
-  seg('#hsStyle',[['bar','Staven'],['line','Lijn']],H.wkStyle,v=>set('wkStyle',v));
-  seg('#hsMode',[['abs','Absoluut'],['pct','Percentage']],H.wkMode,v=>set('wkMode',v));
+  $('#rcrow').classList.toggle('hide',H.view!=='ring'); renderRingSw();
 }
-$('#wksw').onclick=()=>{S.hs.wk=!S.hs.wk;save();renderSet();render()};
+function renderRingSw(){
+  const box=$('#rcsw'); box.innerHTML=''; const cur=Number.isInteger(S.hs.ringColor)?S.hs.ringColor:0;
+  [...thm().r,accentPair()].forEach(([A,B],i)=>{
+    const b=document.createElement('button'); b.className='sw1'+(i===cur?' on':''); b.style.background=`linear-gradient(135deg,${A},${B})`;
+    b.setAttribute('aria-label',i===4?'Accentkleur':'Themakleur '+(i+1)); b.onclick=()=>{S.hs.ringColor=i;save();applyTheme();renderSet();render()}; box.appendChild(b);
+  });
+}
 
 /* ringen en weekgrafiek */
 const MET=[['k','kcal','var(--c0)','goal'],['p','Eiwit','var(--c1)','gp'],['c','Koolh.','var(--c2)','gc'],['f','Vet','var(--c3)','gf']];
-const ringDefs=()=>{const R=thm().r;return [['k','var(--c0)',R[0],90],['p','var(--c1)',R[1],74],['c','var(--c2)',R[2],58],['f','var(--c3)',R[3],42]]};
 const lerpHex=(A,B,t)=>{const a=h2rgb(A),b=h2rgb(B);return '#'+a.map((v,i)=>Math.round(v+(b[i]-v)*t).toString(16).padStart(2,'0')).join('')};
+function accentPair(){const a=isDark()?thm().accD:thm().acc;return [a,lerpHex(a,'#ffffff',.45)]}
+/* kleur van de kcal-ring: bij de enkele ring kies je zelf een themakleur (of het accent) */
+function kcalPair(){
+  const T=thm(), ci=S.hs.ringColor;
+  if(S.hs.view==='ring'&&Number.isInteger(ci)&&ci>=0)return ci===4?accentPair():(T.r[ci]||T.r[0]);
+  return T.r[0];
+}
 const rpt=(r,f)=>{const a=2*Math.PI*f;return [100+r*Math.sin(a),100-r*Math.cos(a)]};
 const clamp01=v=>Math.max(0,Math.min(1,v));
-function arcSegs(r,f0,f1,col){
+function arcSegs(r,f0,f1,col,w=12){
   const n=Math.max(2,Math.ceil((f1-f0)*60)); let o='';
   for(let i=0;i<n;i++){
     const a=f0+(f1-f0)*i/n, b=Math.min(f1,f0+(f1-f0)*(i+1)/n+.004), [x0,y0]=rpt(r,a), [x1,y1]=rpt(r,b);
-    o+=`<path d="M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}" fill="none" stroke-width="12" stroke="${col(f0+(f1-f0)*(i+.5)/n)}"/>`;
+    o+=`<path d="M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}" fill="none" stroke-width="${w}" stroke="${col(f0+(f1-f0)*(i+.5)/n)}"/>`;
   }
   return o;
 }
-const cap=(r,f,c)=>{const [x,y]=rpt(r,f);return `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="6" fill="${c}"/>`};
-function renderRing(t){
-  const on=S.hs.view==='ring'; $('#hero').classList.toggle('ringmode',on); if(!on)return;
-  let defs='<defs><filter id="rb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.2"/></filter>', g='';
-  ringDefs().forEach(([k,v,[A,B],r],i)=>{
-    const R=r+6, Rn=r-6;
-    defs+=`<clipPath id="rc${i}"><path clip-rule="evenodd" fill-rule="evenodd" d="M${100-R} 100a${R} ${R} 0 1 0 ${2*R} 0a${R} ${R} 0 1 0 ${-2*R} 0ZM${100-Rn} 100a${Rn} ${Rn} 0 1 0 ${2*Rn} 0a${Rn} ${Rn} 0 1 0 ${-2*Rn} 0Z"/></clipPath>`;
-    const goal=k==='k'?S.goal:S[{p:'gp',c:'gc',f:'gf'}[k]], p=t[k]/goal;
-    g+=`<circle cx="100" cy="100" r="${r}" fill="none" stroke-width="12" stroke="${A}" stroke-opacity=".2"/>`;
-    /* De kleur hangt af van de afstand tot het uiteinde (D, in rondes), niet van de hoek.
-       Zo loopt het verloop gewoon door als de lijn over 100% gaat. */
-    if(p>.002){
-      const over=p>1.002, q=over?((p-1)%1||1):0, pe=over?1+q:Math.min(p,1), L=Math.min(pe,1);
-      const G=D=>lerpHex(A,B,clamp01(1-D/L));
-      if(!over){
-        g+=cap(r,0,G(pe))+arcSegs(r,0,pe,f=>G(pe-f))+cap(r,pe,B);
-      }else{
-        g+=arcSegs(r,0,1,f=>G(pe-f));
-        const a=2*Math.PI*q, [hx,hy]=rpt(r,q);
-        g+=`<g clip-path="url(#rc${i})"><circle cx="${(hx+Math.cos(a)*2.5).toFixed(2)}" cy="${(hy+Math.sin(a)*2.5).toFixed(2)}" r="6" fill="#000" fill-opacity=".5" filter="url(#rb)"/></g>`;
-        g+=arcSegs(r,0,q,f=>G(q-f))+cap(r,q,B);
-      }
+const cap=(r,f,c,w=12)=>{const [x,y]=rpt(r,f);return `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${w/2}" fill="${c}"/>`};
+/* Eén ring. De kleur hangt af van de afstand tot het uiteinde (niet van de hoek), zodat het verloop
+   gewoon doorloopt als de lijn over 100% gaat. */
+function ringGeom(r,w,p,A,B,i){
+  const R=r+w/2, Rn=r-w/2;
+  const defs=`<clipPath id="rc${i}"><path clip-rule="evenodd" fill-rule="evenodd" d="M${100-R} 100a${R} ${R} 0 1 0 ${2*R} 0a${R} ${R} 0 1 0 ${-2*R} 0ZM${100-Rn} 100a${Rn} ${Rn} 0 1 0 ${2*Rn} 0a${Rn} ${Rn} 0 1 0 ${-2*Rn} 0Z"/></clipPath>`;
+  let g=`<circle cx="100" cy="100" r="${r}" fill="none" stroke-width="${w}" stroke="${A}" stroke-opacity=".2"/>`;
+  if(p>.002){
+    const over=p>1.002, q=over?((p-1)%1||1):0, pe=over?1+q:Math.min(p,1), L=Math.min(pe,1), G=D=>lerpHex(A,B,clamp01(1-D/L));
+    if(!over)g+=cap(r,0,G(pe),w)+arcSegs(r,0,pe,f=>G(pe-f),w)+cap(r,pe,B,w);
+    else{
+      g+=arcSegs(r,0,1,f=>G(pe-f),w);
+      const a=2*Math.PI*q, [hx,hy]=rpt(r,q), o=2.5*w/12;
+      g+=`<g clip-path="url(#rc${i})"><circle cx="${(hx+Math.cos(a)*o).toFixed(2)}" cy="${(hy+Math.sin(a)*o).toFixed(2)}" r="${w/2}" fill="#000" fill-opacity=".5" filter="url(#rb)"/></g>`;
+      g+=arcSegs(r,0,q,f=>G(q-f),w)+cap(r,q,B,w);
     }
-  });
-  const left=S.goal-t.k, eaten=S.hs.show==='eaten', num=eaten?r0(t.k):Math.abs(r0(left));
-  g+=`<text x="100" y="104" text-anchor="middle" font-size="22" font-weight="700" style="fill:${!eaten&&left<0?'var(--bad)':'var(--ink)'}">${num.toLocaleString('nl-NL')}</text>`;
-  g+=`<text x="100" y="119" text-anchor="middle" font-size="11" style="fill:var(--mute)">${eaten?'gegeten':left<0?'te veel':'over'}</text>`;
+  }
+  return {defs,g};
+}
+function renderRing(t){
+  const v=S.hs.view, on=v==='ring'||v==='rings'; $('#hero').classList.toggle('ringmode',on); if(!on)return;
+  const R=thm().r, kp=kcalPair();
+  let defs='<defs><filter id="rb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.2"/></filter>', g='';
+  const left=S.goal-t.k, eaten=S.hs.show==='eaten', num=(eaten?r0(t.k):Math.abs(r0(left))).toLocaleString('nl-NL'), red=!eaten&&left<0;
+  if(v==='ring'){
+    const x=ringGeom(78,18,t.k/S.goal,kp[0],kp[1],0); defs+=x.defs; g+=x.g;
+    g+=`<text x="100" y="107" text-anchor="middle" font-size="38" font-weight="700" style="fill:${red?'var(--bad)':'var(--ink)'}">${num}</text>`;
+    g+=`<text x="100" y="129" text-anchor="middle" font-size="13" style="fill:var(--mute)">${eaten?'/ '+S.goal.toLocaleString('nl-NL')+' kcal':red?'kcal te veel':'kcal over'}</text>`;
+  }else{
+    [['k',S.goal,kp,90],['p',S.gp,R[1],74],['c',S.gc,R[2],58],['f',S.gf,R[3],42]].forEach(([k,goal,[A,B],r],i)=>{const x=ringGeom(r,12,t[k]/goal,A,B,i);defs+=x.defs;g+=x.g});
+    g+=`<text x="100" y="104" text-anchor="middle" font-size="22" font-weight="700" style="fill:${red?'var(--bad)':'var(--ink)'}">${num}</text>`;
+    g+=`<text x="100" y="119" text-anchor="middle" font-size="11" style="fill:var(--mute)">${eaten?'gegeten':red?'te veel':'over'}</text>`;
+  }
   $('#ring').innerHTML=defs+'</defs>'+g;
   $('#rleg').innerHTML=[['Kcal','k','var(--c0)',S.goal,0],['Eiwit','p','var(--c1)',S.gp,1],['Koolh.','c','var(--c2)',S.gc,2],['Vet','f','var(--c3)',S.gf,3]]
     .map(([n,k,c,g2,i])=>`<div><div class="mh"><span><i class="td" style="background:${c}"></i>${n}</span><span><b>${r0(t[k])}</b>/${g2}</span></div><div class="mb"><i style="width:${Math.min(100,t[k]/g2*100)}%;background:linear-gradient(90deg,var(--c${i}),var(--c${i}b))"></i></div></div>`).join('');
@@ -647,76 +680,6 @@ function smoothPath(P){
   }
   return d;
 }
-function renderWeek(){
-  const box=$('#wk'), H=S.hs; box.classList.toggle('hide',!H.wk); if(!H.wk)return; box.innerHTML='';
-  const tk=iso(new Date()), mondayOf=k=>{const d=new Date(k+'T12:00');d.setDate(d.getDate()-((d.getDay()+6)%7));return d};
-  const last=mondayOf(tk), selM=mondayOf(day), logged=Object.keys(S.days).filter(k=>S.days[k].length).sort();
-  let first=logged.length?mondayOf(logged[0]):last; const lim=new Date(last); lim.setDate(lim.getDate()-7*51);
-  if(first<lim)first=lim; if(selM<first)first=selM;
-  const weeks=[]; for(const m=new Date(first);m<=last;m.setDate(m.getDate()+7))weeks.push(weekDays(new Date(m)));
-  function weekDays(mon){const o=[];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const key=iso(d);o.push({key,d,t:tot(key),fut:key>tk,sel:key===day})}return o}
-  const pct=H.wkMode==='pct', bars=H.wkStyle==='bar', ser=pct?MET:MET.filter(m=>m[0]===H.wkMetric);
-  const chips=document.createElement('div'); chips.className='chips'; chips.style.margin='12px 0 2px';
-  MET.forEach(m=>{
-    const b=document.createElement('button'); b.textContent=m[1];
-    const i=document.createElement('i'); i.className='td'; i.style.background=m[2]; b.prepend(i);
-    if(pct){b.disabled=true;b.style.opacity=1;b.style.cursor='default'}
-    else{b.className=m[0]===H.wkMetric?'on':'';b.onclick=()=>{S.hs.wkMetric=m[0];save();renderWeek()}}
-    chips.appendChild(b);
-  });
-  const hideLegend=pct&&H.view==='ring';   // de ringen hebben al een legenda
-  if(!hideLegend)box.appendChild(chips);
-  const W=320,Ht=112,pt=16,pb=18,base=pt+(Ht-pt-pb), cw=W/7, cx=i=>i*cw+cw/2;
-  const val=(d,m)=>pct?d.t[m[0]]/S[m[3]]:d.t[m[0]], ref=pct?1:S[ser[0][3]];
-  const lo=pct?1.2:ref*1.15;
-  function weekSvg(days){
-    /* de schaal hoort bij alleen deze week */
-    const wv=days.flatMap(d=>d.t.n&&!d.fut?ser.map(m=>val(d,m)):[]);
-    const max=Math.max(lo,...wv.map(v=>v*1.08)), Y=v=>Math.max(3,pt+(Ht-pt-pb)*(1-v/max));
-    let g=`<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Weekoverzicht">`;
-    days.forEach((d,i)=>{if(d.sel)g+=`<rect x="${(i*cw+2).toFixed(1)}" y="2" width="${(cw-4).toFixed(1)}" height="${base-2}" rx="8" style="fill:var(--line);opacity:.65"/>`});
-    g+=`<line x1="0" x2="${W}" y1="${base}" y2="${base}" style="stroke:var(--line)"/>`;
-    g+=`<line x1="0" x2="${W}" y1="${Y(ref).toFixed(1)}" y2="${Y(ref).toFixed(1)}" stroke-dasharray="4 3" style="stroke:var(--mute);opacity:.6"/>`;
-    g+=`<text x="2" y="${(Y(ref)-3).toFixed(1)}" font-size="9" style="fill:var(--mute)">${pct?'100%':'doel '+ref}</text>`;
-    if(bars){
-      days.forEach((d,i)=>{
-        if(d.fut||!d.t.n)return;
-        const n=ser.length, bw=n>1?cw*.17:cw*.5, gap=n>1?1.5:0, x0=cx(i)-(n*bw+(n-1)*gap)/2;
-        ser.forEach((m,j)=>{const y=Y(val(d,m));g+=`<rect x="${(x0+j*(bw+gap)).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1,base-y).toFixed(1)}" rx="${n>1?1.5:3}" style="fill:${m[2]};opacity:${d.sel?1:.5}"/>`});
-      });
-    }else{
-      ser.forEach(m=>{
-        const segs=[]; let cur=[];
-        days.forEach((d,i)=>{if(!d.fut&&d.t.n)cur.push({x:cx(i),y:Y(val(d,m)),d});else if(cur.length){segs.push(cur);cur=[]}});
-        if(cur.length)segs.push(cur);
-        segs.forEach(P=>{
-          if(!pct&&P.length>1)g+=`<path d="${smoothPath(P)} L${P[P.length-1].x.toFixed(1)} ${base} L${P[0].x.toFixed(1)} ${base}Z" style="fill:${m[2]};opacity:.12"/>`;
-          if(P.length>1)g+=`<path d="${smoothPath(P)}" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="stroke:${m[2]}"/>`;
-          P.forEach(q=>{g+=`<circle cx="${q.x.toFixed(1)}" cy="${q.y.toFixed(1)}" r="${q.d.sel?4.5:2.6}" style="fill:${m[2]};${q.d.sel?'stroke:var(--bg);stroke-width:2':''}"/>`});
-        });
-      });
-    }
-    const sd=days.find(d=>d.sel);
-    if(!pct&&sd&&sd.t.n&&!sd.fut){const v=val(sd,ser[0]);g+=`<text x="${cx(days.indexOf(sd)).toFixed(1)}" y="${Math.max(10,Y(v)-(bars?5:9)).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" style="fill:var(--ink)">${r0(v)}</text>`}
-    days.forEach((d,i)=>{g+=`<text x="${cx(i).toFixed(1)}" y="${Ht-4}" text-anchor="middle" font-size="10" font-weight="${d.sel?700:400}" style="fill:${d.sel?'var(--ink)':'var(--mute)'};opacity:${d.fut?.4:1}">${d.d.toLocaleDateString('nl-NL',{weekday:'short'}).replace('.','')}</text>`});
-    return g+'</svg>';
-  }
-  const wrap=document.createElement('div'); wrap.className='wkscroll'; if(hideLegend)wrap.style.marginTop='8px';
-  weeks.forEach(days=>{
-    const cell=document.createElement('div'); cell.className='wkw'; cell.innerHTML=weekSvg(days);
-    cell.firstChild.onclick=e=>{const r=cell.firstChild.getBoundingClientRect(),i=Math.min(6,Math.max(0,Math.floor((e.clientX-r.left)/r.width*7)));if(!days[i].fut&&days[i].key!==day){day=days[i].key;render()}};
-    wrap.appendChild(cell);
-  });
-  const cap=document.createElement('div'); cap.className='wkcap';
-  const range=i=>{const a=weeks[i][0].d,b=weeks[i][6].d,m=d=>d.toLocaleDateString('nl-NL',{month:'long'});
-    return a.getMonth()===b.getMonth()?`${a.getDate()} – ${b.getDate()} ${m(b)}`:`${a.getDate()} ${m(a).slice(0,3)} – ${b.getDate()} ${m(b).slice(0,3)}`};
-  const si=weeks.findIndex(w=>w[0].key===iso(selM));
-  cap.textContent=range(si);
-  wrap.onscroll=()=>{const i=Math.min(weeks.length-1,Math.max(0,Math.round(wrap.scrollLeft/(wrap.clientWidth||1))));cap.textContent=range(i)};
-  box.appendChild(wrap); box.appendChild(cap);
-  if(weeks.length>1)wrap.scrollLeft=si*wrap.clientWidth;
-}
-
 /* vergelijking onder je kcal: [emoji, enkelvoud, meervoud, kcal per stuk] */
 const FUN=[
 ['🍬','suikerkorrel','suikerkorrels',0.00116],['🥗','sesamzaadje','sesamzaadjes',0.017],['🍚','rijstkorrel (droog)','rijstkorrels (droog)',0.09],
@@ -758,7 +721,7 @@ function render(){
   $('#fill').style.width=Math.min(100,t.k/S.goal*100)+'%';
   $('#mac').innerHTML=[['Eiwit','p','gp',1],['Koolh.','c','gc',2],['Vet','f','gf',3]].map(([l,k,g,n])=>
     `<div><div class="mh"><span><i class="td" style="background:var(--c${n})"></i>${l}</span><span><b>${r0(t[k])}</b>/${S[g]}</span></div><div class="mb"><i style="width:${Math.min(100,t[k]/S[g]*100)}%;background:linear-gradient(90deg,var(--c${n}),var(--c${n}b))"></i></div></div>`).join('');
-  renderRing(t); renderWeek();
+  renderRing(t);
   const today=iso(new Date());
   $('#date').textContent=day===today?'Vandaag':new Date(day+'T12:00').toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'});
   $('#next').style.visibility=day>=today?'hidden':'visible';
@@ -846,41 +809,179 @@ $('#add').onclick=()=>{origin='sheet';if(!manual)curMeal=defMeal();renderMeals()
 $('#exp').onclick=async()=>{try{await navigator.clipboard.writeText(JSON.stringify(S));$('#setmsg').textContent='Gekopieerd. Plak het ergens veilig, bijvoorbeeld in Notities.'}catch(e){$('#setmsg').textContent='Kopiëren lukte niet.'}};
 $('#imp').onclick=async()=>{try{const d=JSON.parse(await navigator.clipboard.readText());if(d&&d.days){S=d;fix();save();render();$('#setmsg').textContent='Hersteld.'}else throw 0}catch(e){$('#setmsg').textContent='Geen geldige back-up op het klembord.'}};
 
-/* overzicht */
-const TABS=[['k','kcal','kcal','goal'],['p','Eiwit','g','gp'],['c','Koolh.','g','gc'],['f','Vet','g','gf']];
-let stT='k', stN=7, stSel=-1;
-function stats(){
-  const tab=TABS.find(t=>t[0]===stT), goal=S[tab[3]], unit=tab[2];
-  const COL={k:'var(--c0)',p:'var(--c1)',c:'var(--c2)',f:'var(--c3)'};
-  $('#tabs').innerHTML=TABS.map(t=>`<button data-t="${t[0]}" class="${t[0]===stT?'on':''}"><i class="td" style="background:${COL[t[0]]}"></i>${t[1]}</button>`).join('');
-  $('#per').innerHTML=[7,30,365].map(n=>`<button data-n="${n}" class="${n===stN?'on':''}">${n===365?'Jaar':n+' dagen'}</button>`).join('');
-  $('#tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{stT=b.dataset.t;stSel=-1;stats()});
-  $('#per').querySelectorAll('button').forEach(b=>b.onclick=()=>{stN=+b.dataset.n;stSel=-1;stats()});
-  const days=[];
-  for(let i=stN-1;i>=0;i--){
-    const d=new Date(); d.setHours(12,0,0,0); d.setDate(d.getDate()-i);
-    const L=S.days[iso(d)]||[];
-    days.push({d,n:L.length,v:L.reduce((a,e)=>a+e[stT==='k'?'kcal':stT],0)});
+/* statistieken: week, maand en jaar */
+const MET2=[['k','kcal','var(--c0)','goal','kcal'],['p','Eiwit','var(--c1)','gp','g'],['c','Koolh.','var(--c2)','gc','g'],['f','Vet','var(--c3)','gf','g']];
+const MON3=['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+let spm='week', sPer=[], sIdx=-1, sSel=null, sTimer=null;
+const nl=n=>Math.round(n).toLocaleString('nl-NL');
+function statPeriods(mode){
+  const t0=new Date(); t0.setHours(12,0,0,0); const tk=iso(t0), P=[];
+  const logged=Object.keys(S.days).filter(k=>S.days[k].length).sort();
+  const first0=logged.length?new Date(logged[0]+'T12:00'):new Date(t0);
+  const dayItem=d=>{const key=iso(d);return {key,d:new Date(d),t:tot(key),fut:key>tk,cur:key===tk}};
+  if(mode==='week'){
+    const mon=d=>{const m=new Date(d);m.setDate(m.getDate()-((m.getDay()+6)%7));return m};
+    const last=mon(t0); let first=mon(first0); const lim=new Date(last); lim.setDate(lim.getDate()-7*51); if(first<lim)first=lim;
+    for(const m=new Date(first);m<=last;m.setDate(m.getDate()+7)){
+      const items=[]; for(let i=0;i<7;i++){const d=new Date(m);d.setDate(m.getDate()+i);items.push(dayItem(d))}
+      const a=items[0].d, b=items[6].d, mn=d=>d.toLocaleDateString('nl-NL',{month:'long'});
+      P.push({unit:'day',items,label:a.getMonth()===b.getMonth()?`${a.getDate()} – ${b.getDate()} ${mn(b)}`:`${a.getDate()} ${mn(a).slice(0,3)} – ${b.getDate()} ${mn(b).slice(0,3)}`});
+    }
+  }else if(mode==='month'){
+    let c=new Date(first0.getFullYear(),first0.getMonth(),1,12); const cur=new Date(t0.getFullYear(),t0.getMonth(),1,12), lim=new Date(cur); lim.setMonth(lim.getMonth()-35); if(c<lim)c=lim;
+    for(const m=new Date(c);m<=cur;m.setMonth(m.getMonth()+1)){
+      const n=new Date(m.getFullYear(),m.getMonth()+1,0).getDate(), items=[];
+      for(let i=1;i<=n;i++)items.push(dayItem(new Date(m.getFullYear(),m.getMonth(),i,12)));
+      P.push({unit:'day',items,label:m.toLocaleDateString('nl-NL',{month:'long',year:'numeric'})});
+    }
+  }else{
+    for(let y=first0.getFullYear();y<=t0.getFullYear();y++){
+      const items=[];
+      for(let m=0;m<12;m++){
+        const pre=`${y}-${String(m+1).padStart(2,'0')}`, sm={k:0,p:0,c:0,f:0}; let n=0;
+        Object.keys(S.days).forEach(k=>{if(k.startsWith(pre)&&S.days[k].length){const t=tot(k);n++;sm.k+=t.k;sm.p+=t.p;sm.c+=t.c;sm.f+=t.f}});
+        const d=new Date(y,m,1,12);
+        items.push({key:pre,d,y,t:{k:n?sm.k/n:0,p:n?sm.p/n:0,c:n?sm.c/n:0,f:n?sm.f/n:0,n},fut:iso(d)>tk,cur:y===t0.getFullYear()&&m===t0.getMonth()});
+      }
+      P.push({unit:'month',items,label:String(y)});
+    }
   }
-  const logged=days.filter(x=>x.n>0), avg=logged.length?logged.reduce((a,x)=>a+x.v,0)/logged.length:0;
-  const W=320,H=150,pt=8,pb=18,ph=H-pt-pb, max=Math.max(goal*1.15,...days.map(x=>x.v*1.08),1);
-  const cw=W/stN, bw=cw*(stN>30?.8:stN>7?.66:.58), Y=v=>pt+ph*(1-v/max);
-  let g=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Staafgrafiek per dag">`;
-  g+=`<line x1="0" x2="${W}" y1="${pt+ph}" y2="${pt+ph}" style="stroke:var(--line)"/>`;
-  days.forEach((x,i)=>{
-    const cx=i*cw+cw/2;
-    if(x.n>0){const y=Y(x.v);g+=`<rect class="bar1" style="fill:${COL[stT]}" x="${cx-bw/2}" y="${y}" width="${bw}" height="${pt+ph-y}" rx="${stN>30?0:2}" opacity="${stSel<0||stSel===i?1:.35}"/>`}
-    const lab=stN<=7?x.d.toLocaleDateString('nl-NL',{weekday:'short'}):stN>30?(x.d.getDate()===1?x.d.toLocaleDateString('nl-NL',{month:'short'}).replace('.',''):''):((i%5===0||i===stN-1)?x.d.getDate():'');
-    if(lab!=='')g+=`<text x="${cx}" y="${H-4}" font-size="9" text-anchor="middle" fill="currentColor">${lab}</text>`;
+  return P;
+}
+function perKeys(per){
+  const tk=iso(new Date());
+  if(per.unit==='day')return per.items.filter(i=>!i.fut).map(i=>i.key);
+  const y=per.items[0].y; return Object.keys(S.days).filter(k=>k.startsWith(y+'-')&&k<=tk).sort();
+}
+function perElapsed(per){
+  if(per.unit==='day')return perKeys(per).length;
+  const y=per.items[0].y, now=new Date(); now.setHours(12,0,0,0);
+  return Math.round(((y===now.getFullYear()?now:new Date(y,11,31,12))-new Date(y,0,1,12))/864e5)+1;
+}
+function statSvg(per,pi){
+  const H=S.hs, pct=H.wkMode==='pct', bars=H.wkStyle==='bar', ser=pct?MET2:MET2.filter(m=>m[0]===H.wkMetric);
+  const items=per.items, n=items.length, W=320, Ht=132, pt=18, pb=20, base=Ht-pb, ph=base-pt, cw=W/n, cx=i=>i*cw+cw/2;
+  const val=(it,m)=>pct?it.t[m[0]]/S[m[3]]:it.t[m[0]], ref=pct?1:S[ser[0][3]], lo=pct?1.2:ref*1.15;
+  const wv=items.flatMap(it=>it.t.n&&!it.fut?ser.map(m=>val(it,m)):[]);
+  const max=Math.max(lo,...wv.map(v=>v*1.08)), Y=v=>Math.max(3,pt+ph*(1-v/max));   /* schaal per periode */
+  const hl=sSel&&sSel.pi===pi?sSel.i:items.findIndex(it=>it.cur);
+  let g=`<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Grafiek ${per.label}">`;
+  if(hl>=0)g+=`<rect x="${(hl*cw+1).toFixed(1)}" y="2" width="${(cw-2).toFixed(1)}" height="${base-2}" rx="${Math.min(8,cw/2).toFixed(1)}" style="fill:var(--line);opacity:.65"/>`;
+  g+=`<line x1="0" x2="${W}" y1="${base}" y2="${base}" style="stroke:var(--line)"/>`;
+  g+=`<line x1="0" x2="${W}" y1="${Y(ref).toFixed(1)}" y2="${Y(ref).toFixed(1)}" stroke-dasharray="4 3" style="stroke:var(--mute);opacity:.6"/>`;
+  g+=`<text x="2" y="${(Y(ref)-3).toFixed(1)}" font-size="9" style="fill:var(--mute)">${pct?'100%':'doel '+nl(ref)}</text>`;
+  if(bars){
+    items.forEach((it,i)=>{
+      if(it.fut||!it.t.n)return;
+      const m=ser.length, gap=m>1?(n>12?.5:1.5):0, tw=cw*(m>1?.8:(n>12?.66:n>7?.55:.5)), bw=(tw-(m-1)*gap)/m, x0=cx(i)-tw/2;
+      ser.forEach((s2,j)=>{const y=Y(val(it,s2));g+=`<rect x="${(x0+j*(bw+gap)).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1,base-y).toFixed(1)}" rx="${Math.min(m>1?1.5:3,bw/2).toFixed(1)}" style="fill:${s2[2]};opacity:${i===hl||hl<0?1:.55}"/>`});
+    });
+  }else{
+    ser.forEach(s2=>{
+      const segs=[]; let cur=[];
+      items.forEach((it,i)=>{if(!it.fut&&it.t.n)cur.push({x:cx(i),y:Y(val(it,s2)),i});else if(cur.length){segs.push(cur);cur=[]}});
+      if(cur.length)segs.push(cur);
+      segs.forEach(P2=>{
+        if(!pct&&P2.length>1)g+=`<path d="${smoothPath(P2)} L${P2[P2.length-1].x.toFixed(1)} ${base} L${P2[0].x.toFixed(1)} ${base}Z" style="fill:${s2[2]};opacity:.12"/>`;
+        if(P2.length>1)g+=`<path d="${smoothPath(P2)}" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="stroke:${s2[2]}"/>`;
+        P2.forEach(q=>{g+=`<circle cx="${q.x.toFixed(1)}" cy="${q.y.toFixed(1)}" r="${q.i===hl?4.2:(n>12?1.8:2.6)}" style="fill:${s2[2]};${q.i===hl?'stroke:var(--bg);stroke-width:2':''}"/>`});
+      });
+    });
+  }
+  const hi=items[hl];
+  if(!pct&&hi&&hi.t.n&&!hi.fut)g+=`<text x="${cx(hl).toFixed(1)}" y="${Math.max(10,Y(val(hi,ser[0]))-(bars?5:9)).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" style="fill:var(--ink)">${nl(val(hi,ser[0]))}</text>`;
+  items.forEach((it,i)=>{
+    let lab='';
+    if(per.unit==='month')lab=MON3[it.d.getMonth()];
+    else if(n===7)lab=it.d.toLocaleDateString('nl-NL',{weekday:'short'}).replace('.','');
+    else if([1,5,10,15,20,25,30].includes(it.d.getDate()))lab=it.d.getDate();
+    if(lab!=='')g+=`<text x="${cx(i).toFixed(1)}" y="${Ht-5}" text-anchor="middle" font-size="${n>7?9:10}" font-weight="${i===hl?700:400}" style="fill:${i===hl?'var(--ink)':'var(--mute)'};opacity:${it.fut?.4:1}">${lab}</text>`;
   });
-  g+=`<line x1="0" x2="${W}" y1="${Y(goal)}" y2="${Y(goal)}" stroke="currentColor" stroke-dasharray="4 3" opacity=".7"/>`;
-  g+=`<text x="2" y="${Y(goal)-3}" font-size="9" fill="currentColor">doel ${goal}</text></svg>`;
-  $('#chart').innerHTML=g;
-  $('#chart svg').onclick=e=>{const r=e.currentTarget.getBoundingClientRect(),i=Math.min(stN-1,Math.max(0,Math.floor((e.clientX-r.left)/r.width*stN)));stSel=stSel===i?-1:i;stats()};
-  $('#avg').innerHTML=`${r0(avg)} <span>${unit} gemiddeld per dag</span>`;
-  $('#avs').textContent=`${logged.length} van ${stN} dagen ingevuld`;
-  const sd=days[stSel];
-  $('#sel').textContent=sd?`${sd.d.toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'})}: ${sd.n?r0(sd.v)+' '+unit:'niets ingevuld'}`:'Tik op een dag voor de waarde.';
+  return g+'</svg>';
+}
+const msgEl=t=>{const d=document.createElement('div');d.className='msg';d.style.padding='4px 0';d.textContent=t;return d};
+function renderStatSummary(per){
+  const keys=perKeys(per), ds=keys.filter(k=>(S.days[k]||[]).length), n=ds.length;
+  const box=$('#ssum'), mix=$('#smix'), top=$('#stop'); [box,mix,top].forEach(b=>b.innerHTML='');
+  if(!n){box.appendChild(msgEl('Nog niets ingevuld in deze periode.'));mix.appendChild(msgEl('–'));top.appendChild(msgEl('–'));return}
+  const sum={k:0,p:0,c:0,f:0}; let hi=null, lo=null;
+  ds.forEach(k=>{const t=tot(k);sum.k+=t.k;sum.p+=t.p;sum.c+=t.c;sum.f+=t.f;if(!hi||t.k>hi.v)hi={k,v:t.k};if(!lo||t.k<lo.v)lo={k,v:t.k}});
+  const sl=document.createElement('div'); sl.className='sl'; sl.textContent='Gemiddeld per dag'; box.appendChild(sl);
+  const grid=document.createElement('div'); grid.className='avgrid';
+  MET2.forEach(m=>{const c=document.createElement('div');c.className='ag';
+    c.innerHTML=`<small><i class="td" style="background:${m[2]}"></i>${m[1]}</small><b>${nl(sum[m[0]]/n)}</b><small>van ${nl(S[m[3]])}${m[4]==='g'?' g':''}</small>`;grid.appendChild(c)});
+  box.appendChild(grid);
+  const dl=k=>new Date(k+'T12:00').toLocaleDateString('nl-NL',{weekday:'short',day:'numeric',month:'short'});
+  box.append(drow('Dagen ingevuld',`${n} van ${perElapsed(per)}`),drow('Totaal',`${nl(sum.k)} kcal`),drow('Hoogste dag',`${nl(hi.v)} kcal`,dl(hi.k)),drow('Laagste dag',`${nl(lo.v)} kcal`,dl(lo.k)));
+  const pk=sum.p*4, ck=sum.c*4, fk=sum.f*9, tt=pk+ck+fk;
+  if(tt>0){
+    const bar=document.createElement('div'); bar.className='mixbar';
+    [[pk,'var(--c1)'],[ck,'var(--c2)'],[fk,'var(--c3)']].forEach(([v,c])=>{const d=document.createElement('div');d.style.cssText=`flex:${v};background:${c}`;bar.appendChild(d)});
+    mix.appendChild(bar);
+    const parts=[['Eiwit','var(--c1)',pk,sum.p],['Koolhydraten','var(--c2)',ck,sum.c],['Vet','var(--c3)',fk,sum.f]];
+    const pc=parts.map(x=>Math.round(x[2]/tt*100)), dif=100-pc.reduce((x,y)=>x+y,0); if(dif)pc[pc.indexOf(Math.max(...pc))]+=dif;   /* samen altijd 100% */
+    parts.forEach(([l,c,v,gr],i)=>{
+      const r=document.createElement('div'); r.className='mh'; r.style.cssText='margin-top:10px;font-size:14px';
+      r.innerHTML=`<span><i class="td" style="background:${c}"></i>${l}</span><span><b>${pc[i]}%</b> · ${nl(gr/n)} g per dag</span>`; mix.appendChild(r);
+    });
+  }else mix.appendChild(msgEl('–'));
+  const cnt={}; ds.forEach(k=>S.days[k].forEach(e=>{const o=cnt[e.name]=cnt[e.name]||{n:0,kcal:0,ic:entryIcon(e)};o.n++;o.kcal+=e.kcal}));
+  const L=Object.entries(cnt).sort((a,b)=>b[1].n-a[1].n||b[1].kcal-a[1].kcal).slice(0,3);
+  L.forEach(([name,o])=>{
+    const r=document.createElement('div'); r.className='tp'; r.appendChild(icoEl({icon:o.ic}));
+    const rt=document.createElement('span'), s1=document.createElement('span'), s2=document.createElement('small'); rt.className='rt';
+    s1.textContent=name; s2.textContent=`${o.n}× gegeten · ${nl(o.kcal)} kcal`; rt.append(s1,s2); r.appendChild(rt); top.appendChild(r);
+  });
+}
+function showSel(){
+  const el=$('#ssel'), go=$('#sgo'); go.classList.add('hide');
+  const per=sPer[sIdx]; if(!per)return;
+  if(!sSel||sSel.pi!==sIdx){el.textContent='Tik op een '+(per.unit==='month'?'maand':'dag')+' voor de waarde.';return}
+  const it=per.items[sSel.i], H=S.hs, pct=H.wkMode==='pct';
+  const title=per.unit==='month'?it.d.toLocaleDateString('nl-NL',{month:'long',year:'numeric'}):it.d.toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'});
+  let txt;
+  if(it.fut||!it.t.n)txt='niets ingevuld';
+  else if(pct)txt=MET2.map(m=>`${m[1]} ${nl(it.t[m[0]]/S[m[3]]*100)}%`).join(' · ');
+  else{const m=MET2.find(x=>x[0]===H.wkMetric);txt=`${nl(it.t[m[0]])} ${m[4]}`+(per.unit==='month'?` gemiddeld per dag (${it.t.n} dagen)`:'')}
+  el.textContent=`${title}: ${txt}`;
+  if(it.fut)return;
+  if(per.unit==='day'){go.textContent='Open dag ›';go.onclick=()=>{day=it.key;showTab('home')};go.classList.remove('hide')}
+  else if(it.t.n){go.textContent='Bekijk maand ›';go.onclick=()=>{
+    spm='month'; const mp=statPeriods('month'); sIdx=mp.findIndex(q=>q.items[0].key.startsWith(it.key)); sSel=null; stats();
+  };go.classList.remove('hide')}
+}
+function stats(){
+  seg('#spm',[['week','Week'],['month','Maand'],['year','Jaar']],spm,v=>{spm=v;sIdx=-1;sSel=null;stats()});
+  seg('#sst',[['bar','Staven'],['line','Lijn']],S.hs.wkStyle,v=>{S.hs.wkStyle=v;save();stats()});
+  seg('#smd',[['abs','Absoluut'],['pct','Percentage']],S.hs.wkMode,v=>{S.hs.wkMode=v;save();stats()});
+  const pct=S.hs.wkMode==='pct', mt=$('#smt'); mt.innerHTML='';
+  MET2.forEach(m=>{
+    const b=document.createElement('button'), i=document.createElement('i'); i.className='td'; i.style.background=m[2]; b.append(i,m[1]);
+    if(pct){b.disabled=true;b.style.opacity=1;b.style.cursor='default'}
+    else{b.className=m[0]===S.hs.wkMetric?'on':'';b.onclick=()=>{S.hs.wkMetric=m[0];save();stats()}}
+    mt.appendChild(b);
+  });
+  sPer=statPeriods(spm); if(sIdx<0||sIdx>=sPer.length)sIdx=sPer.length-1;
+  const box=$('#sch'); box.innerHTML=''; const wrap=document.createElement('div'); wrap.className='wkscroll';
+  sPer.forEach((per,pi)=>{
+    const cell=document.createElement('div'); cell.className='wkw'; cell.innerHTML=statSvg(per,pi);
+    cell.onclick=e=>{
+      const r=cell.firstChild.getBoundingClientRect(), n=per.items.length, i=Math.min(n-1,Math.max(0,Math.floor((e.clientX-r.left)/(r.width||1)*n)));
+      const old=sSel; sSel=(sSel&&sSel.pi===pi&&sSel.i===i)?null:{pi,i};
+      [old&&old.pi,pi].forEach(x=>{if(x!=null&&wrap.children[x])wrap.children[x].innerHTML=statSvg(sPer[x],x)}); showSel();
+    };
+    wrap.appendChild(cell);
+  });
+  box.appendChild(wrap);
+  if(sPer.length>1)wrap.scrollLeft=sIdx*wrap.clientWidth;
+  wrap.onscroll=()=>{
+    const i=Math.min(sPer.length-1,Math.max(0,Math.round(wrap.scrollLeft/(wrap.clientWidth||1))));
+    if(i!==sIdx){
+      sIdx=i; const o=sSel; sSel=null; if(o&&wrap.children[o.pi])wrap.children[o.pi].innerHTML=statSvg(sPer[o.pi],o.pi);
+      $('#scap').textContent=sPer[i].label; clearTimeout(sTimer); sTimer=setTimeout(()=>{renderStatSummary(sPer[sIdx]);showSel()},120);
+    }
+  };
+  $('#scap').textContent=sPer[sIdx].label; renderStatSummary(sPer[sIdx]); showSel();
 }
 
 /* details en wijzigen van een ingevulde regel */
@@ -916,7 +1017,7 @@ function startEdit(e){
   amount({name:e.name,kcal:e.kcal/g*100,p:e.p/g*100,c:e.c/g*100,f:e.f/g*100,portions:portions.map(x=>({...x}))},{pn,qty,g});
 }
 $('#dedit').onclick=()=>{
-  const e=det; if(e.g>0){startEdit(e);return}
+  const e=det; if(!e)return; if(e.g>0){startEdit(e);return}
   beginEdit(e); renderMeals(); $('#qn').value=e.name; $('#qk').value=Math.round(e.kcal*10)/10; view('qe');
 };
 $('#qgo').onclick=()=>{
@@ -1147,7 +1248,7 @@ $('#impai').onclick=async()=>{
 function showTab(t){
   tab=t; ['home','meals','stats','prof'].forEach(x=>{$('#pg-'+x).classList.toggle('hide',x!==t);$('#tb-'+x).classList.toggle('on',x===t)});
   $('#add').classList.toggle('hide',t!=='home');
-  if(t==='home')render(); if(t==='meals')renderMealsTab(); if(t==='stats'){stSel=-1;stats()} if(t==='prof')renderSet();
+  if(t==='home')render(); if(t==='meals')renderMealsTab(); if(t==='stats')stats(); if(t==='prof')renderSet();
   window.scrollTo(0,0);
 }
 document.querySelectorAll('#tabbar button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
